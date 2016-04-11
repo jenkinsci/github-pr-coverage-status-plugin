@@ -72,4 +72,23 @@
             <version>1.71</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <preparationGoals>clean deploy</preparationGoals>
+                    <completionGoals>release:clean</completionGoals>
+                    <resume>false</resume>
+                    <useReleaseProfile>true</useReleaseProfile>
+                    <releaseProfiles>nexus</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
