@@ -39,14 +39,23 @@ class GitUtils {
      */
     public static final String GIT_PR_ID_ENV_PROPERTY = "ghprbPullId";
 
-    public static final Pattern GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
+    public static final Pattern HTTP_GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
+    public static final Pattern SSH_GITHUB_USER_REPO_PATTERN = Pattern.compile("^.+:(.+)");
 
     public static String getUserRepo(final String url) {
-        final Matcher m = GITHUB_USER_REPO_PATTERN.matcher(url);
-        if (!m.matches()) {
+        String userRepo = null;
+        Matcher m = HTTP_GITHUB_USER_REPO_PATTERN.matcher(url);
+        if (m.matches()) userRepo = m.group(2);
+
+        if (userRepo == null) {
+            m = SSH_GITHUB_USER_REPO_PATTERN.matcher(url);
+            if (m.matches()) userRepo = m.group(1);
+        }
+
+        if (userRepo == null) {
             throw new IllegalStateException(String.format("Invalid GitHub project url: %s", url));
         }
-        String userRepo = m.group(2);
+
         if (userRepo.endsWith(".git")) userRepo = userRepo.substring(0, userRepo.length() - ".git".length());
         return userRepo;
     }
