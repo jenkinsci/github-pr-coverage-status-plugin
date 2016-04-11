@@ -26,10 +26,6 @@ import java.util.regex.Pattern;
 
  class CoberturaParser implements CoverageReportParser {
 
-    public static void main(String[] args) {
-        System.out.println(new CoberturaParser().get("/Users/terma/Projects/sbt-scoverage-samples/target/reports/scoverage/cobertura.xml"));
-    }
-
     private static String find(String string, String pattern) {
         Matcher matcher = Pattern.compile(pattern).matcher(string);
         if (matcher.find()) {

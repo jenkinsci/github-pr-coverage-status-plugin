@@ -42,10 +42,6 @@ import java.io.StringReader;
  */
 class JacocoParser implements CoverageReportParser {
 
-    public static void main(String[] args) {
-        System.out.println(new JacocoParser().get("/Users/terma/Projects/test1/target/site/jacoco-ut/jacoco.xml"));
-    }
-
     private static String findInXml(String xml, String xpath) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
