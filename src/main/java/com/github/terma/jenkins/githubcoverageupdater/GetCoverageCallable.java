@@ -50,6 +50,7 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> {
     public Float invoke(File ws, VirtualChannel channel) throws IOException {
         List<Float> cov = new ArrayList<Float>();
         cov.addAll(getFloats(ws, "**/cobertura.xml", new CoberturaParser()));
+        cov.addAll(getFloats(ws, "**/cobertura-coverage.xml", new CoberturaParser()));
         cov.addAll(getFloats(ws, "**/jacoco.xml", new JacocoParser()));
 
         float s = 0;
