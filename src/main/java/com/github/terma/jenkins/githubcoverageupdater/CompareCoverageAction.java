@@ -51,7 +51,6 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final PrintStream buildLog = listener.getLogger();
 
         final String gitUrl = GitUtils.getGitUrl(build, listener);
-        final String userRepo = GitUtils.getUserRepo(gitUrl);
         final Integer prId = GitUtils.gitPrId(build, listener);
 
         if (prId == null) {
