@@ -35,11 +35,11 @@ class Message {
                 Percent.niceNoSign(coverage), Percent.nice(change), Percent.niceNoSign(masterCoverage));
     }
 
-    public String forComment(final String jenkinsUrl) {
-        return "[![Coverage](" + jenkinsUrl + "/picture" +
+    public String forComment(final String buildUrl) {
+        return "[![Coverage](" + Utils.getJenkinsUrlFromBuildUrl(buildUrl) + "coverage-status-icon" +
                 "?coverage=" + coverage +
                 "&masterCoverage=" + masterCoverage +
-                ")](" + jenkinsUrl + ")";
+                ")](" + buildUrl + ")";
     }
 
     /**

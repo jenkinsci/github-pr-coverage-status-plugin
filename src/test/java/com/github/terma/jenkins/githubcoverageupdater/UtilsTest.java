@@ -38,4 +38,15 @@ public class UtilsTest {
                 Utils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
     }
 
+    @Test
+    public void getJenkinsUrlFromBuildUrl() {
+        Assert.assertEquals(
+                "http://localhost:8080/jenkins/",
+                Utils.getJenkinsUrlFromBuildUrl("http://localhost:8080/jenkins/job/branch/45"));
+
+        Assert.assertEquals(
+                "http://localhost:8080/jenkins/",
+                Utils.getJenkinsUrlFromBuildUrl("http://localhost:8080/jenkins/job/branch/459000"));
+    }
+
 }

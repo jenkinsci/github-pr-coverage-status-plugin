@@ -62,6 +62,13 @@ class Utils {
         return userRepo;
     }
 
+    public static String getJenkinsUrlFromBuildUrl(String buildUrl) {
+        final String jenkinsKeyword = "/jenkins/";
+        final int index = buildUrl.indexOf(jenkinsKeyword);
+        if (index < 0) throw new IllegalArgumentException("Invalid build URL: " + buildUrl + "!");
+        return buildUrl.substring(0, index + jenkinsKeyword.length());
+    }
+
     public static String getGitUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
         return envVars.get(GIT_URL_ENV_PROPERTY);

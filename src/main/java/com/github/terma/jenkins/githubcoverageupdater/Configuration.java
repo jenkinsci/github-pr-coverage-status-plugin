@@ -20,7 +20,6 @@ package com.github.terma.jenkins.githubcoverageupdater;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -40,27 +39,19 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     }
 
     public static String getGitHubApiUrl() {
-        MasterCoverageDescriptor descriptor = (MasterCoverageDescriptor)
-                Jenkins.getInstance().getDescriptor(Configuration.class);
-        return descriptor.getGitHubApiUrl();
+        return DESCRIPTOR.getGitHubApiUrl();
     }
 
     public static String getPersonalAccessToken() {
-        MasterCoverageDescriptor descriptor = (MasterCoverageDescriptor)
-                Jenkins.getInstance().getDescriptor(Configuration.class);
-        return descriptor.getPersonalAccessToken();
+        return DESCRIPTOR.getPersonalAccessToken();
     }
 
     public static float getMasterCoverage(final String repo) {
-        MasterCoverageDescriptor descriptor = (MasterCoverageDescriptor)
-                Jenkins.getInstance().getDescriptor(Configuration.class);
-        return descriptor.get(repo);
+        return DESCRIPTOR.get(repo);
     }
 
     public static void setMasterCoverage(final String repo, final float coverage) {
-        MasterCoverageDescriptor descriptor = (MasterCoverageDescriptor)
-                Jenkins.getInstance().getDescriptor(Configuration.class);
-        descriptor.set(repo, coverage);
+        DESCRIPTOR.set(repo, coverage);
     }
 
     @Override

@@ -42,25 +42,25 @@ public class MessageTest {
 
     @Test
     public void buildNiceForComment() {
-        String jenkinsUrl = "http://terma.com/jenkins";
+        String jenkinsUrl = "http://terma.com/jenkins/jobs/ama";
         Assert.assertEquals(
-                "[![Coverage](http://terma.com/jenkins/picture?coverage=1.0&masterCoverage=1.0)](http://terma.com/jenkins)",
+                "[![Coverage](http://terma.com/jenkins/coverage-status-icon?coverage=1.0&masterCoverage=1.0)](http://terma.com/jenkins/jobs/ama)",
                 new Message(1, 1).forComment(jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](http://terma.com/jenkins/picture?coverage=0.0&masterCoverage=0.0)](http://terma.com/jenkins)",
+                "[![Coverage](http://terma.com/jenkins/coverage-status-icon?coverage=0.0&masterCoverage=0.0)](http://terma.com/jenkins/jobs/ama)",
                 new Message(0, 0).forComment(jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](http://terma.com/jenkins/picture?coverage=0.5&masterCoverage=0.0)](http://terma.com/jenkins)",
+                "[![Coverage](http://terma.com/jenkins/coverage-status-icon?coverage=0.5&masterCoverage=0.0)](http://terma.com/jenkins/jobs/ama)",
                 new Message(0.5f, 0).forComment(jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](http://terma.com/jenkins/picture?coverage=0.0&masterCoverage=0.5)](http://terma.com/jenkins)",
+                "[![Coverage](http://terma.com/jenkins/coverage-status-icon?coverage=0.0&masterCoverage=0.5)](http://terma.com/jenkins/jobs/ama)",
                 new Message(0, 0.5f).forComment(jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](http://terma.com/jenkins/picture?coverage=0.7&masterCoverage=0.5)](http://terma.com/jenkins)",
+                "[![Coverage](http://terma.com/jenkins/coverage-status-icon?coverage=0.7&masterCoverage=0.5)](http://terma.com/jenkins/jobs/ama)",
                 new Message(0.7f, 0.5f).forComment(jenkinsUrl));
     }
 
