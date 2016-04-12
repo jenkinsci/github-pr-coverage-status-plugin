@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>jenkins-github-coverage-updater</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <packaging>hpi</packaging>
 
     <url>https://github.com/terma/jenkins-github-coverage-updater</url>
@@ -24,7 +24,7 @@
         <connection>scm:git:https://github.com/terma/jenkins-github-coverage-updater.git</connection>
         <developerConnection>scm:git:https://github.com/terma/jenkins-github-coverage-updater.git</developerConnection>
         <url>https://github.com/terma/jenkins-github-coverage-updater</url>
-        <tag>HEAD</tag>
+        <tag>jenkins-github-coverage-updater-0.3</tag>
     </scm>
 
     <issueManagement>
