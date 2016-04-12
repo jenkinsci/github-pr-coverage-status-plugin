@@ -85,7 +85,7 @@
                     <resume>false</resume>
                     <useReleaseProfile>true</useReleaseProfile>
                     <releaseProfiles>nexus</releaseProfiles>
-                    <goals>deploy</goals>
+                    <goals>package</goals>
                 </configuration>
             </plugin>
 
