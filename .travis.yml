@@ -3,6 +3,6 @@ language: java
 install: true
 
 jdk:
-  - oraclejdk6
+  - oraclejdk7
 
 script: mvn package jacoco:report coveralls:report
