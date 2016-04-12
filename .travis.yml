@@ -1,6 +1,6 @@
 language: java
 
-install: true
+install: ./install-dependencies.sh
 
 jdk:
   - oraclejdk7
