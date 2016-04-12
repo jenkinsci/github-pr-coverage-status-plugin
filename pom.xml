@@ -80,7 +80,7 @@
                 <version>2.5.1</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <preparationGoals>clean deploy</preparationGoals>
+                    <preparationGoals>clean package</preparationGoals>
                     <completionGoals>release:clean</completionGoals>
                     <resume>false</resume>
                     <useReleaseProfile>true</useReleaseProfile>
