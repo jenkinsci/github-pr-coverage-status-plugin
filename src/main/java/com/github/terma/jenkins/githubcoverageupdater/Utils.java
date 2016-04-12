@@ -63,10 +63,10 @@ class Utils {
     }
 
     public static String getJenkinsUrlFromBuildUrl(String buildUrl) {
-        final String jenkinsKeyword = "/jenkins/";
-        final int index = buildUrl.indexOf(jenkinsKeyword);
+        final String keyword = "/job/";
+        final int index = buildUrl.indexOf(keyword);
         if (index < 0) throw new IllegalArgumentException("Invalid build URL: " + buildUrl + "!");
-        return buildUrl.substring(0, index + jenkinsKeyword.length());
+        return buildUrl.substring(0, index + 1);
     }
 
     public static String getGitUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
