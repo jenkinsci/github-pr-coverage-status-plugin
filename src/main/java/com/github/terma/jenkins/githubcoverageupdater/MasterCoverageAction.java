@@ -48,7 +48,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
     public void perform(final Run build, final FilePath workspace, final Launcher launcher,
                         final TaskListener listener) throws InterruptedException, IOException {
         final PrintStream buildLog = listener.getLogger();
-        final String gitUrl = GitUtils.getGitUrl(build, listener);
+        final String gitUrl = Utils.getGitUrl(build, listener);
 
         final float masterCoverage = GetCoverageCallable.get(workspace);
         buildLog.println("Master coverage " + Percent.of(masterCoverage));

@@ -32,7 +32,7 @@ class CachedGitHubRepository {
 
     private static final transient Logger logger = Logger.getLogger(CachedGitHubRepository.class.getName());
 
-    private GHRepository gitHubRepository;
+    private transient GHRepository gitHubRepository;
 
     public GHPullRequest getPullRequest(final String gitHubUrl, final int prId) throws IOException {
         if (gitHubRepository == null) initGitHubRepository(gitHubUrl);
@@ -90,7 +90,7 @@ class CachedGitHubRepository {
             return false;
         }
 
-        final String userRepo = GitUtils.getUserRepo(gitHubUrl);
+        final String userRepo = Utils.getUserRepo(gitHubUrl);
 
         try {
             gitHubRepository = gitHub.getRepository(userRepo);

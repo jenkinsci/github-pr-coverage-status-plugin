@@ -20,22 +20,22 @@ package com.github.terma.jenkins.githubcoverageupdater;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class GitUtilsTest {
+public class UtilsTest {
 
     @Test
     public void getUserRepo() {
         Assert.assertEquals(
                 "terma/jenkins-github-coverage-updater",
-                GitUtils.getUserRepo("https://github.com/terma/jenkins-github-coverage-updater"));
+                Utils.getUserRepo("https://github.com/terma/jenkins-github-coverage-updater"));
 
         Assert.assertEquals("terma/jenkins-github-coverage-updater",
-                GitUtils.getUserRepo("https://github.com/terma/jenkins-github-coverage-updater.git"));
+                Utils.getUserRepo("https://github.com/terma/jenkins-github-coverage-updater.git"));
 
         Assert.assertEquals("terma/jenkins-github-coverage-updater",
-                GitUtils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater.git"));
+                Utils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater.git"));
 
         Assert.assertEquals("terma/jenkins-github-coverage-updater",
-                GitUtils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
+                Utils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
     }
 
 }

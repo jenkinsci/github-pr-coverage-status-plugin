@@ -26,12 +26,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("WeakerAccess")
-class GitUtils {
+class Utils {
 
     /**
      * Injected by Git plugin
      */
     public static final String GIT_URL_ENV_PROPERTY = "GIT_URL";
+
+    public static final String BUILD_URL_ENV_PROPERTY = "BUILD_URL";
 
     /**
      * Injected by
@@ -63,6 +65,11 @@ class GitUtils {
     public static String getGitUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
         return envVars.get(GIT_URL_ENV_PROPERTY);
+    }
+
+    public static String getBuildUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
+        final EnvVars envVars = build.getEnvironment(listener);
+        return envVars.get(BUILD_URL_ENV_PROPERTY);
     }
 
     public static Integer gitPrId(Run build, TaskListener listener) throws IOException, InterruptedException {

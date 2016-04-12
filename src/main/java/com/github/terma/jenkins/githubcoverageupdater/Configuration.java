@@ -73,7 +73,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<String, Float>();
 
-        private String gitHubApiUrl = "http://api.github.com";
+        private String gitHubApiUrl;
         private String personalAccessToken;
 
         public MasterCoverageDescriptor() {

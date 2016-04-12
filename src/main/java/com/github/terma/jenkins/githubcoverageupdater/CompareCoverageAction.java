@@ -50,30 +50,30 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             final TaskListener listener) throws InterruptedException, IOException {
         final PrintStream buildLog = listener.getLogger();
 
-        final String gitUrl = GitUtils.getGitUrl(build, listener);
-        final Integer prId = GitUtils.gitPrId(build, listener);
+        final String gitUrl = Utils.getGitUrl(build, listener);
+        final Integer prId = Utils.gitPrId(build, listener);
 
         if (prId == null) {
             throw new UnsupportedOperationException(
-                    "Can't find " + GitUtils.GIT_PR_ID_ENV_PROPERTY + " please use " +
+                    "Can't find " + Utils.GIT_PR_ID_ENV_PROPERTY + " please use " +
                             "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin" +
                             "to trigger build!");
         }
 
 
         final float masterCoverage = Configuration.getMasterCoverage(gitUrl);
-        buildLog.println("Master coverage " + Percent.of(masterCoverage));
-
         final float coverage = GetCoverageCallable.get(workspace);
-        buildLog.println("PR coverage " + Percent.of(coverage));
-        final float change = Percent.change(coverage, masterCoverage);
 
-        final String message = "Coverage " + Percent.nice(coverage) + " Compare to master " + Percent.nice(change);
+        final Message message = new Message(coverage, masterCoverage);
+        buildLog.println(message.forConsole());
+
+        final String buildUrl = Utils.getBuildUrl(build, listener);
+
         try {
             final GHPullRequest pr = new CachedGitHubRepository().getPullRequest(gitUrl, prId);
-            pr.comment(message);
+            pr.comment(message.forComment(buildUrl));
         } catch (IOException ex) {
-            listener.error("Couldn't add comment to pull request #" + prId + ": '" + message + "'", ex);
+            listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
         }
     }
 

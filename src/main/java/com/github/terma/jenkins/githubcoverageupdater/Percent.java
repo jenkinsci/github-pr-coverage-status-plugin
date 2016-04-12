@@ -22,19 +22,25 @@ class Percent {
 
     public static float change(float value1, float avg) {
         if (avg > 0) {
-            return (value1 - avg) / avg;
+            return value1 - avg;
+        } else if (value1 > 0) {
+            return value1;
         } else {
-            return 1;
+            return 0;
         }
     }
 
     public static int of(float value) {
-        return (int) (value * 100.0);
+        return (int) Math.round((value * 100.0));
     }
 
     public static String nice(float value) {
+        return (value < 0 ? "-" : "+") + niceNoSign(value);
+    }
+
+    public static String niceNoSign(float value) {
         final int percent = of(value);
-        return (percent < 0 ? "-" : "+") + Math.abs(percent) + "%";
+        return Math.abs(percent) + "%";
     }
 
 }
