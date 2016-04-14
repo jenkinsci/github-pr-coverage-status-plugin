@@ -22,6 +22,7 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -42,6 +43,14 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.getGitHubApiUrl();
     }
 
+    public static int getYellowThreshold() {
+        return DESCRIPTOR.getYellowThreshold();
+    }
+
+    public static int getGreenThreshold() {
+        return DESCRIPTOR.getGreenThreshold();
+    }
+
     public static String getPersonalAccessToken() {
         return DESCRIPTOR.getPersonalAccessToken();
     }
@@ -59,13 +68,23 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR;
     }
 
+    /**
+     * Not more valid name. But let's keep as Jenkins stores conf on disk under that name.
+     * So in case of modification users will lose their settings.
+     */
     @SuppressWarnings("unused")
     public static final class MasterCoverageDescriptor extends Descriptor<Configuration> {
+
+        private static final int DEFAULT_YELLOW_THRESHOLD = 80;
+        private static final int DEFAULT_GREEN_THRESHOLD = 90;
 
         private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<String, Float>();
 
         private String gitHubApiUrl;
         private String personalAccessToken;
+
+        private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
+        private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
 
         public MasterCoverageDescriptor() {
             load();
@@ -73,7 +92,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         @Override
         public String getDisplayName() {
-            return "Master Coverage";
+            return "Coverage status for GitHub Pull Requests";
         }
 
         public float get(String repo) {
@@ -98,10 +117,20 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return personalAccessToken;
         }
 
+        public int getYellowThreshold() {
+            return yellowThreshold;
+        }
+
+        public int getGreenThreshold() {
+            return greenThreshold;
+        }
+
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             gitHubApiUrl = StringUtils.trimToNull(formData.getString("gitHubApiUrl"));
             personalAccessToken = StringUtils.trimToNull(formData.getString("personalAccessToken"));
+            yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
+            greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
             save();
             return super.configure(req, formData);
         }

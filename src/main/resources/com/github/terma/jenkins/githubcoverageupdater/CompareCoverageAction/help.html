@@ -1,0 +1,19 @@
+<div>
+    This step could be used only for Jenkins jobs triggered by
+    <a href="https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin">GitHub pull request builder plugin</a>
+
+    <p></p>
+
+    Step will get code coverage from build. Get collected previously coverage for master. Then
+    post status to GitHub pull request as comment.
+
+    <p></p>
+
+    To record master coverage add post build step <b>Record Master Coverage</b> to any job which you think
+    should be master. Ensure that coverage report is present in a build.
+
+    <p></p>
+
+    Step get test coverage from Cobertura or Jacoco reports (XML) if they present in build.
+    They could be created by any tool. Otherwise coverage will be 0.
+</div>

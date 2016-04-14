@@ -10,7 +10,7 @@ import org.kohsuke.stapler.StaplerResponse;
 import java.io.IOException;
 
 @Extension
-public class CoverageStatusIcon implements UnprotectedRootAction {
+public class CoverageStatusIconAction implements UnprotectedRootAction {
 
     @Override
     public String getIconFileName() {
@@ -28,7 +28,7 @@ public class CoverageStatusIcon implements UnprotectedRootAction {
     }
 
     /**
-     * Used by Jenkins Stapler service when get request on that URL
+     * Used by Jenkins Stapler service when get request on URL jenkins_host/getUrlName()
      *
      * @param request - request
      * @param response - response
@@ -44,12 +44,13 @@ public class CoverageStatusIcon implements UnprotectedRootAction {
         String svg = IOUtils.toString(this.getClass().getResourceAsStream(
                 "/com/github/terma/jenkins/githubcoverageupdater/Icon/icon.svg"));
 
-        Message message = new Message(coverage, masterCoverage);
+        final Message message = new Message(coverage, masterCoverage);
         svg = StringUtils.replace(svg, "{{ message }}", message.forIcon());
 
+        final int coveragePercent = Percent.of(coverage);
         String color;
-        if (coverage < 0.8) color = "#b94947"; // red
-        else if (coverage < 0.9) color = "#F89406"; // yellow
+        if (coveragePercent < Configuration.getYellowThreshold()) color = "#b94947"; // red
+        else if (coveragePercent < Configuration.getGreenThreshold()) color = "#F89406"; // yellow
         else color = "#97CA00"; // green
         svg = StringUtils.replace(svg, "{{ color }}", color);
 

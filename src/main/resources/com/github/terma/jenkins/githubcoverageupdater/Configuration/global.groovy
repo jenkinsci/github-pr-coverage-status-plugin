@@ -12,4 +12,12 @@ f.section(title: descriptor.displayName) {
         f.password()
     }
 
+    f.entry(field: "yellowThreshold", title: _("Yellow threshold")) {
+        f.textbox()
+    }
+
+    f.entry(field: "greenThreshold", title: _("Green Threshold")) {
+        f.textbox()
+    }
+
 }
