@@ -42,7 +42,7 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
         response.setContentType("image/svg+xml");
 
         String svg = IOUtils.toString(this.getClass().getResourceAsStream(
-                "/com/github/terma/jenkins/githubcoverageupdater/Icon/icon.svg"));
+                "/com/github/terma/jenkins/githubprcoveragestatus/Icon/icon.svg"));
 
         final Message message = new Message(coverage, masterCoverage);
         svg = StringUtils.replace(svg, "{{ message }}", message.forIcon());
