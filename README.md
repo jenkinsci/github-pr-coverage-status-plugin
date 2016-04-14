@@ -3,3 +3,5 @@
 
 Work in conjuction with [GitHub pull request builder plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin)
 
+Post code coverage status to GitHub pull request comments. Example:
+![Example](https://raw.githubusercontent.com/terma/jenkins-github-coverage-updater/master/screenshot.png)
