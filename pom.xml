@@ -6,11 +6,13 @@
         <version>2.4</version>
     </parent>
 
-    <artifactId>jenkins-github-coverage-updater</artifactId>
+    <artifactId>github-pr-coverage-status</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
-    <url>https://github.com/terma/jenkins-github-coverage-updater</url>
+    <url>https://github.com/terma/jenkins-github-coverage-status</url>
+
+    <name>GitHub Pull Request Coverage Status</name>
 
     <description>
         Addon for https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
@@ -27,15 +29,23 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/terma/jenkins-github-coverage-updater.git</connection>
-        <developerConnection>scm:git:https://github.com/terma/jenkins-github-coverage-updater.git</developerConnection>
-        <url>https://github.com/terma/jenkins-github-coverage-updater</url>
+        <connection>scm:git:https://github.com/terma/github-pr-coverage-status.git</connection>
+        <developerConnection>scm:git:https://github.com/terma/github-pr-coverage-status.git</developerConnection>
+        <url>https://github.com/terma/github-pr-coverage-status</url>
         <tag>HEAD</tag>
     </scm>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/terma/jenkins-github-coverage-updater/issues</url>
+        <url>https://github.com/terma/github-pr-coverage-status/issues</url>
     </issueManagement>
 
     <properties>

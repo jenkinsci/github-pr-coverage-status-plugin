@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-package com.github.terma.jenkins.githubcoverageupdater;
+package com.github.terma.jenkins.githubprcoveragestatus;
 
 import hudson.Extension;
 import hudson.FilePath;
@@ -28,31 +28,53 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 import java.io.PrintStream;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
+public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
     private static final long serialVersionUID = 1L;
 
     @DataBoundConstructor
-    public MasterCoverageAction() {
-
+    public CompareCoverageAction() {
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public void perform(final Run build, final FilePath workspace, final Launcher launcher,
-                        final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(
+            final Run build, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         final PrintStream buildLog = listener.getLogger();
-        final String gitUrl = Utils.getGitUrl(build, listener);
 
-        final float masterCoverage = GetCoverageCallable.get(workspace);
-        buildLog.println("Master coverage " + Percent.of(masterCoverage));
-        Configuration.setMasterCoverage(gitUrl, masterCoverage);
+        final String gitUrl = Utils.getGitUrl(build, listener);
+        final Integer prId = Utils.gitPrId(build, listener);
+
+        if (prId == null) {
+            throw new UnsupportedOperationException(
+                    "Can't find " + Utils.GIT_PR_ID_ENV_PROPERTY + " please use " +
+                            "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin" +
+                            "to trigger build!");
+        }
+
+
+        final float masterCoverage = Configuration.getMasterCoverage(gitUrl);
+        final float coverage = GetCoverageCallable.get(workspace);
+
+        final Message message = new Message(coverage, masterCoverage);
+        buildLog.println(message.forConsole());
+
+        final String buildUrl = Utils.getBuildUrl(build, listener);
+
+        try {
+            final GHPullRequest pr = new CachedGitHubRepository().getPullRequest(gitUrl, prId);
+            pr.comment(message.forComment(buildUrl));
+        } catch (IOException ex) {
+            listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
+        }
     }
 
     @Override
@@ -65,7 +87,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
         @Override
         public String getDisplayName() {
-            return "Record Master Coverage";
+            return "Publish coverage to GitHub";
         }
 
         @Override

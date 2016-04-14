@@ -16,7 +16,7 @@ limitations under the License.
 
 */
 
-package com.github.terma.jenkins.githubcoverageupdater;
+package com.github.terma.jenkins.githubprcoveragestatus;
 
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;

@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-package com.github.terma.jenkins.githubcoverageupdater;
+package com.github.terma.jenkins.githubprcoveragestatus;
 
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Configuration extends AbstractDescribableImpl<Configuration> {
 
     @Extension
-    public static final MasterCoverageDescriptor DESCRIPTOR = new MasterCoverageDescriptor();
+    public static final ConfigurationDescriptor DESCRIPTOR = new ConfigurationDescriptor();
 
     @DataBoundConstructor
     public Configuration() {
@@ -64,16 +64,12 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     }
 
     @Override
-    public MasterCoverageDescriptor getDescriptor() {
+    public ConfigurationDescriptor getDescriptor() {
         return DESCRIPTOR;
     }
 
-    /**
-     * Not more valid name. But let's keep as Jenkins stores conf on disk under that name.
-     * So in case of modification users will lose their settings.
-     */
     @SuppressWarnings("unused")
-    public static final class MasterCoverageDescriptor extends Descriptor<Configuration> {
+    public static final class ConfigurationDescriptor extends Descriptor<Configuration> {
 
         private static final int DEFAULT_YELLOW_THRESHOLD = 80;
         private static final int DEFAULT_GREEN_THRESHOLD = 90;
@@ -86,7 +82,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
 
-        public MasterCoverageDescriptor() {
+        public ConfigurationDescriptor() {
             load();
         }
 
