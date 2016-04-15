@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN"
+        "report.dtd">
+<report name="GitHub Pull Request Coverage Status">
+    <package name="com/github/terma/jenkins/githubprcoveragestatus">
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/CoberturaParser">
+            <method name="&lt;init&gt;" desc="()V" line="27">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="find" desc="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;" line="30">
+                <counter type="INSTRUCTION" missed="16" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="4" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="get" desc="(Ljava/lang/String;)F" line="41">
+                <counter type="INSTRUCTION" missed="30" covered="0"/>
+                <counter type="LINE" missed="6" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="49" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="11" covered="0"/>
+            <counter type="COMPLEXITY" missed="4" covered="0"/>
+            <counter type="METHOD" missed="3" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/GetCoverageCallable">
+            <method name="&lt;init&gt;" desc="()V" line="33">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getFloats"
+                    desc="(Ljava/io/File;Ljava/lang/String;Lcom/github/terma/jenkins/githubprcoveragestatus/CoverageReportParser;)Ljava/util/List;"
+                    line="36">
+                <counter type="INSTRUCTION" missed="45" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="6" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="get" desc="(Lhudson/FilePath;)F" line="45">
+                <counter type="INSTRUCTION" missed="15" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="invoke" desc="(Ljava/io/File;Lhudson/remoting/VirtualChannel;)Ljava/lang/Float;" line="51">
+                <counter type="INSTRUCTION" missed="62" covered="0"/>
+                <counter type="BRANCH" missed="4" covered="0"/>
+                <counter type="LINE" missed="9" covered="0"/>
+                <counter type="COMPLEXITY" missed="3" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="125" covered="0"/>
+            <counter type="BRANCH" missed="8" covered="0"/>
+            <counter type="LINE" missed="18" covered="0"/>
+            <counter type="COMPLEXITY" missed="8" covered="0"/>
+            <counter type="METHOD" missed="4" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/Message">
+            <method name="&lt;init&gt;" desc="(FF)V" line="27">
+                <counter type="INSTRUCTION" missed="0" covered="14"/>
+                <counter type="LINE" missed="0" covered="5"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="forConsole" desc="()Ljava/lang/String;" line="34">
+                <counter type="INSTRUCTION" missed="0" covered="23"/>
+                <counter type="LINE" missed="0" covered="2"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="forComment" desc="(Ljava/lang/String;)Ljava/lang/String;" line="39">
+                <counter type="INSTRUCTION" missed="0" covered="28"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="forIcon" desc="()Ljava/lang/String;" line="49">
+                <counter type="INSTRUCTION" missed="0" covered="23"/>
+                <counter type="LINE" missed="0" covered="2"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="0" covered="88"/>
+            <counter type="LINE" missed="0" covered="10"/>
+            <counter type="COMPLEXITY" missed="0" covered="4"/>
+            <counter type="METHOD" missed="0" covered="4"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/Percent">
+            <method name="&lt;init&gt;" desc="()V" line="21">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="change" desc="(FF)F" line="24">
+                <counter type="INSTRUCTION" missed="0" covered="16"/>
+                <counter type="BRANCH" missed="0" covered="4"/>
+                <counter type="LINE" missed="0" covered="5"/>
+                <counter type="COMPLEXITY" missed="0" covered="3"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="of" desc="(F)I" line="34">
+                <counter type="INSTRUCTION" missed="0" covered="7"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="nice" desc="(F)Ljava/lang/String;" line="38">
+                <counter type="INSTRUCTION" missed="0" covered="16"/>
+                <counter type="BRANCH" missed="0" covered="2"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="2"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="niceNoSign" desc="(F)Ljava/lang/String;" line="42">
+                <counter type="INSTRUCTION" missed="0" covered="13"/>
+                <counter type="LINE" missed="0" covered="2"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="3" covered="52"/>
+            <counter type="BRANCH" missed="0" covered="6"/>
+            <counter type="LINE" missed="1" covered="9"/>
+            <counter type="COMPLEXITY" missed="1" covered="7"/>
+            <counter type="METHOD" missed="1" covered="4"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/Configuration">
+            <method name="&lt;init&gt;" desc="()V" line="39">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getGitHubApiUrl" desc="()Ljava/lang/String;" line="43">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getYellowThreshold" desc="()I" line="47">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getGreenThreshold" desc="()I" line="51">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getPersonalAccessToken" desc="()Ljava/lang/String;" line="55">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getMasterCoverage" desc="(Ljava/lang/String;)F" line="59">
+                <counter type="INSTRUCTION" missed="4" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="setMasterCoverage" desc="(Ljava/lang/String;F)V" line="63">
+                <counter type="INSTRUCTION" missed="5" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getDescriptor"
+                    desc="()Lcom/github/terma/jenkins/githubprcoveragestatus/Configuration$ConfigurationDescriptor;"
+                    line="68">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="&lt;clinit&gt;" desc="()V" line="36">
+                <counter type="INSTRUCTION" missed="0" covered="5"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="26" covered="5"/>
+            <counter type="LINE" missed="10" covered="1"/>
+            <counter type="COMPLEXITY" missed="8" covered="1"/>
+            <counter type="METHOD" missed="8" covered="1"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/MasterCoverageAction">
+            <method name="&lt;init&gt;" desc="()V" line="42">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="perform"
+                    desc="(Lhudson/model/Run;Lhudson/FilePath;Lhudson/Launcher;Lhudson/model/TaskListener;)V" line="50">
+                <counter type="INSTRUCTION" missed="25" covered="0"/>
+                <counter type="LINE" missed="6" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getRequiredMonitorService" desc="()Lhudson/tasks/BuildStepMonitor;" line="60">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="30" covered="0"/>
+            <counter type="LINE" missed="9" covered="0"/>
+            <counter type="COMPLEXITY" missed="3" covered="0"/>
+            <counter type="METHOD" missed="3" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/CoverageStatusIconAction">
+            <method name="&lt;init&gt;" desc="()V" line="13">
+                <counter type="INSTRUCTION" missed="0" covered="3"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getIconFileName" desc="()Ljava/lang/String;" line="17">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getDisplayName" desc="()Ljava/lang/String;" line="22">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getUrlName" desc="()Ljava/lang/String;" line="27">
+                <counter type="INSTRUCTION" missed="0" covered="2"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="doIndex" desc="(Lorg/kohsuke/stapler/StaplerRequest;Lorg/kohsuke/stapler/StaplerResponse;)V"
+                    line="39">
+                <counter type="INSTRUCTION" missed="58" covered="0"/>
+                <counter type="BRANCH" missed="4" covered="0"/>
+                <counter type="LINE" missed="13" covered="0"/>
+                <counter type="COMPLEXITY" missed="3" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="62" covered="5"/>
+            <counter type="BRANCH" missed="4" covered="0"/>
+            <counter type="LINE" missed="15" covered="2"/>
+            <counter type="COMPLEXITY" missed="5" covered="2"/>
+            <counter type="METHOD" missed="3" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/JacocoParser$1">
+            <method name="&lt;init&gt;" desc="()V" line="49">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="resolveEntity" desc="(Ljava/lang/String;Ljava/lang/String;)Lorg/xml/sax/InputSource;"
+                    line="54">
+                <counter type="INSTRUCTION" missed="8" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="11" covered="0"/>
+            <counter type="LINE" missed="2" covered="0"/>
+            <counter type="COMPLEXITY" missed="2" covered="0"/>
+            <counter type="METHOD" missed="2" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/Configuration$ConfigurationDescriptor">
+            <method name="&lt;init&gt;" desc="()V" line="77">
+                <counter type="INSTRUCTION" missed="0" covered="16"/>
+                <counter type="LINE" missed="0" covered="6"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getDisplayName" desc="()Ljava/lang/String;" line="91">
+                <counter type="INSTRUCTION" missed="0" covered="2"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="get" desc="(Ljava/lang/String;)F" line="95">
+                <counter type="INSTRUCTION" missed="13" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="set" desc="(Ljava/lang/String;F)V" line="100">
+                <counter type="INSTRUCTION" missed="10" covered="0"/>
+                <counter type="LINE" missed="3" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getCoverageByRepo" desc="()Ljava/util/Map;" line="105">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getGitHubApiUrl" desc="()Ljava/lang/String;" line="109">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getPersonalAccessToken" desc="()Ljava/lang/String;" line="113">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getYellowThreshold" desc="()I" line="117">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getGreenThreshold" desc="()I" line="121">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="configure" desc="(Lorg/kohsuke/stapler/StaplerRequest;Lnet/sf/json/JSONObject;)Z" line="126">
+                <counter type="INSTRUCTION" missed="33" covered="0"/>
+                <counter type="LINE" missed="6" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="71" covered="18"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="16" covered="7"/>
+            <counter type="COMPLEXITY" missed="9" covered="2"/>
+            <counter type="METHOD" missed="8" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/CompareCoverageAction$DescriptorImpl">
+            <method name="&lt;init&gt;" desc="()V" line="86">
+                <counter type="INSTRUCTION" missed="0" covered="3"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getDisplayName" desc="()Ljava/lang/String;" line="90">
+                <counter type="INSTRUCTION" missed="0" covered="2"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="isApplicable" desc="(Ljava/lang/Class;)Z" line="95">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="2" covered="5"/>
+            <counter type="LINE" missed="1" covered="2"/>
+            <counter type="COMPLEXITY" missed="1" covered="2"/>
+            <counter type="METHOD" missed="1" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/MasterCoverageAction$DescriptorImpl">
+            <method name="&lt;init&gt;" desc="()V" line="64">
+                <counter type="INSTRUCTION" missed="0" covered="3"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getDisplayName" desc="()Ljava/lang/String;" line="68">
+                <counter type="INSTRUCTION" missed="0" covered="2"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="isApplicable" desc="(Ljava/lang/Class;)Z" line="73">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="2" covered="5"/>
+            <counter type="LINE" missed="1" covered="2"/>
+            <counter type="COMPLEXITY" missed="1" covered="2"/>
+            <counter type="METHOD" missed="1" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/CompareCoverageAction">
+            <method name="&lt;init&gt;" desc="()V" line="43">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="perform"
+                    desc="(Lhudson/model/Run;Lhudson/FilePath;Lhudson/Launcher;Lhudson/model/TaskListener;)V" line="51">
+                <counter type="INSTRUCTION" missed="74" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="16" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getRequiredMonitorService" desc="()Lhudson/tasks/BuildStepMonitor;" line="82">
+                <counter type="INSTRUCTION" missed="2" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="79" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="19" covered="0"/>
+            <counter type="COMPLEXITY" missed="4" covered="0"/>
+            <counter type="METHOD" missed="3" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/CachedGitHubRepository">
+            <method name="&lt;init&gt;" desc="()V" line="31">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getPullRequest" desc="(Ljava/lang/String;I)Lorg/kohsuke/github/GHPullRequest;" line="38">
+                <counter type="INSTRUCTION" missed="12" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getGitHub" desc="()Lorg/kohsuke/github/GitHub;" line="43">
+                <counter type="INSTRUCTION" missed="22" covered="0"/>
+                <counter type="BRANCH" missed="6" covered="0"/>
+                <counter type="LINE" missed="9" covered="0"/>
+                <counter type="COMPLEXITY" missed="4" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="initGitHubRepository" desc="(Ljava/lang/String;)Z" line="62">
+                <counter type="INSTRUCTION" missed="79" covered="0"/>
+                <counter type="BRANCH" missed="6" covered="0"/>
+                <counter type="LINE" missed="27" covered="0"/>
+                <counter type="COMPLEXITY" missed="4" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="&lt;clinit&gt;" desc="()V" line="33">
+                <counter type="INSTRUCTION" missed="5" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="121" covered="0"/>
+            <counter type="BRANCH" missed="14" covered="0"/>
+            <counter type="LINE" missed="40" covered="0"/>
+            <counter type="COMPLEXITY" missed="12" covered="0"/>
+            <counter type="METHOD" missed="5" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/JacocoParser">
+            <method name="&lt;init&gt;" desc="()V" line="43">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="findInXml" desc="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;" line="47">
+                <counter type="INSTRUCTION" missed="41" covered="0"/>
+                <counter type="LINE" missed="9" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="get" desc="(Ljava/lang/String;)F" line="72">
+                <counter type="INSTRUCTION" missed="28" covered="0"/>
+                <counter type="LINE" missed="6" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="72" covered="0"/>
+            <counter type="LINE" missed="16" covered="0"/>
+            <counter type="COMPLEXITY" missed="3" covered="0"/>
+            <counter type="METHOD" missed="3" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="com/github/terma/jenkins/githubprcoveragestatus/Utils">
+            <method name="&lt;init&gt;" desc="()V" line="29">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getUserRepo" desc="(Ljava/lang/String;)Ljava/lang/String;" line="48">
+                <counter type="INSTRUCTION" missed="12" covered="43"/>
+                <counter type="BRANCH" missed="2" covered="8"/>
+                <counter type="LINE" missed="1" covered="9"/>
+                <counter type="COMPLEXITY" missed="2" covered="4"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getJenkinsUrlFromBuildUrl" desc="(Ljava/lang/String;)Ljava/lang/String;" line="66">
+                <counter type="INSTRUCTION" missed="14" covered="15"/>
+                <counter type="BRANCH" missed="1" covered="1"/>
+                <counter type="LINE" missed="0" covered="4"/>
+                <counter type="COMPLEXITY" missed="1" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getGitUrl" desc="(Lhudson/model/Run;Lhudson/model/TaskListener;)Ljava/lang/String;" line="73">
+                <counter type="INSTRUCTION" missed="9" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="getBuildUrl" desc="(Lhudson/model/Run;Lhudson/model/TaskListener;)Ljava/lang/String;"
+                    line="78">
+                <counter type="INSTRUCTION" missed="9" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="gitPrId" desc="(Lhudson/model/Run;Lhudson/model/TaskListener;)Ljava/lang/Integer;" line="83">
+                <counter type="INSTRUCTION" missed="17" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="5" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="&lt;clinit&gt;" desc="()V" line="44">
+                <counter type="INSTRUCTION" missed="0" covered="7"/>
+                <counter type="LINE" missed="0" covered="2"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="64" covered="65"/>
+            <counter type="BRANCH" missed="5" covered="9"/>
+            <counter type="LINE" missed="11" covered="15"/>
+            <counter type="COMPLEXITY" missed="8" covered="6"/>
+            <counter type="METHOD" missed="4" covered="3"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <sourcefile name="CoverageStatusIconAction.java">
+            <line nr="13" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="17" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="22" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="27" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="39" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="40" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="42" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="44" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="47" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="48" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="50" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="52" mi="6" ci="0" mb="2" cb="0"/>
+            <line nr="53" mi="6" ci="0" mb="2" cb="0"/>
+            <line nr="54" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="55" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="57" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="58" mi="1" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="62" covered="5"/>
+            <counter type="BRANCH" missed="4" covered="0"/>
+            <counter type="LINE" missed="15" covered="2"/>
+            <counter type="COMPLEXITY" missed="5" covered="2"/>
+            <counter type="METHOD" missed="3" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <sourcefile name="Utils.java">
+            <line nr="29" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="44" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="45" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="48" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="49" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="50" mi="0" ci="7" mb="0" cb="2"/>
+            <line nr="52" mi="0" ci="2" mb="0" cb="2"/>
+            <line nr="53" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="54" mi="0" ci="7" mb="1" cb="1"/>
+            <line nr="57" mi="0" ci="2" mb="1" cb="1"/>
+            <line nr="58" mi="12" ci="0" mb="0" cb="0"/>
+            <line nr="61" mi="0" ci="13" mb="0" cb="2"/>
+            <line nr="62" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="66" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="67" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="68" mi="14" ci="2" mb="1" cb="1"/>
+            <line nr="69" mi="0" ci="7" mb="0" cb="0"/>
+            <line nr="73" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="74" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="78" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="79" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="83" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="84" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="85" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="86" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="88" mi="4" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="64" covered="65"/>
+            <counter type="BRANCH" missed="5" covered="9"/>
+            <counter type="LINE" missed="11" covered="15"/>
+            <counter type="COMPLEXITY" missed="8" covered="6"/>
+            <counter type="METHOD" missed="4" covered="3"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <sourcefile name="CachedGitHubRepository.java">
+            <line nr="31" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="33" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="38" mi="7" ci="0" mb="2" cb="0"/>
+            <line nr="39" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="43" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="44" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="46" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="47" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="48" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="50" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="53" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="54" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="56" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="62" mi="3" ci="0" mb="2" cb="0"/>
+            <line nr="63" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="69" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="70" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="71" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="72" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="73" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="75" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="76" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="77" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="81" mi="4" ci="0" mb="2" cb="0"/>
+            <line nr="82" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="83" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="85" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="86" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="87" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="88" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="89" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="90" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="91" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="93" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="96" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="97" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="98" mi="14" ci="0" mb="0" cb="0"/>
+            <line nr="100" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="101" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="102" mi="2" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="121" covered="0"/>
+            <counter type="BRANCH" missed="14" covered="0"/>
+            <counter type="LINE" missed="40" covered="0"/>
+            <counter type="COMPLEXITY" missed="12" covered="0"/>
+            <counter type="METHOD" missed="5" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </sourcefile>
+        <sourcefile name="CompareCoverageAction.java">
+            <line nr="43" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="44" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="51" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="53" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="54" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="56" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="57" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="64" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="65" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="67" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="68" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="70" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="73" mi="8" ci="0" mb="0" cb="0"/>
+            <line nr="74" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="75" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="76" mi="19" ci="0" mb="0" cb="0"/>
+            <line nr="77" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="78" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="82" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="86" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="90" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="95" mi="2" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="81" covered="5"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="20" covered="2"/>
+            <counter type="COMPLEXITY" missed="5" covered="2"/>
+            <counter type="METHOD" missed="4" covered="2"/>
+            <counter type="CLASS" missed="1" covered="1"/>
+        </sourcefile>
+        <sourcefile name="CoberturaParser.java">
+            <line nr="27" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="30" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="31" mi="3" ci="0" mb="2" cb="0"/>
+            <line nr="32" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="34" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="41" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="42" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="43" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="44" mi="8" ci="0" mb="0" cb="0"/>
+            <line nr="45" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="46" mi="5" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="49" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="11" covered="0"/>
+            <counter type="COMPLEXITY" missed="4" covered="0"/>
+            <counter type="METHOD" missed="3" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </sourcefile>
+        <sourcefile name="Percent.java">
+            <line nr="21" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="24" mi="0" ci="4" mb="0" cb="2"/>
+            <line nr="25" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="26" mi="0" ci="4" mb="0" cb="2"/>
+            <line nr="27" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="29" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="34" mi="0" ci="7" mb="0" cb="0"/>
+            <line nr="38" mi="0" ci="16" mb="0" cb="2"/>
+            <line nr="42" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="43" mi="0" ci="10" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="3" covered="52"/>
+            <counter type="BRANCH" missed="0" covered="6"/>
+            <counter type="LINE" missed="1" covered="9"/>
+            <counter type="COMPLEXITY" missed="1" covered="7"/>
+            <counter type="METHOD" missed="1" covered="4"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <sourcefile name="GetCoverageCallable.java">
+            <line nr="33" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="36" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="37" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="38" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="39" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="40" mi="29" ci="0" mb="2" cb="0"/>
+            <line nr="41" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="45" mi="7" ci="0" mb="2" cb="0"/>
+            <line nr="46" mi="8" ci="0" mb="0" cb="0"/>
+            <line nr="51" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="52" mi="9" ci="0" mb="0" cb="0"/>
+            <line nr="53" mi="9" ci="0" mb="0" cb="0"/>
+            <line nr="54" mi="9" ci="0" mb="0" cb="0"/>
+            <line nr="56" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="57" mi="16" ci="0" mb="2" cb="0"/>
+            <line nr="59" mi="3" ci="0" mb="2" cb="0"/>
+            <line nr="60" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="62" mi="7" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="125" covered="0"/>
+            <counter type="BRANCH" missed="8" covered="0"/>
+            <counter type="LINE" missed="18" covered="0"/>
+            <counter type="COMPLEXITY" missed="8" covered="0"/>
+            <counter type="METHOD" missed="4" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </sourcefile>
+        <sourcefile name="JacocoParser.java">
+            <line nr="43" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="47" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="48" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="49" mi="8" ci="0" mb="0" cb="0"/>
+            <line nr="54" mi="8" ci="0" mb="0" cb="0"/>
+            <line nr="60" mi="12" ci="0" mb="0" cb="0"/>
+            <line nr="61" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="62" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="63" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="64" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="65" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="72" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="73" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="74" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="75" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="76" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="77" mi="5" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="83" covered="0"/>
+            <counter type="LINE" missed="17" covered="0"/>
+            <counter type="COMPLEXITY" missed="5" covered="0"/>
+            <counter type="METHOD" missed="5" covered="0"/>
+            <counter type="CLASS" missed="2" covered="0"/>
+        </sourcefile>
+        <sourcefile name="Configuration.java">
+            <line nr="36" mi="0" ci="5" mb="0" cb="0"/>
+            <line nr="39" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="40" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="43" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="47" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="51" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="55" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="59" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="63" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="64" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="68" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="77" mi="0" ci="5" mb="0" cb="0"/>
+            <line nr="82" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="83" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="85" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="86" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="87" mi="0" ci="1" mb="0" cb="0"/>
+            <line nr="91" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="95" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="96" mi="7" ci="0" mb="2" cb="0"/>
+            <line nr="100" mi="7" ci="0" mb="0" cb="0"/>
+            <line nr="101" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="102" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="105" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="109" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="113" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="117" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="121" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="126" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="127" mi="6" ci="0" mb="0" cb="0"/>
+            <line nr="128" mi="7" ci="0" mb="0" cb="0"/>
+            <line nr="129" mi="7" ci="0" mb="0" cb="0"/>
+            <line nr="130" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="131" mi="5" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="97" covered="23"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="26" covered="8"/>
+            <counter type="COMPLEXITY" missed="17" covered="3"/>
+            <counter type="METHOD" missed="16" covered="3"/>
+            <counter type="CLASS" missed="0" covered="2"/>
+        </sourcefile>
+        <sourcefile name="Message.java">
+            <line nr="27" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="28" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="29" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="30" mi="0" ci="5" mb="0" cb="0"/>
+            <line nr="31" mi="0" ci="1" mb="0" cb="0"/>
+            <line nr="34" mi="0" ci="9" mb="0" cb="0"/>
+            <line nr="35" mi="0" ci="14" mb="0" cb="0"/>
+            <line nr="39" mi="0" ci="28" mb="0" cb="0"/>
+            <line nr="49" mi="0" ci="9" mb="0" cb="0"/>
+            <line nr="50" mi="0" ci="14" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="0" covered="88"/>
+            <counter type="LINE" missed="0" covered="10"/>
+            <counter type="COMPLEXITY" missed="0" covered="4"/>
+            <counter type="METHOD" missed="0" covered="4"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <sourcefile name="MasterCoverageAction.java">
+            <line nr="42" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="44" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="50" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="51" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="53" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="54" mi="11" ci="0" mb="0" cb="0"/>
+            <line nr="55" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="56" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="60" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="64" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="68" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="73" mi="2" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="32" covered="5"/>
+            <counter type="LINE" missed="10" covered="2"/>
+            <counter type="COMPLEXITY" missed="4" covered="2"/>
+            <counter type="METHOD" missed="4" covered="2"/>
+            <counter type="CLASS" missed="1" covered="1"/>
+        </sourcefile>
+        <counter type="INSTRUCTION" missed="717" covered="243"/>
+        <counter type="BRANCH" missed="37" covered="15"/>
+        <counter type="LINE" missed="169" covered="48"/>
+        <counter type="COMPLEXITY" missed="69" covered="26"/>
+        <counter type="METHOD" missed="49" covered="20"/>
+        <counter type="CLASS" missed="7" covered="8"/>
+    </package>
+    <counter type="INSTRUCTION" missed="717" covered="243"/>
+    <counter type="BRANCH" missed="37" covered="15"/>
+    <counter type="LINE" missed="169" covered="48"/>
+    <counter type="COMPLEXITY" missed="69" covered="26"/>
+    <counter type="METHOD" missed="49" covered="20"/>
+    <counter type="CLASS" missed="7" covered="8"/>
+</report>
