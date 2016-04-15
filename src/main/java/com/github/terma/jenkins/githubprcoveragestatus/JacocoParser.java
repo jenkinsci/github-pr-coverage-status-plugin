@@ -42,6 +42,9 @@ import java.io.StringReader;
  */
 class JacocoParser implements CoverageReportParser {
 
+    private static final String MISSED_XPATH = "/report/counter[@type='LINE']/@missed";
+    private static final String COVERAGE_XPATH = "/report/counter[@type='LINE']/@covered";
+
     private static String findInXml(String xml, String xpath) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -66,15 +69,35 @@ class JacocoParser implements CoverageReportParser {
         }
     }
 
-    @Override
-    public float get(String jacocoFilePath) {
+    private float getByXpath(final String filePath, final String content, final String xpath) {
         try {
-            String content = FileUtils.readFileToString(new File(jacocoFilePath));
-            float lineMissed = Float.parseFloat(findInXml(content, "/report/counter[@type='LINE']/@missed"));
-            float lineCovered = Float.parseFloat(findInXml(content, "/report/counter[@type='LINE']/@covered"));
-            return lineCovered / (lineCovered + lineMissed);
+            return Float.parseFloat(findInXml(content, xpath));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                    "Strange Jacoco report!\n" +
+                            "File path: " + filePath + "\n" +
+                            "Can't extract float value by XPath: " + xpath + "\n" +
+                            "from:\n" + content);
+        }
+    }
+
+    @Override
+    public float get(final String jacocoFilePath) {
+        final String content;
+        try {
+            content = FileUtils.readFileToString(new File(jacocoFilePath));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(
+                    "Can't read Jacoco report by path: " + jacocoFilePath);
+        }
+
+        final float lineMissed = getByXpath(jacocoFilePath, content, MISSED_XPATH);
+        final float lineCovered = getByXpath(jacocoFilePath, content, COVERAGE_XPATH);
+        final float lines = lineCovered + lineMissed;
+        if (lines == 0) {
+            return 0;
+        } else {
+            return lineCovered / (lines);
         }
     }
 

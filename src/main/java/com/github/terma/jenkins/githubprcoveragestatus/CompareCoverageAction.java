@@ -21,6 +21,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
@@ -48,6 +49,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public void perform(
             final Run build, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
+        if (build.getResult() != Result.SUCCESS) return;
+
         final PrintStream buildLog = listener.getLogger();
 
         final String gitUrl = Utils.getGitUrl(build, listener);
