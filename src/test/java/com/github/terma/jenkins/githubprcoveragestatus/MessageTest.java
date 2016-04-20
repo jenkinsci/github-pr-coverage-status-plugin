@@ -24,20 +24,26 @@ public class MessageTest {
 
     @Test
     public void buildNiceForConsole() {
-        Assert.assertEquals("Coverage 100% changed +0% vs master 100%", new Message(1, 1).forConsole());
-        Assert.assertEquals("Coverage 0% changed +0% vs master 0%", new Message(0, 0).forConsole());
-        Assert.assertEquals("Coverage 50% changed +50% vs master 0%", new Message(0.5f, 0).forConsole());
-        Assert.assertEquals("Coverage 0% changed -50% vs master 50%", new Message(0, 0.5f).forConsole());
-        Assert.assertEquals("Coverage 70% changed +20% vs master 50%", new Message(0.7f, 0.5f).forConsole());
+        Assert.assertEquals("Coverage 100% changed 0.0% vs master 100%", new Message(1, 1).forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0, 0).forConsole());
+        Assert.assertEquals("Coverage 50% changed +50.0% vs master 0%", new Message(0.5f, 0).forConsole());
+        Assert.assertEquals("Coverage 0% changed -50.0% vs master 50%", new Message(0, 0.5f).forConsole());
+        Assert.assertEquals("Coverage 70% changed +20.0% vs master 50%", new Message(0.7f, 0.5f).forConsole());
+        Assert.assertEquals("Coverage 0% changed +0.02% vs master 0%", new Message(0.0007f, 0.0005f).forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0.000007f, 0.000005f).forConsole());
     }
 
     @Test
     public void buildNiceForIcon() {
-        Assert.assertEquals("100% (+0%) vs master 100%", new Message(1, 1).forIcon());
-        Assert.assertEquals("0% (+0%) vs master 0%", new Message(0, 0).forIcon());
-        Assert.assertEquals("50% (+50%) vs master 0%", new Message(0.5f, 0).forIcon());
-        Assert.assertEquals("0% (-50%) vs master 50%", new Message(0, 0.5f).forIcon());
-        Assert.assertEquals("70% (+20%) vs master 50%", new Message(0.7f, 0.5f).forIcon());
+        Assert.assertEquals("100% (0.0%) vs master 100%", new Message(1, 1).forIcon());
+        Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0, 0).forIcon());
+        Assert.assertEquals("50% (+50.0%) vs master 0%", new Message(0.5f, 0).forIcon());
+        Assert.assertEquals("0% (-50.0%) vs master 50%", new Message(0, 0.5f).forIcon());
+        Assert.assertEquals("70% (+20.0%) vs master 50%", new Message(0.7f, 0.5f).forIcon());
+        Assert.assertEquals("69% (-0.7%) vs master 69%", new Message(0.686f, 0.693f).forIcon());
+        Assert.assertEquals("60% (+0.06%) vs master 60%", new Message(0.6007f, 0.6001f).forIcon());
+        Assert.assertEquals("0% (+0.01%) vs master 0%", new Message(0.00007f, 0.00001f).forIcon());
+        Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0.000007f, 0.000001f).forIcon());
     }
 
     @Test

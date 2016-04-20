@@ -34,13 +34,28 @@ class Percent {
         return (int) Math.round((value * 100.0));
     }
 
-    public static String nice(float value) {
-        return (value < 0 ? "-" : "+") + niceNoSign(value);
+    public static float ofAndFourDigit(float value) {
+        return roundFourAfterDigit(value * 100);
     }
 
-    public static String niceNoSign(float value) {
-        final int percent = of(value);
-        return Math.abs(percent) + "%";
+    public static float roundFourAfterDigit(float value) {
+        return ((float) Math.round(value * 10000)) / 10000;
+    }
+
+    public static String toWholeString(float value) {
+        return (value < 0 ? "-" : value > 0 ? "+" : "") + toWholeNoSignString(value);
+    }
+
+    public static String toString(float value) {
+        return (value < 0 ? "-" : value > 0 ? "+" : "") + toNoSignString(value);
+    }
+
+    public static String toWholeNoSignString(float value) {
+        return Math.abs(of(value)) + "%";
+    }
+
+    public static String toNoSignString(float value) {
+        return Math.abs(ofAndFourDigit(value)) + "%";
     }
 
 }

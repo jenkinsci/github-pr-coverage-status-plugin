@@ -22,17 +22,17 @@ class Message {
 
     private final float coverage;
     private final float masterCoverage;
-    private final float change;
 
     public Message(float coverage, float masterCoverage) {
-        this.coverage = coverage;
-        this.masterCoverage = masterCoverage;
-        this.change = Percent.change(coverage, masterCoverage);
+        this.coverage = Percent.roundFourAfterDigit(coverage);
+        this.masterCoverage = Percent.roundFourAfterDigit(masterCoverage);
     }
 
     public String forConsole() {
         return String.format("Coverage %s changed %s vs master %s",
-                Percent.niceNoSign(coverage), Percent.nice(change), Percent.niceNoSign(masterCoverage));
+                Percent.toWholeNoSignString(coverage),
+                Percent.toString(Percent.change(coverage, masterCoverage)),
+                Percent.toWholeNoSignString(masterCoverage));
     }
 
     public String forComment(final String buildUrl) {
@@ -47,6 +47,8 @@ class Message {
      */
     public String forIcon() {
         return String.format("%s (%s) vs master %s",
-                Percent.niceNoSign(coverage), Percent.nice(change), Percent.niceNoSign(masterCoverage));
+                Percent.toWholeNoSignString(coverage),
+                Percent.toString(Percent.change(coverage, masterCoverage)),
+                Percent.toWholeNoSignString(masterCoverage));
     }
 }
