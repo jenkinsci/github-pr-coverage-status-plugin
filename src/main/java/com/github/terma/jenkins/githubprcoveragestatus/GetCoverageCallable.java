@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
-final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> {
+final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> implements CoverageRepository {
 
     private static List<Float> getFloats(File ws, String path, CoverageReportParser parser) {
         FileSet fs = Util.createFileSet(ws, path);
@@ -41,7 +41,8 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> {
         return cov;
     }
 
-    public static float get(final FilePath workspace) throws IOException, InterruptedException {
+    @Override
+    public float get(final FilePath workspace) throws IOException, InterruptedException {
         if (workspace == null) throw new IllegalArgumentException("Workspace should not be null!");
         return workspace.act(new GetCoverageCallable());
     }

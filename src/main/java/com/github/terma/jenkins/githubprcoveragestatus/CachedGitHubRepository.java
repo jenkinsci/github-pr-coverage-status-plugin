@@ -40,8 +40,9 @@ class CachedGitHubRepository {
     }
 
     private GitHub getGitHub() throws IOException {
-        final String apiUrl = Configuration.getGitHubApiUrl();
-        final String personalAccessToken = Configuration.getPersonalAccessToken();
+        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+        final String apiUrl = settingsRepository.getGitHubApiUrl();
+        final String personalAccessToken = settingsRepository.getPersonalAccessToken();
 
         if (apiUrl != null) {
             if (personalAccessToken != null) {

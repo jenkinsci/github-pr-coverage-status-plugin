@@ -53,8 +53,8 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         final PrintStream buildLog = listener.getLogger();
         final String gitUrl = Utils.getGitUrl(build, listener);
 
-        final float masterCoverage = GetCoverageCallable.get(workspace);
-        buildLog.println("Master coverage " + Percent.of(masterCoverage));
+        final float masterCoverage = ServiceRegistry.getCoverageRepository().get(workspace);
+        buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }
 

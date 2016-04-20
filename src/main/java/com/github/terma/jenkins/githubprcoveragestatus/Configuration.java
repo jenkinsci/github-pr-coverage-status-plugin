@@ -55,10 +55,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.getPersonalAccessToken();
     }
 
-    public static float getMasterCoverage(final String repo) {
-        return DESCRIPTOR.get(repo);
-    }
-
     public static void setMasterCoverage(final String repo, final float coverage) {
         DESCRIPTOR.set(repo, coverage);
     }
@@ -69,7 +65,8 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     }
 
     @SuppressWarnings("unused")
-    public static final class ConfigurationDescriptor extends Descriptor<Configuration> {
+    public static final class ConfigurationDescriptor extends Descriptor<Configuration>
+            implements MasterCoverageRepository, SettingsRepository {
 
         private static final int DEFAULT_YELLOW_THRESHOLD = 80;
         private static final int DEFAULT_GREEN_THRESHOLD = 90;
@@ -91,6 +88,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return "Coverage status for GitHub Pull Requests";
         }
 
+        @Override
         public float get(String repo) {
             final Float coverage = coverageByRepo.get(repo);
             return coverage == null ? 0 : coverage;
@@ -105,10 +103,12 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return coverageByRepo;
         }
 
+        @Override
         public String getGitHubApiUrl() {
             return gitHubApiUrl;
         }
 
+        @Override
         public String getPersonalAccessToken() {
             return personalAccessToken;
         }
