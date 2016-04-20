@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>github-pr-coverage-status</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.8</version>
     <packaging>hpi</packaging>
 
     <url>https://github.com/terma/jenkins-github-coverage-status</url>
@@ -32,7 +32,7 @@
         <connection>scm:git:https://github.com/terma/github-pr-coverage-status.git</connection>
         <developerConnection>scm:git:https://github.com/terma/github-pr-coverage-status.git</developerConnection>
         <url>https://github.com/terma/github-pr-coverage-status</url>
-        <tag>HEAD</tag>
+        <tag>github-pr-coverage-status-0.8</tag>
     </scm>
 
     <licenses>
