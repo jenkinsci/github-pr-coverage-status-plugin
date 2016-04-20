@@ -63,9 +63,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                             "to trigger build!");
         }
 
-
-        final float masterCoverage = Configuration.getMasterCoverage(gitUrl);
-        final float coverage = GetCoverageCallable.get(workspace);
+        final float masterCoverage = ServiceRegistry.getMasterCoverageRepository().get(gitUrl);
+        final float coverage = ServiceRegistry.getCoverageRepository().get(workspace);
 
         final Message message = new Message(coverage, masterCoverage);
         buildLog.println(message.forConsole());
@@ -73,8 +72,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
         try {
-            final GHPullRequest pr = new CachedGitHubRepository().getPullRequest(gitUrl, prId);
-            pr.comment(message.forComment(buildUrl));
+            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, message.forComment(buildUrl));
         } catch (IOException ex) {
             listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
         }
