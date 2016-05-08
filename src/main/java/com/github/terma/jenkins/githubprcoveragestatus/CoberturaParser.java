@@ -41,7 +41,17 @@ import java.util.regex.Pattern;
             String content = FileUtils.readFileToString(new File(coberturaFilePath));
             float lineRate = Float.parseFloat(find(content, "line-rate=\"([0-9.]+)\""));
             float branchRate = Float.parseFloat(find(content, "branch-rate=\"([0-9.]+)\""));
-            return (lineRate / 2 + branchRate / 2);
+            float linesValid = Float.parseFloat(find(content, "lines-valid=\"([0-9.]+)\""));
+            float branchesValid = Float.parseFloat(find(content, "branches-valid=\"([0-9.]+)\""));
+            if (linesValid > 0 && branchesValid > 0) {
+                return (lineRate / 2 + branchRate / 2);
+            } else if (linesValid > 0) {
+                return lineRate;
+            } else if (branchesValid > 0) {
+                return branchRate;
+            } else {
+                return 0;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
