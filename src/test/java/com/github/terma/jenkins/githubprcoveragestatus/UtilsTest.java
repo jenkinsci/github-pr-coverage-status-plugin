@@ -41,11 +41,11 @@ public class UtilsTest {
     @Test
     public void getJenkinsUrlFromBuildUrl() {
         Assert.assertEquals(
-                "http://localhost:8080/jenkins/",
+                "http://localhost:8080/jenkins",
                 Utils.getJenkinsUrlFromBuildUrl("http://localhost:8080/jenkins/job/branch/45"));
 
         Assert.assertEquals(
-                "http://localhost:8080/",
+                "http://localhost:8080",
                 Utils.getJenkinsUrlFromBuildUrl("http://localhost:8080/job/branch/459000"));
     }
 

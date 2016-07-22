@@ -66,7 +66,7 @@ class Utils {
         final String keyword = "/job/";
         final int index = buildUrl.indexOf(keyword);
         if (index < 0) throw new IllegalArgumentException("Invalid build URL: " + buildUrl + "!");
-        return buildUrl.substring(0, index + 1);
+        return buildUrl.substring(0, index);
     }
 
     public static String getGitUrl(Run build, TaskListener listener) throws IOException, InterruptedException {

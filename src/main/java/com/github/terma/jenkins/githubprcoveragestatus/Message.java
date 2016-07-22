@@ -35,8 +35,8 @@ class Message {
                 Percent.toWholeNoSignString(masterCoverage));
     }
 
-    public String forComment(final String buildUrl) {
-        return "[![Coverage](" + Utils.getJenkinsUrlFromBuildUrl(buildUrl) + "coverage-status-icon" +
+    public String forComment(final String buildUrl, final String jenkinsUrl) {
+        return "[![Coverage](" + jenkinsUrl + "/coverage-status-icon" +
                 "?coverage=" + coverage +
                 "&masterCoverage=" + masterCoverage +
                 ")](" + buildUrl + ")";

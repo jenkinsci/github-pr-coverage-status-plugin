@@ -6,4 +6,6 @@ interface SettingsRepository {
 
     String getPersonalAccessToken();
 
+    String getJenkinsUrl();
+
 }
