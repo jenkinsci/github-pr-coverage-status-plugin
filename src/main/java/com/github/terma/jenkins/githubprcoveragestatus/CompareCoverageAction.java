@@ -29,7 +29,6 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
-import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
@@ -71,8 +70,11 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
+        String jenkinsUrl = ServiceRegistry.getSettingsRepository().getJenkinsUrl();
+        if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
+
         try {
-            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, message.forComment(buildUrl));
+            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, message.forComment(buildUrl, jenkinsUrl));
         } catch (IOException ex) {
             listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
         }

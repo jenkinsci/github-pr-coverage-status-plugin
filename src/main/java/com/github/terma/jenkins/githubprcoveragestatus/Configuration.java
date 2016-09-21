@@ -75,6 +75,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         private String gitHubApiUrl;
         private String personalAccessToken;
+        private String jenkinsUrl;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
@@ -122,11 +123,17 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public String getJenkinsUrl() {
+            return jenkinsUrl;
+        }
+
+        @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             gitHubApiUrl = StringUtils.trimToNull(formData.getString("gitHubApiUrl"));
             personalAccessToken = StringUtils.trimToNull(formData.getString("personalAccessToken"));
             yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
             greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
+            jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
             save();
             return super.configure(req, formData);
         }

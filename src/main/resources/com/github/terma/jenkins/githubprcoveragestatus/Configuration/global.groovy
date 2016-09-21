@@ -12,6 +12,10 @@ f.section(title: descriptor.displayName) {
         f.password()
     }
 
+    f.entry(field: "jenkinsUrl", title: _("Jenkins URL for icon in Pull Request")) {
+        f.textbox()
+    }
+
     f.entry(field: "yellowThreshold", title: _("Yellow threshold")) {
         f.textbox()
     }

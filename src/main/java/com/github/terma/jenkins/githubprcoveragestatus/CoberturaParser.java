@@ -24,14 +24,33 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
- class CoberturaParser implements CoverageReportParser {
+class CoberturaParser implements CoverageReportParser {
 
-    private static String find(String string, String pattern) {
+    private static String findFirst(String string, String pattern) {
+        String result = findFirstOrNull(string, pattern);
+        if (result != null) {
+            return result;
+        } else {
+            throw new IllegalArgumentException("Can't find " + pattern + " in " + string);
+        }
+    }
+
+    private static String findFirstOrNull(String string, String pattern) {
         Matcher matcher = Pattern.compile(pattern).matcher(string);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            throw new RuntimeException();
+            return null;
+        }
+    }
+
+    private static float parseFloatOrDefault(String string, float d) {
+        if (string == null) return d;
+
+        try {
+            return Float.parseFloat(string);
+        } catch (NumberFormatException e) {
+            return d;
         }
     }
 
@@ -39,9 +58,19 @@ import java.util.regex.Pattern;
     public float get(String coberturaFilePath) {
         try {
             String content = FileUtils.readFileToString(new File(coberturaFilePath));
-            float lineRate = Float.parseFloat(find(content, "line-rate=\"([0-9.]+)\""));
-            float branchRate = Float.parseFloat(find(content, "branch-rate=\"([0-9.]+)\""));
-            return (lineRate / 2 + branchRate / 2);
+            float lineRate = Float.parseFloat(findFirst(content, "line-rate=\"([0-9.]+)\""));
+            float branchRate = Float.parseFloat(findFirst(content, "branch-rate=\"([0-9.]+)\""));
+            float linesValid = parseFloatOrDefault(findFirstOrNull(content, "lines-valid=\"([0-9.]+)\""), 0);
+            float branchesValid = parseFloatOrDefault(findFirstOrNull(content, "branches-valid=\"([0-9.]+)\""), 0);
+            if (linesValid > 0 && branchesValid > 0) {
+                return (lineRate / 2 + branchRate / 2);
+            } else if (linesValid > 0) {
+                return lineRate;
+            } else if (branchesValid > 0) {
+                return branchRate;
+            } else {
+                return 0;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -11,7 +11,13 @@ Post code coverage status to GitHub pull request comments. Example:
 ## Prerequisite
 
 * Plugin could be used only for Build triggered by [GitHub pull request builder plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin)
-* Plugin use existent coverage reports. So ensure you have Cubertura or Jacoco setup. It could be done by Jenkins or Mave or Gradle etc. Plugin just uses reports.
+* Plugin use existent coverage reports. Ensure that you have it in Jenkins build workspace
+ 
+## Supported coverage reports
+
+* Jacoco ```jacoco.xml```
+* Cobertura ```cobertura.xml``` or ```cobertura-coverage.xml```
+* Clover ```clover.xml```
 
 ## How to use
 

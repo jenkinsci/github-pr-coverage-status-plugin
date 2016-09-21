@@ -17,21 +17,11 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.github.terma.jenkins.githubcoverageupdater.XmlUtils;
 import org.apache.commons.io.FileUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 
 /*
 <counter type="INSTRUCTION" missed="1" covered="4"/>
@@ -45,33 +35,9 @@ class JacocoParser implements CoverageReportParser {
     private static final String MISSED_XPATH = "/report/counter[@type='LINE']/@missed";
     private static final String COVERAGE_XPATH = "/report/counter[@type='LINE']/@covered";
 
-    private static String findInXml(String xml, String xpath) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setEntityResolver(new EntityResolver() {
-                @Override
-                public InputSource resolveEntity(String publicId, String systemId)
-                        throws SAXException, IOException {
-//                    if (systemId.contains("foo.dtd")) {
-                    return new InputSource(new StringReader(""));
-//                    } else {
-//                        return null;
-//                    }
-                }
-            });
-            Document doc = builder.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPathExpression expr = xPathfactory.newXPath().compile(xpath);
-            return (String) expr.evaluate(doc, XPathConstants.STRING);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
     private float getByXpath(final String filePath, final String content, final String xpath) {
         try {
-            return Float.parseFloat(findInXml(content, xpath));
+            return Float.parseFloat(XmlUtils.findInXml(content, xpath));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
                     "Strange Jacoco report!\n" +
