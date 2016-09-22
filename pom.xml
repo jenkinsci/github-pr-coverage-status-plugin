@@ -28,12 +28,12 @@
         </developer>
     </developers>
 
-    <!--<scm>-->
-        <!--<connection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>-->
-        <!--<developerConnection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>-->
-        <!--<url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>-->
-        <!--<tag>HEAD</tag>-->
-    <!--</scm>-->
+    <scm>
+        <connection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
+        <developerConnection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <licenses>
         <license>
