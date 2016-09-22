@@ -4,11 +4,11 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>2.11</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <artifactId>github-pr-coverage-status</artifactId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.8</version>
     <packaging>hpi</packaging>
 
     <url>https://wiki.jenkins-ci.org/display/JENKINS/GitHub+PR+Coverage+Status+Plugin</url>
@@ -33,7 +33,7 @@
         <connection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
         <developerConnection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
-        <tag>HEAD</tag>
+        <tag>github-pr-coverage-status-1.0.8</tag>
     </scm>
 
     <licenses>
