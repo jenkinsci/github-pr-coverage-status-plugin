@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>github-pr-coverage-status</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <url>https://wiki.jenkins-ci.org/display/JENKINS/GitHub+PR+Coverage+Status+Plugin</url>
@@ -126,8 +126,4 @@
             </plugin>
         </plugins>
     </build>
-
-  <scm>
-    <tag>github-pr-coverage-status-1.0.1</tag>
-  </scm>
 </project>
