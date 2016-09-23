@@ -51,23 +51,23 @@ public class MessageTest {
         String buildUrl = "http://terma.com/jenkins/job/ama";
         String jenkinsUrl = "jenkinsUrl";
         Assert.assertEquals(
-                "[![Coverage](jenkinsUrl/coverage-status-icon?coverage=1.0&masterCoverage=1.0)](http://terma.com/jenkins/job/ama)",
+                "[![Coverage](jenkinsUrl/coverage-status-icon/?coverage=1.0&masterCoverage=1.0)](http://terma.com/jenkins/job/ama)",
                 new Message(1, 1).forComment(buildUrl, jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](jenkinsUrl/coverage-status-icon?coverage=0.0&masterCoverage=0.0)](http://terma.com/jenkins/job/ama)",
+                "[![Coverage](jenkinsUrl/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](http://terma.com/jenkins/job/ama)",
                 new Message(0, 0).forComment(buildUrl, jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](jenkinsUrl/coverage-status-icon?coverage=0.5&masterCoverage=0.0)](http://terma.com/jenkins/job/ama)",
+                "[![Coverage](jenkinsUrl/coverage-status-icon/?coverage=0.5&masterCoverage=0.0)](http://terma.com/jenkins/job/ama)",
                 new Message(0.5f, 0).forComment(buildUrl, jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](jenkinsUrl/coverage-status-icon?coverage=0.0&masterCoverage=0.5)](http://terma.com/jenkins/job/ama)",
+                "[![Coverage](jenkinsUrl/coverage-status-icon/?coverage=0.0&masterCoverage=0.5)](http://terma.com/jenkins/job/ama)",
                 new Message(0, 0.5f).forComment(buildUrl, jenkinsUrl));
 
         Assert.assertEquals(
-                "[![Coverage](jenkinsUrl/coverage-status-icon?coverage=0.7&masterCoverage=0.5)](http://terma.com/jenkins/job/ama)",
+                "[![Coverage](jenkinsUrl/coverage-status-icon/?coverage=0.7&masterCoverage=0.5)](http://terma.com/jenkins/job/ama)",
                 new Message(0.7f, 0.5f).forComment(buildUrl, jenkinsUrl));
     }
 
