@@ -36,7 +36,7 @@ class Message {
     }
 
     public String forComment(final String buildUrl, final String jenkinsUrl) {
-        return "[![Coverage](" + jenkinsUrl + "/coverage-status-icon" +
+        return "[![Coverage](" + jenkinsUrl + "/coverage-status-icon/" +
                 "?coverage=" + coverage +
                 "&masterCoverage=" + masterCoverage +
                 ")](" + buildUrl + ")";
