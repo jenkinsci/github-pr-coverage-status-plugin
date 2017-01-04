@@ -62,7 +62,7 @@ class CoberturaParser implements CoverageReportParser {
             float branchRate = Float.parseFloat(findFirst(content, "branch-rate=\"([0-9.]+)\""));
             float linesValid = parseFloatOrDefault(findFirstOrNull(content, "lines-valid=\"([0-9.]+)\""), 0);
             float branchesValid = parseFloatOrDefault(findFirstOrNull(content, "branches-valid=\"([0-9.]+)\""), 0);
-            if (linesValid > 0 && branchesValid > 0) {
+            if (lineRate > 0 && branchRate > 0) {
                 return (lineRate / 2 + branchRate / 2);
             } else if (linesValid > 0) {
                 return lineRate;
