@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <a href="http://cobertura.sourceforge.net/xml/coverage-04.dtd">Coverage DTD</a>
+ */
 class CoberturaParser implements CoverageReportParser {
 
     private static String findFirst(String string, String pattern) {
@@ -44,33 +47,13 @@ class CoberturaParser implements CoverageReportParser {
         }
     }
 
-    private static float parseFloatOrDefault(String string, float d) {
-        if (string == null) return d;
-
-        try {
-            return Float.parseFloat(string);
-        } catch (NumberFormatException e) {
-            return d;
-        }
-    }
-
     @Override
     public float get(String coberturaFilePath) {
         try {
             String content = FileUtils.readFileToString(new File(coberturaFilePath));
             float lineRate = Float.parseFloat(findFirst(content, "line-rate=\"([0-9.]+)\""));
             float branchRate = Float.parseFloat(findFirst(content, "branch-rate=\"([0-9.]+)\""));
-            float linesValid = parseFloatOrDefault(findFirstOrNull(content, "lines-valid=\"([0-9.]+)\""), 0);
-            float branchesValid = parseFloatOrDefault(findFirstOrNull(content, "branches-valid=\"([0-9.]+)\""), 0);
-            if (lineRate > 0 && branchRate > 0) {
-                return (lineRate / 2 + branchRate / 2);
-            } else if (linesValid > 0) {
-                return lineRate;
-            } else if (branchesValid > 0) {
-                return branchRate;
-            } else {
-                return 0;
-            }
+            return lineRate / 2 + branchRate / 2;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

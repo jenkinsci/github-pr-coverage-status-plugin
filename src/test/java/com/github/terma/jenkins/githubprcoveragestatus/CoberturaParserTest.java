@@ -25,7 +25,7 @@ import java.io.IOException;
 public class CoberturaParserTest {
 
     @Test
-    public void extractCoverageFromCoberturaReport() throws IOException {
+    public void extractCoverageFromCoberturaReportAsLineRatePlusBranchRateDivByTwo() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura.xml").getFile();
 
@@ -33,7 +33,7 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractZeroCoverageIfNoCoveredLinesAndBranches() throws IOException {
+    public void extractZeroCoverageIfNoZeroLineRateAndBranchRate() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-coverage.xml").getFile();
 
@@ -41,51 +41,33 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractOnlyLineCoverageIfZeroBranchesCovered() throws IOException {
+    public void extractCoverageIfBranchRateIsZero() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
-                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-branches-covered.xml").getFile();
+                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-branch-rate.xml").getFile();
 
         Assert.assertEquals(0.25, new CoberturaParser().get(filePath), 0.1);
     }
 
     @Test
-    public void extractOnlyLineCoverageIfZeroLinesCovered() throws IOException {
+    public void extractCoverageIfLineRateIsZero() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
-                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-lines-covered.xml").getFile();
-
-        Assert.assertEquals(0.25, new CoberturaParser().get(filePath), 0.1);
-    }
-
-    @Test
-    public void ignoreLinesCoverageIfValidLinesNotPresent() throws IOException {
-        String filePath = CoberturaParserTest.class.getResource(
-                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-no-lines-valid.xml").getFile();
-
-        Assert.assertEquals(1, new CoberturaParser().get(filePath), 0.1);
-    }
-
-    @Test
-    public void ignoreLinesCoverageIfValidBranchesNotPresent() throws IOException {
-        String filePath = CoberturaParserTest.class.getResource(
-                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-no-branches-valid.xml").getFile();
+                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-line-rate.xml").getFile();
 
         Assert.assertEquals(0.5, new CoberturaParser().get(filePath), 0.1);
     }
 
-    @Test
-    public void ignoreLinesCoverageIfZeroLinesValid() throws IOException {
+    @Test(expected = IllegalArgumentException.class)
+    public void throwExceptionIfNoLineRate() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
-                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-lines-valid.xml").getFile();
-
-        Assert.assertEquals(1, new CoberturaParser().get(filePath), 0.1);
+                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-no-line-rate.xml").getFile();
+        new CoberturaParser().get(filePath);
     }
 
-    @Test
-    public void ignoreLinesCoverageIfZeroBranchesValid() throws IOException {
+    @Test(expected = IllegalArgumentException.class)
+    public void throwExceptionIfNoBranchRate() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
-                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-branches-valid.xml").getFile();
-
-        Assert.assertEquals(1, new CoberturaParser().get(filePath), 0.1);
+                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-no-branch-rate.xml").getFile();
+        new CoberturaParser().get(filePath);
     }
 
 }
