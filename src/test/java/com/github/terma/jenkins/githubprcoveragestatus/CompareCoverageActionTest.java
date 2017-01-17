@@ -17,16 +17,17 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import hudson.EnvVars;
-import hudson.model.Build;
-import hudson.model.Result;
-import hudson.model.TaskListener;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.io.PrintStream;
+import hudson.EnvVars;
+import hudson.model.Build;
+import hudson.model.Result;
+import hudson.model.TaskListener;
 
 public class CompareCoverageActionTest {
 
@@ -65,7 +66,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![Coverage](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
     @Test
@@ -80,7 +81,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![Coverage](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
 }
