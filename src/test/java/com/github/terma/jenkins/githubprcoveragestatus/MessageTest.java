@@ -51,24 +51,23 @@ public class MessageTest {
         String buildUrl = "http://terma.com/jenkins/job/ama";
         String jenkinsUrl = "jenkinsUrl";
         Assert.assertEquals(
-                "[![100% (0.0%) vs master 100%](jenkinsUrl/coverage-status-icon/?coverage=1.0&masterCoverage=1.0)](http://terma.com/jenkins/job/ama)",
-                new Message(1, 1).forComment(buildUrl, jenkinsUrl));
+                "[![100% (0.0%) vs master 100%](https://img.shields.io/badge/coverage-100%25%20(0.0%25)%20vs%20master%20100%25-brightgreen.svg)](http://terma.com/jenkins/job/ama)",
+                new Message(1, 1).forComment(buildUrl, 80, 90));
 
         Assert.assertEquals(
-                "[![0% (0.0%) vs master 0%](jenkinsUrl/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](http://terma.com/jenkins/job/ama)",
-                new Message(0, 0).forComment(buildUrl, jenkinsUrl));
+                "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-red.svg)](http://terma.com/jenkins/job/ama)",
+                new Message(0, 0).forComment(buildUrl, 80, 90));
 
         Assert.assertEquals(
-                "[![50% (+50.0%) vs master 0%](jenkinsUrl/coverage-status-icon/?coverage=0.5&masterCoverage=0.0)](http://terma.com/jenkins/job/ama)",
-                new Message(0.5f, 0).forComment(buildUrl, jenkinsUrl));
+                "[![50% (+50.0%) vs master 0%](https://img.shields.io/badge/coverage-50%25%20(%2B50.0%25)%20vs%20master%200%25-red.svg)](http://terma.com/jenkins/job/ama)",
+                new Message(0.5f, 0).forComment(buildUrl, 80, 90));
 
         Assert.assertEquals(
-                "[![0% (-50.0%) vs master 50%](jenkinsUrl/coverage-status-icon/?coverage=0.0&masterCoverage=0.5)](http://terma.com/jenkins/job/ama)",
-                new Message(0, 0.5f).forComment(buildUrl, jenkinsUrl));
+                "[![0% (-50.0%) vs master 50%](https://img.shields.io/badge/coverage-0%25%20(-50.0%25)%20vs%20master%2050%25-red.svg)](http://terma.com/jenkins/job/ama)",
+                new Message(0, 0.5f).forComment(buildUrl, 80, 90));
 
         Assert.assertEquals(
-                "[![70% (+20.0%) vs master 50%](jenkinsUrl/coverage-status-icon/?coverage=0.7&masterCoverage=0.5)](http://terma.com/jenkins/job/ama)",
-                new Message(0.7f, 0.5f).forComment(buildUrl, jenkinsUrl));
+                "[![85% (+35.0%) vs master 50%](https://img.shields.io/badge/coverage-85%25%20(%2B35.0%25)%20vs%20master%2050%25-yellow.svg)](http://terma.com/jenkins/job/ama)",
+                new Message(0.85f, 0.5f).forComment(buildUrl, 80, 90));
     }
-
 }

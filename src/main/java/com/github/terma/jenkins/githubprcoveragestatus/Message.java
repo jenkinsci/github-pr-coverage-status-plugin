@@ -17,8 +17,16 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
+
 @SuppressWarnings("WeakerAccess")
 class Message {
+
+    private static final String BADGE_TEMPLATE = "https://img.shields.io/badge/coverage-%s-%s.svg"; //see http://shields.io/ for reference
+    private static final String COLOR_RED = "red";
+    private static final String COLOR_YELLOW = "yellow";
+    private static final String COLOR_GREEN = "brightgreen";
 
     private final float coverage;
     private final float masterCoverage;
@@ -35,11 +43,26 @@ class Message {
                 Percent.toWholeNoSignString(masterCoverage));
     }
 
-    public String forComment(final String buildUrl, final String jenkinsUrl) {
-        return "[![" + forIcon() +"](" + jenkinsUrl + "/coverage-status-icon/" +
-                "?coverage=" + coverage +
-                "&masterCoverage=" + masterCoverage +
-                ")](" + buildUrl + ")";
+    public String forComment(final String buildUrl, int yellowThreshold, int greenThreshold) {
+        String color = getColor(yellowThreshold, greenThreshold);
+        try {
+            String badgeUri = String.format(BADGE_TEMPLATE, URIUtil.encodePath(forIcon()), color);
+            return "[![" + forIcon() + "](" + badgeUri + ")](" + buildUrl + ")";
+        } catch (URIException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    private String getColor(int yellowThreshold, int greenThreshold) {
+        String color = COLOR_GREEN;
+        final int coveragePercent = Percent.of(coverage);
+        if (coveragePercent < yellowThreshold) {
+            color = COLOR_RED;
+        }
+        else if (coveragePercent < greenThreshold) {
+            color = COLOR_YELLOW;
+        }
+        return color;
     }
 
     /**
