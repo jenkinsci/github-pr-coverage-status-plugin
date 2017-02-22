@@ -40,18 +40,20 @@ In most cases that mean that your Jenkins runs on ```http``` instead of ```https
 Plugin uses same protocol as your Jenkins, however GitHub in most cases accessible by ```https```
 Default browser policy to block non secure resources on secure pages from unknown domain.
 
-To fix that you have a few options:
+To fix that:
 
-* Configure plugin to publish link on picture over ```https```
-  * Open Jenkins
-  * Click ```Manage Jenkins```
-  * Click ```Configure System```
-    * Find section ```Coverage status for GitHub Pull Requests```
-    * Find property ```Jenkins URL for icon in Pull Request```
-    * Put URL to your Jenkins with ```https``` like ```https://jenkins.my.com```
-    * Save
-  * Restart Jenkins
-* Run your Jenkins on ```https``` by default
+1. Configure Jenkins to be accessible for ```https``` https://wiki.jenkins-ci.org/display/JENKINS/Starting+and+Accessing+Jenkins
+1. Next you have a few options:
+  * Run your Jenkins on ```https``` only
+  * Or configure plugin to publish link on picture over ```https```
+    * Open Jenkins
+    * Click ```Manage Jenkins```
+    * Click ```Configure System```
+      * Find section ```Coverage status for GitHub Pull Requests```
+      * Find property ```Jenkins URL for icon in Pull Request```
+      * Put URL to your Jenkins with ```https``` like ```https://jenkins.my.com```
+      * Save
+    * Restart Jenkins
 
 ![Plugin settings](https://raw.githubusercontent.com/jenkinsci/github-pr-coverage-status-plugin/master/plugin-settings.png)
 
