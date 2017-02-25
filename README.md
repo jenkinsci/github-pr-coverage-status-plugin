@@ -60,6 +60,10 @@ To fix that:
 
 ## Changelog
 
+### 1.3.0
+
+Add support SimpleCov JSON coverage report for Ruby
+
 ### 1.2.0
 
 Add alternative text to coverage image for case when GitHub doesn't able to show image
