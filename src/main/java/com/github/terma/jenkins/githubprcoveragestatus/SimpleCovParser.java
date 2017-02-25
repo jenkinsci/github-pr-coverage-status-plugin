@@ -7,12 +7,9 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by stevegal on 24/02/2017.
- */
 public class SimpleCovParser implements CoverageReportParser {
 
-    private static final String METRIC_PATH="$.metrics.covered_percent";
+    private static final String METRIC_PATH = "$.metrics.covered_percent";
 
     @Override
     public float get(String simpleCovFilePath) {
@@ -30,10 +27,9 @@ public class SimpleCovParser implements CoverageReportParser {
 
     private Double extractValueFromPath(String content) {
         try {
-            Double covered = JsonUtils.findInJson(content, METRIC_PATH);
-            return covered;
+            return JsonUtils.findInJson(content, METRIC_PATH);
         } catch (JsonPathException error) {
-            throw new IllegalArgumentException( "Strange SimpleCov report!\n" +
+            throw new IllegalArgumentException("Strange SimpleCov report!\n" +
                     "Can't extract float value by JsonPath: " + METRIC_PATH + "\n" +
                     "from:\n" + content);
         }

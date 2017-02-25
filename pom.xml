@@ -18,7 +18,7 @@
     <description>
         Addon for https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
         give you possibility to publish code coverage status (Cobertura and Jenkins) to Pull Request Commits.
-        So you will see coverage of your PR and comparsion with master.
+        So you will see coverage of your PR and comparision with master.
     </description>
 
     <developers>
