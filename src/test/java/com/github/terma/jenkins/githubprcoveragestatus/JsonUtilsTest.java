@@ -1,8 +1,8 @@
-package com.github.terma.jenkins.githubcoverageupdater;
+package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.github.terma.jenkins.githubprcoveragestatus.JsonUtils;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.IsCloseTo.closeTo;

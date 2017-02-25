@@ -17,7 +17,6 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import com.github.terma.jenkins.githubcoverageupdater.XmlUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

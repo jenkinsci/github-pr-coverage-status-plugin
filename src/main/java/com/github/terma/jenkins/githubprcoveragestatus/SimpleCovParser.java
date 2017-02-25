@@ -1,12 +1,14 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import com.github.terma.jenkins.githubcoverageupdater.JsonUtils;
 import com.jayway.jsonpath.JsonPathException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * <a href="https://github.com/vicentllongo/simplecov-json">SimpleCov JSON</a>
+ */
 public class SimpleCovParser implements CoverageReportParser {
 
     private static final String METRIC_PATH = "$.metrics.covered_percent";

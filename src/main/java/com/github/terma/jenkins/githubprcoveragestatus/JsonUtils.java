@@ -1,4 +1,4 @@
-package com.github.terma.jenkins.githubcoverageupdater;
+package com.github.terma.jenkins.githubprcoveragestatus;
 
 import com.jayway.jsonpath.JsonPath;
 
