@@ -17,6 +17,11 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import java.io.IOException;
+import java.io.PrintStream;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -29,10 +34,6 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import java.io.IOException;
-import java.io.PrintStream;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
@@ -70,11 +71,12 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
-        String jenkinsUrl = ServiceRegistry.getSettingsRepository().getJenkinsUrl();
-        if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
+        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+        final int yellowThreshold = settingsRepository.getYellowThreshold();
+        final int greenThreshold = settingsRepository.getGreenThreshold();
 
         try {
-            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, message.forComment(buildUrl, jenkinsUrl));
+            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, message.forComment(buildUrl, yellowThreshold, greenThreshold));
         } catch (IOException ex) {
             listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
         }

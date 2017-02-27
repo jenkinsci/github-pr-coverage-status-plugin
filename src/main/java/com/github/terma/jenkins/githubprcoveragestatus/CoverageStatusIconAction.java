@@ -1,13 +1,14 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import hudson.Extension;
-import hudson.model.UnprotectedRootAction;
+import java.io.IOException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import java.io.IOException;
+import hudson.Extension;
+import hudson.model.UnprotectedRootAction;
 
 @Extension
 public class CoverageStatusIconAction implements UnprotectedRootAction {

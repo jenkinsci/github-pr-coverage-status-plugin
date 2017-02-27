@@ -17,17 +17,18 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import hudson.Extension;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
-import net.sf.json.JSONObject;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import net.sf.json.JSONObject;
 
 @SuppressWarnings("WeakerAccess")
 public class Configuration extends AbstractDescribableImpl<Configuration> {
@@ -114,10 +115,12 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return personalAccessToken;
         }
 
+        @Override
         public int getYellowThreshold() {
             return yellowThreshold;
         }
 
+        @Override
         public int getGreenThreshold() {
             return greenThreshold;
         }

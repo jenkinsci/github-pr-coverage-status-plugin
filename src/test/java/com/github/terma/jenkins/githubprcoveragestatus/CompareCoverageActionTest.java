@@ -66,7 +66,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
     }
 
     @Test
@@ -81,7 +81,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
     }
 
 }
