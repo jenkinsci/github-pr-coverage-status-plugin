@@ -66,6 +66,22 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
+        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+    }
+
+    @Test
+    public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
+            throws IOException, InterruptedException {
+        Mockito.when(build.getResult()).thenReturn(Result.SUCCESS);
+        Mockito.when(listener.getLogger()).thenReturn(logger);
+        Mockito.when(build.getEnvironment(Mockito.any(TaskListener.class))).thenReturn(envVars);
+        Mockito.when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        Mockito.when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+
+        Mockito.when(settingsRepository.isPrivateJenkinsPublicGitHub()).thenReturn(true);
+
+        new CompareCoverageAction().perform(build, null, null, listener);
+
         Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
     }
 
@@ -81,7 +97,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
+        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
 }
