@@ -70,7 +70,7 @@ To fix that:
 
 ### 1.4.0
 
-Supporting of private Jenkins with public GitHub
+Supporting of private Jenkins with public GitHub. To enable that mode goto Jenkins Configuration and turn on ```Jenkins is not accessible for GitHub```
 
 ### 1.3.0
 
