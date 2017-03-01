@@ -68,6 +68,10 @@ To fix that:
 
 ## Changelog
 
+### 1.4.0
+
+Supporting of private Jenkins with public GitHub
+
 ### 1.3.0
 
 Add support SimpleCov JSON coverage report for Ruby
