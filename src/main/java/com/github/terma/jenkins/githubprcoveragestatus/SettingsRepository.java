@@ -11,4 +11,7 @@ interface SettingsRepository {
     int getYellowThreshold();
 
     int getGreenThreshold();
+
+    boolean isPrivateJenkinsPublicGitHub();
+
 }

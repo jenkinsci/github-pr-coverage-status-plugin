@@ -8,6 +8,10 @@ f.section(title: descriptor.displayName) {
         f.textbox()
     }
 
+    f.entry(field: "privateJenkinsPublicGitHub", title: _("Jenkins is not accessible for GitHub")) {
+        f.checkbox()
+    }
+
     f.entry(field: "personalAccessToken", title: _("GitHub Personal Access Token")) {
         f.password()
     }
@@ -16,11 +20,11 @@ f.section(title: descriptor.displayName) {
         f.textbox()
     }
 
-    f.entry(field: "yellowThreshold", title: _("Yellow threshold")) {
+    f.entry(field: "yellowThreshold", title: _("Yellow threshold 0-100%")) {
         f.textbox()
     }
 
-    f.entry(field: "greenThreshold", title: _("Green Threshold")) {
+    f.entry(field: "greenThreshold", title: _("Green Threshold 0-100%")) {
         f.textbox()
     }
 

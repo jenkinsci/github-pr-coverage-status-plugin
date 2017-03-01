@@ -23,7 +23,9 @@ import org.apache.commons.httpclient.util.URIUtil;
 @SuppressWarnings("WeakerAccess")
 class Message {
 
-    private static final String BADGE_TEMPLATE = "https://img.shields.io/badge/coverage-%s-%s.svg"; //see http://shields.io/ for reference
+    //see http://shields.io/ for reference
+    private static final String BADGE_TEMPLATE = "https://img.shields.io/badge/coverage-%s-%s.svg";
+
     private static final String COLOR_RED = "red";
     private static final String COLOR_YELLOW = "yellow";
     private static final String COLOR_GREEN = "brightgreen";
@@ -43,13 +45,29 @@ class Message {
                 Percent.toWholeNoSignString(masterCoverage));
     }
 
-    public String forComment(final String buildUrl, int yellowThreshold, int greenThreshold) {
-        String color = getColor(yellowThreshold, greenThreshold);
+    public String forComment(
+            final String buildUrl, final String jenkinsUrl,
+            final int yellowThreshold, final int greenThreshold,
+            final boolean useShieldsIo) {
+        final String icon = forIcon();
+        if (useShieldsIo) {
+            return "[![" + icon + "](" + shieldIoUrl(icon, yellowThreshold, greenThreshold) + ")](" + buildUrl + ")";
+        } else {
+            return "[![" + icon + "](" + jenkinsUrl + "/coverage-status-icon/" +
+                    "?coverage=" + coverage +
+                    "&masterCoverage=" + masterCoverage +
+                    ")](" + buildUrl + ")";
+        }
+    }
+
+    private String shieldIoUrl(String icon, final int yellowThreshold, final int greenThreshold) {
+        final String color = getColor(yellowThreshold, greenThreshold);
+        // dash should be encoded as two dash
+        icon = icon.replace("-", "--");
         try {
-            String badgeUri = String.format(BADGE_TEMPLATE, URIUtil.encodePath(forIcon()), color);
-            return "[![" + forIcon() + "](" + badgeUri + ")](" + buildUrl + ")";
+            return String.format(BADGE_TEMPLATE, URIUtil.encodePath(icon), color);
         } catch (URIException e) {
-            throw new UnsupportedOperationException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -58,8 +76,7 @@ class Message {
         final int coveragePercent = Percent.of(coverage);
         if (coveragePercent < yellowThreshold) {
             color = COLOR_RED;
-        }
-        else if (coveragePercent < greenThreshold) {
+        } else if (coveragePercent < greenThreshold) {
             color = COLOR_YELLOW;
         }
         return color;

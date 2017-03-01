@@ -71,12 +71,19 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
+        String jenkinsUrl = ServiceRegistry.getSettingsRepository().getJenkinsUrl();
+        if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
+
         final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
-        final int yellowThreshold = settingsRepository.getYellowThreshold();
-        final int greenThreshold = settingsRepository.getGreenThreshold();
 
         try {
-            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, message.forComment(buildUrl, yellowThreshold, greenThreshold));
+            final String comment = message.forComment(
+                    buildUrl,
+                    jenkinsUrl,
+                    settingsRepository.getYellowThreshold(),
+                    settingsRepository.getGreenThreshold(),
+                    settingsRepository.isPrivateJenkinsPublicGitHub());
+            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, comment);
         } catch (IOException ex) {
             listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
         }

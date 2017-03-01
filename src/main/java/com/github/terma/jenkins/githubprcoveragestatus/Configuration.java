@@ -20,6 +20,7 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -77,6 +78,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private String gitHubApiUrl;
         private String personalAccessToken;
         private String jenkinsUrl;
+        private boolean privateJenkinsPublicGitHub;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
@@ -126,6 +128,11 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public boolean isPrivateJenkinsPublicGitHub() {
+            return privateJenkinsPublicGitHub;
+        }
+
+        @Override
         public String getJenkinsUrl() {
             return jenkinsUrl;
         }
@@ -137,6 +144,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
             greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
             jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
+            privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
             save();
             return super.configure(req, formData);
         }
