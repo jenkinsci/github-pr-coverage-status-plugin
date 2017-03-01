@@ -8,4 +8,10 @@ interface SettingsRepository {
 
     String getJenkinsUrl();
 
+    int getYellowThreshold();
+
+    int getGreenThreshold();
+
+    boolean isPrivateJenkinsPublicGitHub();
+
 }
