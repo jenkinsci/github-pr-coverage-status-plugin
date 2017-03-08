@@ -8,7 +8,15 @@ public class ServiceRegistry {
     private static PullRequestRepository pullRequestRepository;
 
     public static MasterCoverageRepository getMasterCoverageRepository() {
-        return masterCoverageRepository != null ? masterCoverageRepository : Configuration.DESCRIPTOR;
+        if (masterCoverageRepository != null) {
+            return masterCoverageRepository;
+        } else {
+            if (Configuration.isUseSonarForMasterCoverage() && Configuration.getSonarUrl() != null) {
+                return new SonarMasterCoverageRepository(Configuration.getSonarUrl());
+            } else {
+               return Configuration.DESCRIPTOR;
+            }
+        }
     }
 
     public static void setMasterCoverageRepository(MasterCoverageRepository masterCoverageRepository) {

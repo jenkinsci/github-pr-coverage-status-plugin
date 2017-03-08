@@ -14,4 +14,7 @@ interface SettingsRepository {
 
     boolean isPrivateJenkinsPublicGitHub();
 
+    boolean isUseSonarForMasterCoverage();
+
+    String getSonarUrl();
 }
