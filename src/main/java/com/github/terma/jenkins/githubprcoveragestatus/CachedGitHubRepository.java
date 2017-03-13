@@ -59,9 +59,9 @@ class CachedGitHubRepository {
         }
     }
 
-    private boolean initGitHubRepository(final String gitHubUrl) {
+    private void initGitHubRepository(final String gitHubUrl) {
         if (gitHubRepository != null) {
-            return true;
+            return;
         }
 
         GitHub gitHub;
@@ -70,12 +70,13 @@ class CachedGitHubRepository {
             gitHub = getGitHub();
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Error while accessing rate limit API", ex);
-            return false;
+            throw ex;
         }
 
         if (gitHub == null) {
-            logger.log(Level.SEVERE, "No connection returned to GitHub server!");
-            return false;
+            final IOException ex = new IOException("No connection returned to GitHub server!");
+            logger.log(Level.SEVERE, ex.getMessage());
+            throw ex;
         }
 
         try {
@@ -84,11 +85,11 @@ class CachedGitHubRepository {
                 return false;
             }
         } catch (FileNotFoundException ex) {
-            logger.log(Level.INFO, "Rate limit API not found.");
-            return false;
+            logger.log(Level.SEVERE, "Rate limit API not found.");
+            throw ex;
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Error while accessing rate limit API", ex);
-            return false;
+            throw ex;
         }
 
         final String userRepo = Utils.getUserRepo(gitHubUrl);
@@ -98,9 +99,7 @@ class CachedGitHubRepository {
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Could not retrieve GitHub repository named " + userRepo
                     + " (Do you have properly set 'GitHub project' field in job configuration?)", ex);
-            return false;
+            throw ex;
         }
-        return true;
     }
-
 }
