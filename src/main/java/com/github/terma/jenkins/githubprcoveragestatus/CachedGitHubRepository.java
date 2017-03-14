@@ -24,22 +24,38 @@ import org.kohsuke.github.GitHub;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @SuppressWarnings("WeakerAccess")
 class CachedGitHubRepository {
 
-    private static final transient Logger logger = Logger.getLogger(CachedGitHubRepository.class.getName());
-
-    private transient GHRepository gitHubRepository;
-
-    public GHPullRequest getPullRequest(final String gitHubUrl, final int prId) throws IOException {
-        if (gitHubRepository == null) initGitHubRepository(gitHubUrl);
-        return gitHubRepository.getPullRequest(prId);
+    public static GHPullRequest getPullRequest(final String gitHubUrl, final int prId) throws IOException {
+        return getGitHubRepository(gitHubUrl).getPullRequest(prId);
     }
 
-    private GitHub getGitHub() throws IOException {
+    private static GHRepository getGitHubRepository(final String gitHubUrl) throws IOException {
+        GitHub gitHub = getGitHub();
+
+        try {
+            if (gitHub.getRateLimit().remaining == 0) {
+                throw new IOException("Exceeded rate limit for repository");
+            }
+        } catch (FileNotFoundException ex) {
+            throw new IOException("Rate limit API not found.");
+        } catch (IOException ex) {
+            throw new IOException("Error while accessing rate limit API", ex);
+        }
+
+        final String userRepo = Utils.getUserRepo(gitHubUrl);
+
+        try {
+            return gitHub.getRepository(userRepo);
+        } catch (IOException ex) {
+            throw new IOException("Could not retrieve GitHub repository named " + userRepo
+                    + " (Do you have properly set 'GitHub project' field in job configuration?)", ex);
+        }
+    }
+
+    private static GitHub getGitHub() throws IOException {
         final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
         final String apiUrl = settingsRepository.getGitHubApiUrl();
         final String personalAccessToken = settingsRepository.getPersonalAccessToken();
@@ -57,50 +73,6 @@ class CachedGitHubRepository {
                 return GitHub.connectAnonymously();
             }
         }
-    }
-
-    private boolean initGitHubRepository(final String gitHubUrl) {
-        if (gitHubRepository != null) {
-            return true;
-        }
-
-        GitHub gitHub;
-
-        try {
-            gitHub = getGitHub();
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Error while accessing rate limit API", ex);
-            return false;
-        }
-
-        if (gitHub == null) {
-            logger.log(Level.SEVERE, "No connection returned to GitHub server!");
-            return false;
-        }
-
-        try {
-            if (gitHub.getRateLimit().remaining == 0) {
-                logger.log(Level.INFO, "Exceeded rate limit for repository");
-                return false;
-            }
-        } catch (FileNotFoundException ex) {
-            logger.log(Level.INFO, "Rate limit API not found.");
-            return false;
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Error while accessing rate limit API", ex);
-            return false;
-        }
-
-        final String userRepo = Utils.getUserRepo(gitHubUrl);
-
-        try {
-            gitHubRepository = gitHub.getRepository(userRepo);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Could not retrieve GitHub repository named " + userRepo
-                    + " (Do you have properly set 'GitHub project' field in job configuration?)", ex);
-            return false;
-        }
-        return true;
     }
 
 }
