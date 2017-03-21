@@ -1,5 +1,7 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import java.io.PrintStream;
+
 public class ServiceRegistry {
 
     private static MasterCoverageRepository masterCoverageRepository;
@@ -7,12 +9,12 @@ public class ServiceRegistry {
     private static SettingsRepository settingsRepository;
     private static PullRequestRepository pullRequestRepository;
 
-    public static MasterCoverageRepository getMasterCoverageRepository() {
+    public static MasterCoverageRepository getMasterCoverageRepository(PrintStream buildLog) {
         if (masterCoverageRepository != null) {
             return masterCoverageRepository;
         } else {
-            if (Configuration.isUseSonarForMasterCoverage() && Configuration.getSonarUrl() != null) {
-                return new SonarMasterCoverageRepository(Configuration.getSonarUrl());
+            if (Configuration.getSonarUrl() != null) {
+                return new SonarMasterCoverageRepository(Configuration.getSonarUrl(), buildLog);
             } else {
                return Configuration.DESCRIPTOR;
             }

@@ -1,0 +1,28 @@
+{
+  "component": {
+    "id": "AVePr_fQwz0tAcNAWEGz",
+    "key": "my-project:origin/master",
+    "measures": [
+      {
+        "metric": "overall_line_coverage",
+        "periods": [
+          {
+            "index": 1,
+            "value": "0.0"
+          },
+          {
+            "index": 2,
+            "value": "0.0"
+          },
+          {
+            "index": 3,
+            "value": "0.0"
+          }
+        ],
+        "value": "95.3"
+      }
+    ],
+    "name": "my-project origin/master",
+    "qualifier": "TRK"
+  }
+}
