@@ -57,6 +57,14 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.getPersonalAccessToken();
     }
 
+    public static String getSonarUrl() {
+        return DESCRIPTOR.getSonarUrl();
+    }
+
+    public static Boolean isUseSonarForMasterCoverage() {
+        return DESCRIPTOR.isUseSonarForMasterCoverage();
+    }
+
     public static void setMasterCoverage(final String repo, final float coverage) {
         DESCRIPTOR.set(repo, coverage);
     }
@@ -79,6 +87,8 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private String personalAccessToken;
         private String jenkinsUrl;
         private boolean privateJenkinsPublicGitHub;
+        private boolean useSonarForMasterCoverage;
+        private String sonarUrl;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
@@ -133,6 +143,16 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public boolean isUseSonarForMasterCoverage() {
+            return useSonarForMasterCoverage;
+        }
+
+        @Override
+        public String getSonarUrl() {
+            return sonarUrl;
+        }
+
+        @Override
         public String getJenkinsUrl() {
             return jenkinsUrl;
         }
@@ -145,6 +165,8 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
             jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
             privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
+            useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));
+            sonarUrl = StringUtils.trimToNull(formData.getString("sonarUrl"));
             save();
             return super.configure(req, formData);
         }

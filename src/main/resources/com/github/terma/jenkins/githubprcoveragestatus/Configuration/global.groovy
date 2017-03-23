@@ -28,4 +28,12 @@ f.section(title: descriptor.displayName) {
         f.textbox()
     }
 
+    f.entry(field: "useSonarForMasterCoverage", title: _("Use Sonar as a backend for master coverage")) {
+        f.checkbox()
+    }
+
+    f.entry(field: "sonarUrl", title: _("Sonar endpoint URL")) {
+        f.textbox()
+    }
+
 }
