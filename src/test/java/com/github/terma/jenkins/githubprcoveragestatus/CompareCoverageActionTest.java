@@ -17,31 +17,33 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.io.IOException;
-import java.io.PrintStream;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-
 import hudson.EnvVars;
 import hudson.model.Build;
 import hudson.model.Result;
 import hudson.model.TaskListener;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
+import static org.mockito.Mockito.*;
 
 public class CompareCoverageActionTest {
 
-    private Build build = Mockito.mock(Build.class);
+    private Build build = mock(Build.class);
 
-    private PrintStream logger = Mockito.mock(PrintStream.class);
-    private TaskListener listener = Mockito.mock(TaskListener.class);
+    private PrintStream logger = mock(PrintStream.class);
+    private PrintWriter printWriter = mock(PrintWriter.class);
+    private TaskListener listener = mock(TaskListener.class);
 
-    private EnvVars envVars = Mockito.mock(EnvVars.class);
+    private EnvVars envVars = mock(EnvVars.class);
 
-    private MasterCoverageRepository masterCoverageRepository = Mockito.mock(MasterCoverageRepository.class);
-    private CoverageRepository coverageRepository = Mockito.mock(CoverageRepository.class);
-    private SettingsRepository settingsRepository = Mockito.mock(SettingsRepository.class);
-    private PullRequestRepository pullRequestRepository = Mockito.mock(PullRequestRepository.class);
+    private MasterCoverageRepository masterCoverageRepository = mock(MasterCoverageRepository.class);
+    private CoverageRepository coverageRepository = mock(CoverageRepository.class);
+    private SettingsRepository settingsRepository = mock(SettingsRepository.class);
+    private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
 
     @Before
     public void initMocks() {
@@ -58,46 +60,63 @@ public class CompareCoverageActionTest {
 
     @Test
     public void postCoverageStatusToPullRequestAsComment() throws IOException, InterruptedException {
-        Mockito.when(build.getResult()).thenReturn(Result.SUCCESS);
-        Mockito.when(listener.getLogger()).thenReturn(logger);
-        Mockito.when(build.getEnvironment(Mockito.any(TaskListener.class))).thenReturn(envVars);
-        Mockito.when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-        Mockito.when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(listener.getLogger()).thenReturn(logger);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+    }
+
+    @Test
+    public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess() throws IOException, InterruptedException {
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(listener.getLogger()).thenReturn(logger);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+        when(listener.error(anyString())).thenReturn(printWriter);
+
+        doThrow(new IOException("???")).when(pullRequestRepository).comment(anyString(), anyInt(), anyString());
+
+        new CompareCoverageAction().perform(build, null, null, listener);
+
+        verify(listener).error("Couldn't add comment to pull request #12!");
+        verify(printWriter, atLeastOnce()).println(anyObject());
     }
 
     @Test
     public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
             throws IOException, InterruptedException {
-        Mockito.when(build.getResult()).thenReturn(Result.SUCCESS);
-        Mockito.when(listener.getLogger()).thenReturn(logger);
-        Mockito.when(build.getEnvironment(Mockito.any(TaskListener.class))).thenReturn(envVars);
-        Mockito.when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-        Mockito.when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(listener.getLogger()).thenReturn(logger);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
 
-        Mockito.when(settingsRepository.isPrivateJenkinsPublicGitHub()).thenReturn(true);
+        when(settingsRepository.isPrivateJenkinsPublicGitHub()).thenReturn(true);
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
+        verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
     }
 
     @Test
     public void postCoverageStatusToPullRequestAsCommentWithCustomJenkinsUrlIfConfigured() throws IOException, InterruptedException {
-        Mockito.when(build.getResult()).thenReturn(Result.SUCCESS);
-        Mockito.when(listener.getLogger()).thenReturn(logger);
-        Mockito.when(build.getEnvironment(Mockito.any(TaskListener.class))).thenReturn(envVars);
-        Mockito.when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-        Mockito.when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(listener.getLogger()).thenReturn(logger);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
 
-        Mockito.when(settingsRepository.getJenkinsUrl()).thenReturn("customJ");
+        when(settingsRepository.getJenkinsUrl()).thenReturn("customJ");
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        Mockito.verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
 }

@@ -94,7 +94,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         @Override
         public float get(String repo) {
-            final Float coverage = coverageByRepo.get(repo);
+            final Float coverage = repo == null ? null : coverageByRepo.get(repo);
             return coverage == null ? 0 : coverage;
         }
 

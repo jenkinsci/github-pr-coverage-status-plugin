@@ -19,6 +19,7 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -44,6 +45,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public CompareCoverageAction() {
     }
 
+    // todo show message that addition comment in progress as it could take a while
     @SuppressWarnings("NullableProblems")
     @Override
     public void perform(
@@ -84,8 +86,9 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                     settingsRepository.getGreenThreshold(),
                     settingsRepository.isPrivateJenkinsPublicGitHub());
             ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, comment);
-        } catch (IOException ex) {
-            listener.error("Couldn't add comment to pull request #" + prId + "!", ex);
+        } catch (Exception ex) {
+            PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
+            ex.printStackTrace(pw);
         }
     }
 

@@ -46,12 +46,15 @@ class Utils {
 
     public static String getUserRepo(final String url) {
         String userRepo = null;
-        Matcher m = HTTP_GITHUB_USER_REPO_PATTERN.matcher(url);
-        if (m.matches()) userRepo = m.group(2);
 
-        if (userRepo == null) {
-            m = SSH_GITHUB_USER_REPO_PATTERN.matcher(url);
-            if (m.matches()) userRepo = m.group(1);
+        if (url != null) {
+            Matcher m = HTTP_GITHUB_USER_REPO_PATTERN.matcher(url);
+            if (m.matches()) userRepo = m.group(2);
+
+            if (userRepo == null) {
+                m = SSH_GITHUB_USER_REPO_PATTERN.matcher(url);
+                if (m.matches()) userRepo = m.group(1);
+            }
         }
 
         if (userRepo == null) {
