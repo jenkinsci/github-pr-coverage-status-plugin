@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/terma/github-pr-coverage-status/badge.svg?branch=master)](https://coveralls.io/github/terma/github-pr-coverage-status?branch=master)
 
 * [Overview](#overview)
-* [Supports coverage reports](supports-coverage-reports)
+* [Supports coverage reports](#supports-coverage-reports)
 * [How to use](#how-to-use)
 * [Troubleshooting](#troubleshooting)
 * [Changelog](#changelog)
