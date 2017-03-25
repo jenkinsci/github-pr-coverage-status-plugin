@@ -13,10 +13,10 @@ public class ServiceRegistry {
         if (masterCoverageRepository != null) {
             return masterCoverageRepository;
         } else {
-            if (Configuration.getSonarUrl() != null) {
+            if (Configuration.isUseSonarForMasterCoverage()) {
                 return new SonarMasterCoverageRepository(Configuration.getSonarUrl(), buildLog);
             } else {
-               return Configuration.DESCRIPTOR;
+                return Configuration.DESCRIPTOR;
             }
         }
     }

@@ -1,7 +1,11 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.apache.commons.httpclient.HttpStatus.SC_BAD_REQUEST;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -9,28 +13,22 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.lang.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static org.apache.commons.httpclient.HttpStatus.SC_BAD_REQUEST;
 
 public class SonarMasterCoverageRepository implements MasterCoverageRepository {
-
 
     private static final String SONAR_SEARCH_PROJECTS_API_PATH = "/api/projects/index";
     private static final String SONAR_COMPONENT_MEASURE_API_PATH = "/api/measures/component";
     private static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "overall_line_coverage";
 
-    private final String sonarEndpoint;
-    private PrintStream buildLog;
+    private final String sonarUrl;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper = new ObjectMapper().disable(FAIL_ON_UNKNOWN_PROPERTIES);
+    private PrintStream buildLog;
 
-    public SonarMasterCoverageRepository(String sonarEndpoint, PrintStream buildLog) {
-        this.sonarEndpoint = sonarEndpoint;
+    public SonarMasterCoverageRepository(String sonarUrl, PrintStream buildLog) {
+        this.sonarUrl = sonarUrl;
         this.buildLog = buildLog;
         httpClient = new HttpClient();
     }
@@ -38,7 +36,6 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
     @Override
     public float get(String gitUrl) {
         log("Getting coverage for %s", gitUrl);
-
         try {
             final SonarProject sonarProject = getSonarProject(gitUrl);
             return getCoverageMeasure(sonarProject);
@@ -59,10 +56,11 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
     private SonarProject getSonarProject(String gitUrl) throws SonarProjectRetrievalException {
         String repoName = StringUtils.substringAfterLast(StringUtils.removeEnd(gitUrl, ".git"), "/");
 
-        final String searchUri = sonarEndpoint + SONAR_SEARCH_PROJECTS_API_PATH + "?search=" + repoName;
+        final String searchUri = sonarUrl + SONAR_SEARCH_PROJECTS_API_PATH + "?search=" + repoName;
         try {
             final GetMethod method = executeGetRequest(searchUri);
-            List<SonarProject> sonarProjects = objectMapper.readValue(method.getResponseBodyAsStream(), new TypeReference<List<SonarProject>>() {});
+            List<SonarProject> sonarProjects = objectMapper.readValue(method.getResponseBodyAsStream(), new TypeReference<List<SonarProject>>() {
+            });
 
             if (sonarProjects.isEmpty()) {
                 throw new SonarProjectRetrievalException("No sonar project found for repo" + repoName);
@@ -85,8 +83,7 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
      * @throws SonarCoverageMeasureRetrievalException if an error occurred during retrieval of the coverage
      */
     private float getCoverageMeasure(SonarProject project) throws SonarCoverageMeasureRetrievalException {
-
-        final String uri = MessageFormat.format("{0}{1}?componentKey={2}&metricKeys={3}", sonarEndpoint, SONAR_COMPONENT_MEASURE_API_PATH, URLEncoder.encode(project.getKey()), SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME);
+        final String uri = MessageFormat.format("{0}{1}?componentKey={2}&metricKeys={3}", sonarUrl, SONAR_COMPONENT_MEASURE_API_PATH, URLEncoder.encode(project.getKey()), SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME);
         try {
             final GetMethod method = executeGetRequest(uri);
             String value = JsonUtils.findInJson(method.getResponseBodyAsString(), "component.measures[0].value");
@@ -105,15 +102,15 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
         return method;
     }
 
-    private static class  HttpClientException extends Exception {
-        HttpClientException(String uri, int status, String reason) {
-            super("request to "  + uri + " failed with " + status + " reason " + reason);
-        }
-    }
-
     private void log(String format, Object... arguments) {
         buildLog.printf(format, arguments);
         buildLog.println();
+    }
+
+    private static class HttpClientException extends Exception {
+        HttpClientException(String uri, int status, String reason) {
+            super("request to " + uri + " failed with " + status + " reason " + reason);
+        }
     }
 
     private static class SonarProject {
