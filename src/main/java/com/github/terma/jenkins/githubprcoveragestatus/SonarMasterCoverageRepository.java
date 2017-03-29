@@ -65,10 +65,10 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
             if (sonarProjects.isEmpty()) {
                 throw new SonarProjectRetrievalException("No sonar project found for repo" + repoName);
             } else if (sonarProjects.size() == 1) {
-                log("Found project for repo name {0} - {1}", repoName, sonarProjects.get(0));
+                log("Found project for repo name %s - %s", repoName, sonarProjects.get(0));
                 return sonarProjects.get(0);
             } else {
-                log("Found multiple projects for repo name {0} - found {1} - returning first result", repoName, sonarProjects.toArray());
+                log("Found multiple projects for repo name %s - found %s - returning first result", repoName, sonarProjects);
                 return sonarProjects.get(0);
             }
         } catch (Exception e) {
