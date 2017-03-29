@@ -1,23 +1,20 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static com.google.common.base.Charsets.UTF_8;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.commons.io.IOUtils;
+import org.junit.After;
+import org.junit.ClassRule;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.ClassRule;
-import org.junit.Test;
-
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.google.common.base.Charsets.UTF_8;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class SonarMasterCoverageRepositoryTest {
 
@@ -25,6 +22,12 @@ public class SonarMasterCoverageRepositoryTest {
     public static WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(0));
 
     private SonarMasterCoverageRepository sonarMasterCoverageRepository;
+    private ByteArrayOutputStream buildLogOutputStream;
+
+    @After
+    public void afterTest() throws Exception {
+        System.out.println(buildLogOutputStream.toString());
+    }
 
     @Test
     public void should_get_coverage() throws IOException {
@@ -68,7 +71,7 @@ public class SonarMasterCoverageRepositoryTest {
     }
 
     private void givenCoverageRepository() {
-        ByteArrayOutputStream buildLogOutputStream = new ByteArrayOutputStream();
+        buildLogOutputStream = new ByteArrayOutputStream();
         sonarMasterCoverageRepository = new SonarMasterCoverageRepository("http://localhost:" + wireMockRule.port(),
                 new PrintStream(buildLogOutputStream, true));
     }
