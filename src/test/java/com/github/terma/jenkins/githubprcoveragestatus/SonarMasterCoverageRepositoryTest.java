@@ -1,19 +1,23 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.apache.commons.io.IOUtils;
-import org.junit.ClassRule;
-import org.junit.Test;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.google.common.base.Charsets.UTF_8;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static com.google.common.base.Charsets.UTF_8;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.apache.commons.io.IOUtils;
+import org.junit.ClassRule;
+import org.junit.Test;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class SonarMasterCoverageRepositoryTest {
 
@@ -27,6 +31,17 @@ public class SonarMasterCoverageRepositoryTest {
         givenCoverageRepository();
 
         givenProjectResponseWithSingleMatch();
+        givenMeasureResponse();
+
+        final float coverage = sonarMasterCoverageRepository.get("git@github.com:some/my-project.git");
+        assertThat(coverage, is(0.953f));
+    }
+
+    @Test
+    public void should_get_coverage_for_multiple_projects_found() throws IOException {
+        givenCoverageRepository();
+
+        givenProjectResponseWithMultipleMatches();
         givenMeasureResponse();
 
         final float coverage = sonarMasterCoverageRepository.get("git@github.com:some/my-project.git");
@@ -64,6 +79,16 @@ public class SonarMasterCoverageRepositoryTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody(getResponseBodyFromFile("singleProjectFound.json"))
+                )
+        );
+    }
+
+    private void givenProjectResponseWithMultipleMatches() throws IOException {
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/projects/index"))
+                .withQueryParam("search", equalTo("my-project"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(getResponseBodyFromFile("multipleProjectsFound.json"))
                 )
         );
     }
