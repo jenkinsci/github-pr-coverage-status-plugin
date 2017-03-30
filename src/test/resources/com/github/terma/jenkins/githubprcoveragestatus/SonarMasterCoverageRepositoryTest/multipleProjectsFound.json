@@ -1,0 +1,16 @@
+[
+  {
+    "id": "10400",
+    "k": "my-project:origin/master",
+    "nm": "my-project origin/master",
+    "qu": "TRK",
+    "sc": "PRJ"
+  },
+  {
+    "id": "10401",
+    "k": "my-other-project:origin/master",
+    "nm": "my-other-project origin/master",
+    "qu": "TRK",
+    "sc": "PRJ"
+  }
+]

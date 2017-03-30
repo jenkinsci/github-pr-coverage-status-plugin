@@ -2,6 +2,7 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.commons.io.IOUtils;
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -21,12 +22,29 @@ public class SonarMasterCoverageRepositoryTest {
     public static WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(0));
 
     private SonarMasterCoverageRepository sonarMasterCoverageRepository;
+    private ByteArrayOutputStream buildLogOutputStream;
+
+    @After
+    public void afterTest() throws Exception {
+        System.out.println(buildLogOutputStream.toString());
+    }
 
     @Test
     public void should_get_coverage() throws IOException {
         givenCoverageRepository();
 
         givenProjectResponseWithSingleMatch();
+        givenMeasureResponse();
+
+        final float coverage = sonarMasterCoverageRepository.get("git@github.com:some/my-project.git");
+        assertThat(coverage, is(0.953f));
+    }
+
+    @Test
+    public void should_get_coverage_for_multiple_projects_found() throws IOException {
+        givenCoverageRepository();
+
+        givenProjectResponseWithMultipleMatches();
         givenMeasureResponse();
 
         final float coverage = sonarMasterCoverageRepository.get("git@github.com:some/my-project.git");
@@ -53,7 +71,7 @@ public class SonarMasterCoverageRepositoryTest {
     }
 
     private void givenCoverageRepository() {
-        ByteArrayOutputStream buildLogOutputStream = new ByteArrayOutputStream();
+        buildLogOutputStream = new ByteArrayOutputStream();
         sonarMasterCoverageRepository = new SonarMasterCoverageRepository("http://localhost:" + wireMockRule.port(),
                 new PrintStream(buildLogOutputStream, true));
     }
@@ -64,6 +82,16 @@ public class SonarMasterCoverageRepositoryTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody(getResponseBodyFromFile("singleProjectFound.json"))
+                )
+        );
+    }
+
+    private void givenProjectResponseWithMultipleMatches() throws IOException {
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/projects/index"))
+                .withQueryParam("search", equalTo("my-project"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(getResponseBodyFromFile("multipleProjectsFound.json"))
                 )
         );
     }
