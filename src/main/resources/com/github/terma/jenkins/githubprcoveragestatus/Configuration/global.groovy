@@ -36,4 +36,8 @@ f.section(title: descriptor.displayName) {
         f.textbox()
     }
 
+    f.entry(field: "sonarToken", title: _("Sonar access token")) {
+        f.textbox()
+    }
+
 }

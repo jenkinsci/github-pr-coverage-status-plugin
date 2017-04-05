@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -27,10 +29,14 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
     private final ObjectMapper objectMapper = new ObjectMapper().disable(FAIL_ON_UNKNOWN_PROPERTIES);
     private PrintStream buildLog;
 
-    public SonarMasterCoverageRepository(String sonarUrl, PrintStream buildLog) {
+    public SonarMasterCoverageRepository(String sonarUrl, String sonarToken, PrintStream buildLog) {
         this.sonarUrl = sonarUrl;
         this.buildLog = buildLog;
         httpClient = new HttpClient();
+        httpClient.getState().setCredentials(
+            new AuthScope(null, 0, null, null),
+            new UsernamePasswordCredentials(sonarToken, "")
+        );
     }
 
     @Override
@@ -95,6 +101,7 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
 
     private GetMethod executeGetRequest(String uri) throws IOException, HttpClientException {
         final GetMethod method = new GetMethod(uri);
+        method.setDoAuthentication(true);
         int status = httpClient.executeMethod(method);
         if (status >= SC_BAD_REQUEST) {
             throw new HttpClientException(uri, status, method.getResponseBodyAsString());

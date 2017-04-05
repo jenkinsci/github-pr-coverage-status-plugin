@@ -17,4 +17,6 @@ interface SettingsRepository {
     boolean isUseSonarForMasterCoverage();
 
     String getSonarUrl();
+
+    String getSonarToken();
 }
