@@ -53,7 +53,13 @@ class CoberturaParser implements CoverageReportParser {
             String content = FileUtils.readFileToString(new File(coberturaFilePath));
             float lineRate = Float.parseFloat(findFirst(content, "line-rate=\"([0-9.]+)\""));
             float branchRate = Float.parseFloat(findFirst(content, "branch-rate=\"([0-9.]+)\""));
-            return lineRate / 2 + branchRate / 2;
+            if (lineRate > 0 && branchRate == 0) {
+              return lineRate;
+            } else if (lineRate == 0 && branchRate > 0) {
+              return branchRate;
+            } else {
+              return lineRate / 2 + branchRate / 2;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

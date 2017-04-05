@@ -41,19 +41,19 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractCoverageIfBranchRateIsZero() throws IOException {
+    public void extractCoverageIfBranchRateIsZeroAndHasOnlyLineRate() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-branch-rate.xml").getFile();
 
-        Assert.assertEquals(0.25, new CoberturaParser().get(filePath), 0.1);
+        Assert.assertEquals(0.5, new CoberturaParser().get(filePath), 0.1);
     }
 
     @Test
-    public void extractCoverageIfLineRateIsZero() throws IOException {
+    public void extractCoverageIfLineRateIsZeroAndHasBranchRate() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-line-rate.xml").getFile();
 
-        Assert.assertEquals(0.5, new CoberturaParser().get(filePath), 0.1);
+        Assert.assertEquals(1, new CoberturaParser().get(filePath), 0.1);
     }
 
     @Test(expected = IllegalArgumentException.class)
