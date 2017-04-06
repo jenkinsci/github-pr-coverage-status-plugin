@@ -93,6 +93,11 @@ To fix that:
 
 ## Changelog
 
+### [1.6.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.6.0)
+
+- Cobertura plugin ignores zero for ```lineRate``` or ```branchRate``` as result ```lineRate=0 branchRate=0.5 => Coverage 25%``` became ```0.5``` as ```lineRate=0```, same policy for branchRate
+- Log Enchacements
+
 ### 1.5.0
 
 Supporting Master Coverage from SonarQube. Check (details)[#master-coverage-from-sonar]
