@@ -33,6 +33,14 @@ public class CoberturaParserTest {
     }
 
     @Test
+    public void extractCoverageFromCoberturaReportWithSingleQuotes() throws IOException {
+        String filePath = CoberturaParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-with-single-quotes.xml").getFile();
+
+        Assert.assertEquals(0.94, new CoberturaParser().get(filePath), 0.1);
+    }
+
+    @Test
     public void extractZeroCoverageIfNoZeroLineRateAndBranchRate() throws IOException {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-coverage.xml").getFile();
