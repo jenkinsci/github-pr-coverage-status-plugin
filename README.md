@@ -93,6 +93,10 @@ To fix that:
 
 ## Changelog
 
+### [1.6.1](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.6.1)
+
+- Support single quotes for Cobertura Report
+
 ### [1.6.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.6.0)
 
 - Cobertura plugin ignores zero for ```lineRate``` or ```branchRate``` as result ```lineRate=0 branchRate=0.5 => Coverage 25%``` became ```0.5``` as ```lineRate=0```, same policy for ```branchRate```
