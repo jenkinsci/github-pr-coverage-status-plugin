@@ -43,6 +43,8 @@ class Utils {
 
     public static final Pattern HTTP_GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
     public static final Pattern SSH_GITHUB_USER_REPO_PATTERN = Pattern.compile("^.+:(.+)");
+    public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
+    public static final String CHANGE_URL_PROPERTY = "CHANGE_URL";
 
     public static String getUserRepo(final String url) {
         String userRepo = null;
@@ -74,7 +76,9 @@ class Utils {
 
     public static String getGitUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
-        return envVars.get(GIT_URL_ENV_PROPERTY);
+        final String gitUrl = envVars.get(GIT_URL_ENV_PROPERTY);
+        final String changeUrl = envVars.get(CHANGE_URL_PROPERTY);
+        return gitUrl != null ? gitUrl : changeUrl;
     }
 
     public static String getBuildUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
@@ -84,7 +88,9 @@ class Utils {
 
     public static Integer gitPrId(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
-        final String prIdString = envVars.get(GIT_PR_ID_ENV_PROPERTY);
+        final String gitPrId = envVars.get(GIT_PR_ID_ENV_PROPERTY);
+        final String changeId = envVars.get(CHANGE_ID_PROPERTY);
+        final String prIdString = gitPrId != null ? gitPrId : changeId;
         if (prIdString == null) {
             return null;
         } else {
