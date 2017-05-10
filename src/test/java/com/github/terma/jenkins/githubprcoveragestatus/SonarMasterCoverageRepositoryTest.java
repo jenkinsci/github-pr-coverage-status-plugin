@@ -73,6 +73,7 @@ public class SonarMasterCoverageRepositoryTest {
     private void givenCoverageRepository() {
         buildLogOutputStream = new ByteArrayOutputStream();
         sonarMasterCoverageRepository = new SonarMasterCoverageRepository("http://localhost:" + wireMockRule.port(),
+                "myToken",
                 new PrintStream(buildLogOutputStream, true));
     }
 

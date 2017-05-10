@@ -14,7 +14,11 @@ public class ServiceRegistry {
             return masterCoverageRepository;
         } else {
             if (Configuration.isUseSonarForMasterCoverage()) {
-                return new SonarMasterCoverageRepository(Configuration.getSonarUrl(), buildLog);
+                return new SonarMasterCoverageRepository(
+                    Configuration.getSonarUrl(),
+                    Configuration.getSonarToken(),
+                    buildLog
+                );
             } else {
                 return Configuration.DESCRIPTOR;
             }
