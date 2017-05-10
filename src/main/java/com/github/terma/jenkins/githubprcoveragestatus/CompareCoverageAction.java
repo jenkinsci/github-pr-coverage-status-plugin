@@ -57,11 +57,12 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String gitUrl = Utils.getGitUrl(build, listener);
         final Integer prId = Utils.gitPrId(build, listener);
+        buildLog.println("PrId is " + prId + " and url=" + gitUrl);
 
         if (prId == null) {
             throw new UnsupportedOperationException(
                     "Can't find " + Utils.GIT_PR_ID_ENV_PROPERTY + " please use " +
-                            "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin" +
+                            "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin " +
                             "to trigger build!");
         }
 

@@ -43,7 +43,7 @@ class Utils {
 
     public static final Pattern HTTP_GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
     public static final Pattern SSH_GITHUB_USER_REPO_PATTERN = Pattern.compile("^.+:(.+)");
-    public static final String CHANGE_ID_PROPERTY = "CHANGE_ID_PROPERTY";
+    public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
     public static final String CHANGE_URL_PROPERTY = "CHANGE_URL";
 
     public static String getUserRepo(final String url) {
