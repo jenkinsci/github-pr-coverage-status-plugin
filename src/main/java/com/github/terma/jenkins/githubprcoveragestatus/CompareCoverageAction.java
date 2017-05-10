@@ -57,7 +57,6 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String gitUrl = Utils.getGitUrl(build, listener);
         final Integer prId = Utils.gitPrId(build, listener);
-        buildLog.println("PrId is " + prId + " and url=" + gitUrl);
 
         if (prId == null) {
             throw new UnsupportedOperationException(
