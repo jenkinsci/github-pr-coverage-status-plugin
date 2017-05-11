@@ -61,7 +61,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         if (prId == null) {
             throw new UnsupportedOperationException(
                     "Can't find " + Utils.GIT_PR_ID_ENV_PROPERTY + " please use " +
-                            "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin" +
+                            "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin " +
                             "to trigger build!");
         }
 
