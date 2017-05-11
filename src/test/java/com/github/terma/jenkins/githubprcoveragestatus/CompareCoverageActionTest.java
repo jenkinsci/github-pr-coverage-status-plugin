@@ -21,6 +21,8 @@ import hudson.EnvVars;
 import hudson.model.Build;
 import hudson.model.Result;
 import hudson.model.TaskListener;
+import org.kohsuke.github.GHRepository;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,6 +34,7 @@ import static org.mockito.Mockito.*;
 
 public class CompareCoverageActionTest {
 
+    private static final String GIT_URL = "git@github.com:some/my-project.git";
     private Build build = mock(Build.class);
 
     private PrintStream logger = mock(PrintStream.class);
@@ -44,13 +47,16 @@ public class CompareCoverageActionTest {
     private CoverageRepository coverageRepository = mock(CoverageRepository.class);
     private SettingsRepository settingsRepository = mock(SettingsRepository.class);
     private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
+    private GHRepository ghRepository = mock(GHRepository.class);
 
     @Before
-    public void initMocks() {
+    public void initMocks() throws IOException {
         ServiceRegistry.setMasterCoverageRepository(masterCoverageRepository);
         ServiceRegistry.setCoverageRepository(coverageRepository);
         ServiceRegistry.setSettingsRepository(settingsRepository);
         ServiceRegistry.setPullRequestRepository(pullRequestRepository);
+        when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
+        when(envVars.get(Utils.GIT_URL_ENV_PROPERTY)).thenReturn(GIT_URL);
     }
 
     @Test
@@ -68,7 +74,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
     @Test
@@ -80,7 +86,7 @@ public class CompareCoverageActionTest {
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
         when(listener.error(anyString())).thenReturn(printWriter);
 
-        doThrow(new IOException("???")).when(pullRequestRepository).comment(anyString(), anyInt(), anyString());
+        doThrow(new IOException("???")).when(pullRequestRepository).comment(any(GHRepository.class), anyInt(), anyString());
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
@@ -101,7 +107,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
+        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
     }
 
     @Test
@@ -116,7 +122,7 @@ public class CompareCoverageActionTest {
 
         new CompareCoverageAction().perform(build, null, null, listener);
 
-        verify(pullRequestRepository).comment(null, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
 }

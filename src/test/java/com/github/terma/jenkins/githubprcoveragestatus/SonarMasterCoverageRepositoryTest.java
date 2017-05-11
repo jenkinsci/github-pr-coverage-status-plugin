@@ -1,5 +1,6 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -18,6 +19,7 @@ import static org.hamcrest.Matchers.is;
 
 public class SonarMasterCoverageRepositoryTest {
 
+    private static final String REPO_NAME = "my-project";
     @ClassRule
     public static WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(0));
 
@@ -27,69 +29,78 @@ public class SonarMasterCoverageRepositoryTest {
     @After
     public void afterTest() throws Exception {
         System.out.println(buildLogOutputStream.toString());
+        wireMockRule.resetMappings();
     }
 
     @Test
     public void should_get_coverage() throws IOException {
-        givenCoverageRepository();
+        testCoverage(null, null);
+        testCoverage("token", "");
+        testCoverage("login", "password");
+    }
 
-        givenProjectResponseWithSingleMatch();
+    private void testCoverage(final String login, final String password) throws IOException {
+        givenCoverageRepository(login, password);
+        givenProjectResponseWithSingleMatch(login, password);
+
         givenMeasureResponse();
 
-        final float coverage = sonarMasterCoverageRepository.get("git@github.com:some/my-project.git");
+        final float coverage = sonarMasterCoverageRepository.get(REPO_NAME);
         assertThat(coverage, is(0.953f));
     }
 
     @Test
     public void should_get_coverage_for_multiple_projects_found() throws IOException {
-        givenCoverageRepository();
+        givenCoverageRepository(null, null);
 
         givenProjectResponseWithMultipleMatches();
         givenMeasureResponse();
 
-        final float coverage = sonarMasterCoverageRepository.get("git@github.com:some/my-project.git");
+        final float coverage = sonarMasterCoverageRepository.get(REPO_NAME);
         assertThat(coverage, is(0.953f));
     }
 
     @Test
     public void should_get_zero_coverage_for_not_found() {
-        givenCoverageRepository();
+        givenCoverageRepository(null, null);
 
         givenProjectResponseWithoutMatch();
 
-        assertThat(sonarMasterCoverageRepository.get("git@github.com:some/my-project.git"), is(0f));
+        assertThat(sonarMasterCoverageRepository.get(REPO_NAME), is(0f));
     }
 
     @Test
     public void should_get_zero_coverage_for_unknown_metric() throws IOException {
-        givenCoverageRepository();
+        givenCoverageRepository(null, null);
 
-        givenProjectResponseWithSingleMatch();
+        givenProjectResponseWithSingleMatch(null, null);
         givenNotFoundMeasureResponse();
 
-        assertThat(sonarMasterCoverageRepository.get("git@github.com:some/my-project.git"), is(0f));
+        assertThat(sonarMasterCoverageRepository.get(REPO_NAME), is(0f));
     }
 
-    private void givenCoverageRepository() {
+    private void givenCoverageRepository(final String login, String password) {
         buildLogOutputStream = new ByteArrayOutputStream();
         sonarMasterCoverageRepository = new SonarMasterCoverageRepository("http://localhost:" + wireMockRule.port(),
-                "myToken",
-                new PrintStream(buildLogOutputStream, true));
+                                                                          login, password, new PrintStream(buildLogOutputStream, true));
     }
 
-    private void givenProjectResponseWithSingleMatch() throws IOException {
-        wireMockRule.stubFor(get(urlPathEqualTo("/api/projects/index"))
-                .withQueryParam("search", equalTo("my-project"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withBody(getResponseBodyFromFile("singleProjectFound.json"))
+    private void givenProjectResponseWithSingleMatch(final String login, String password) throws IOException {
+        final MappingBuilder search = get(urlPathEqualTo("/api/projects/index"))
+                                      .withQueryParam("search", equalTo(REPO_NAME));
+        if (login != null) {
+            search.withBasicAuth(login, password);
+        }
+        wireMockRule.stubFor(search.willReturn(
+                            aResponse().withStatus(200)
+                                       .withBody(getResponseBodyFromFile("singleProjectFound.json"))
                 )
         );
     }
 
     private void givenProjectResponseWithMultipleMatches() throws IOException {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/projects/index"))
-                .withQueryParam("search", equalTo("my-project"))
+                .withQueryParam("search", equalTo(REPO_NAME))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody(getResponseBodyFromFile("multipleProjectsFound.json"))
@@ -99,7 +110,7 @@ public class SonarMasterCoverageRepositoryTest {
 
     private void givenProjectResponseWithoutMatch() {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/projects/index"))
-                .withQueryParam("search", equalTo("my-project"))
+                .withQueryParam("search", equalTo(REPO_NAME))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("[]")
@@ -110,7 +121,7 @@ public class SonarMasterCoverageRepositoryTest {
     private void givenMeasureResponse() throws IOException {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/measures/component"))
                 .withQueryParam("componentKey", equalTo("my-project:origin/master"))
-                .withQueryParam("metricKeys", equalTo("overall_line_coverage"))
+                .withQueryParam("metricKeys", equalTo(SonarMasterCoverageRepository.SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody(getResponseBodyFromFile("measureFound.json"))
@@ -121,7 +132,7 @@ public class SonarMasterCoverageRepositoryTest {
     private void givenNotFoundMeasureResponse() throws IOException {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/measures/component"))
                 .withQueryParam("componentKey", equalTo("my-project:origin/master"))
-                .withQueryParam("metricKeys", equalTo("overall_line_coverage"))
+                .withQueryParam("metricKeys", equalTo(SonarMasterCoverageRepository.SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withBody(getResponseBodyFromFile("metricNotFound.json"))

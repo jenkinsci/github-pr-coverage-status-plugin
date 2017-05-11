@@ -9,16 +9,16 @@ public class ServiceRegistry {
     private static SettingsRepository settingsRepository;
     private static PullRequestRepository pullRequestRepository;
 
-    public static MasterCoverageRepository getMasterCoverageRepository(PrintStream buildLog) {
+    public static MasterCoverageRepository getMasterCoverageRepository(PrintStream buildLog, final String login, final String password) {
         if (masterCoverageRepository != null) {
             return masterCoverageRepository;
         } else {
             if (Configuration.isUseSonarForMasterCoverage()) {
-                return new SonarMasterCoverageRepository(
-                    Configuration.getSonarUrl(),
-                    Configuration.getSonarToken(),
-                    buildLog
-                );
+                final String sonarUrl = Configuration.getSonarUrl();
+                if (login != null && password != null) {
+                    return new SonarMasterCoverageRepository(sonarUrl, login, password, buildLog);
+                }
+                return new SonarMasterCoverageRepository(sonarUrl, Configuration.getSonarToken(), "", buildLog);
             } else {
                 return Configuration.DESCRIPTOR;
             }

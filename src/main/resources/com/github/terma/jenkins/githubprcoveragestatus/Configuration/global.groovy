@@ -37,7 +37,7 @@ f.section(title: descriptor.displayName) {
     }
 
     f.entry(field: "sonarToken", title: _("Sonar access token")) {
-        f.textbox()
+        f.password()
     }
 
 }

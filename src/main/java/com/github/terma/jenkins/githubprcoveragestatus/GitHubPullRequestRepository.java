@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public class GitHubPullRequestRepository implements PullRequestRepository {
 
-    private static GHRepository getGitHubRepository(final String gitHubUrl) throws IOException {
+    @Override
+    public GHRepository getGitHubRepository(final String gitHubUrl) throws IOException {
         GitHub gitHub = getGitHub();
 
         try {
@@ -52,8 +53,8 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
     }
 
     @Override
-    public void comment(String gitUrl, int prId, String message) throws IOException {
-        getGitHubRepository(gitUrl).getPullRequest(prId).comment(message);
+    public void comment(final GHRepository ghRepository, final int prId, final String message) throws IOException {
+        ghRepository.getPullRequest(prId).comment(message);
     }
 
 }
