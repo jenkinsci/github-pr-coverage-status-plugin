@@ -22,7 +22,7 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
 
     private static final String SONAR_SEARCH_PROJECTS_API_PATH = "/api/projects/index";
     private static final String SONAR_COMPONENT_MEASURE_API_PATH = "/api/measures/component";
-    public static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "line_coverage";
+    public static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "coverage";
 
     private final String sonarUrl;
     private final String login;
