@@ -21,7 +21,7 @@ public class SimpleCovParserTest {
         float coverage = new SimpleCovParser().get(filePath);
 
         // won't be an exact match as we're converting double to float
-        assertThat((double) coverage, is(closeTo(85.7142857142857, 0.00001)));
+        assertThat((double) coverage, is(closeTo(0.857142857142857, 0.00001)));
 
     }
 
