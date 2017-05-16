@@ -103,6 +103,10 @@ To fix that:
 
 ## Changelog
 
+### [1.7.1](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.7.1)
+
+- SimpleCov JSON report fix coverage
+
 ### [1.7.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.7.0)
 
 - Support of https://github.com/jenkinsci/branch-api-plugin
