@@ -24,7 +24,7 @@ public class SimpleCovParser implements CoverageReportParser {
         }
 
         Double covered = extractValueFromPath(content);
-        return covered.floatValue();
+        return covered.floatValue() / 100;
     }
 
     private Double extractValueFromPath(String content) {
