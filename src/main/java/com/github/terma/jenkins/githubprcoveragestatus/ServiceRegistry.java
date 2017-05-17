@@ -18,7 +18,10 @@ public class ServiceRegistry {
                 if (login != null && password != null) {
                     return new SonarMasterCoverageRepository(sonarUrl, login, password, buildLog);
                 }
-                return new SonarMasterCoverageRepository(sonarUrl, Configuration.getSonarToken(), "", buildLog);
+                if (Configuration.getSonarToken() != null) {
+                    return new SonarMasterCoverageRepository(sonarUrl, Configuration.getSonarToken(), "", buildLog);
+                }
+                return new SonarMasterCoverageRepository(sonarUrl, Configuration.getSonarLogin(), Configuration.getSonarPassword(), buildLog);
             } else {
                 return Configuration.DESCRIPTOR;
             }

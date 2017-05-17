@@ -40,4 +40,12 @@ f.section(title: descriptor.displayName) {
         f.password()
     }
 
+    f.entry(field: "sonarLogin", title: _("Sonar login")) {
+        f.textbox()
+    }
+
+    f.entry(field: "sonarPassword", title: _("Sonar password")) {
+        f.password()
+    }
+
 }
