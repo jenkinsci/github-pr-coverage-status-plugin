@@ -103,6 +103,10 @@ To fix that:
 
 ## Changelog
 
+### [1.8.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.8.0) 
+
+- Sonar token & login/password authentication
+
 ### [1.7.1](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.7.1)
 
 - SimpleCov JSON report fix coverage
