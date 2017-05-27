@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.auth.BasicScheme;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -20,27 +22,32 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
 
     private static final String SONAR_SEARCH_PROJECTS_API_PATH = "/api/projects/index";
     private static final String SONAR_COMPONENT_MEASURE_API_PATH = "/api/measures/component";
-    private static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "overall_line_coverage";
+    public static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "coverage";
 
     private final String sonarUrl;
+    private final String login;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper = new ObjectMapper().disable(FAIL_ON_UNKNOWN_PROPERTIES);
     private PrintStream buildLog;
 
-    public SonarMasterCoverageRepository(String sonarUrl, PrintStream buildLog) {
+    public SonarMasterCoverageRepository(String sonarUrl, String login, String password, PrintStream buildLog) {
         this.sonarUrl = sonarUrl;
+        this.login = login;
         this.buildLog = buildLog;
         httpClient = new HttpClient();
+        if (login != null) {
+            httpClient.getState().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(login, password));
+        }
     }
 
     @Override
-    public float get(String gitUrl) {
-        log("Getting coverage for %s", gitUrl);
+    public float get(final String repoName) {
+        log("Getting coverage for %s", repoName);
         try {
-            final SonarProject sonarProject = getSonarProject(gitUrl);
+            final SonarProject sonarProject = getSonarProject(repoName);
             return getCoverageMeasure(sonarProject);
         } catch (Exception e) {
-            log("Failed to get master coverage for %s", gitUrl);
+            log("Failed to get master coverage for %s", repoName);
             log("Exception message '%s'", e);
             e.printStackTrace(buildLog);
             return 0;
@@ -53,13 +60,11 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
      * @return the sonar project found in case multiple are found, the first one is returned
      * @throws SonarProjectRetrievalException if no project could be found or an error occurred during retrieval
      */
-    private SonarProject getSonarProject(String gitUrl) throws SonarProjectRetrievalException {
-        String repoName = StringUtils.substringAfterLast(StringUtils.removeEnd(gitUrl, ".git"), "/");
-
-        final String searchUri = sonarUrl + SONAR_SEARCH_PROJECTS_API_PATH + "?search=" + repoName;
+    private SonarProject getSonarProject(final String repoName) throws SonarProjectRetrievalException {
         try {
+            final String searchUri = sonarUrl + SONAR_SEARCH_PROJECTS_API_PATH + "?search=" + repoName;
             final GetMethod method = executeGetRequest(searchUri);
-            List<SonarProject> sonarProjects = objectMapper.readValue(method.getResponseBodyAsStream(), new TypeReference<List<SonarProject>>() {
+            final List<SonarProject> sonarProjects = objectMapper.readValue(method.getResponseBodyAsStream(), new TypeReference<List<SonarProject>>() {
             });
 
             if (sonarProjects.isEmpty()) {
@@ -71,8 +76,8 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
                 log("Found multiple projects for repo name %s - found %s - returning first result", repoName, sonarProjects);
                 return sonarProjects.get(0);
             }
-        } catch (Exception e) {
-            throw new SonarProjectRetrievalException(String.format("failed to search for sonar project %s - %s", searchUri, e.getMessage()), e);
+        } catch (final Exception e) {
+            throw new SonarProjectRetrievalException(String.format("failed to search for sonar project %s - %s", repoName, e.getMessage()), e);
         }
     }
 
@@ -95,6 +100,9 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
 
     private GetMethod executeGetRequest(String uri) throws IOException, HttpClientException {
         final GetMethod method = new GetMethod(uri);
+        if (login != null) {
+            method.getHostAuthState().setAuthScheme(new BasicScheme());
+        }
         int status = httpClient.executeMethod(method);
         if (status >= SC_BAD_REQUEST) {
             throw new HttpClientException(uri, status, method.getResponseBodyAsString());

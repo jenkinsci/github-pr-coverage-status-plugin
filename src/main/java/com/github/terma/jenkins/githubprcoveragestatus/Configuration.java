@@ -61,6 +61,18 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.getSonarUrl();
     }
 
+    public static String getSonarToken() {
+        return DESCRIPTOR.getSonarToken();
+    }
+
+    public static String getSonarLogin() {
+        return DESCRIPTOR.getSonarLogin();
+    }
+
+    public static String getSonarPassword() {
+        return DESCRIPTOR.getSonarPassword();
+    }
+
     public static Boolean isUseSonarForMasterCoverage() {
         return DESCRIPTOR.isUseSonarForMasterCoverage();
     }
@@ -89,6 +101,9 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private boolean privateJenkinsPublicGitHub;
         private boolean useSonarForMasterCoverage;
         private String sonarUrl;
+        private String sonarToken;
+        private String sonarLogin;
+        private String sonarPassword;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
@@ -153,8 +168,21 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public String getSonarToken() {
+            return sonarToken;
+        }
+
+        @Override
         public String getJenkinsUrl() {
             return jenkinsUrl;
+        }
+
+        public String getSonarLogin() {
+            return sonarLogin;
+        }
+
+        public String getSonarPassword() {
+            return sonarPassword;
         }
 
         @Override
@@ -167,6 +195,9 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
             useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));
             sonarUrl = StringUtils.trimToNull(formData.getString("sonarUrl"));
+            sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
+            sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
+            sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
             save();
             return super.configure(req, formData);
         }

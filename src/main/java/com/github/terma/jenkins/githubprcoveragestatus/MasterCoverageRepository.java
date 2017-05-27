@@ -2,6 +2,6 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 
 interface MasterCoverageRepository {
 
-    float get(String gitUrl);
+    float get(final String repoName);
 
 }

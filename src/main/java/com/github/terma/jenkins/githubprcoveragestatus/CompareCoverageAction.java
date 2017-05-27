@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import org.kohsuke.github.GHRepository;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -35,14 +36,27 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundSetter;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
     private static final long serialVersionUID = 1L;
+    private String sonarLogin;
+    private String sonarPassword;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
+    }
+
+    @DataBoundSetter
+    public void setSonarLogin(String sonarLogin) {
+        this.sonarLogin = sonarLogin;
+    }
+
+    @DataBoundSetter
+    public void setSonarPassword(String sonarPassword) {
+        this.sonarPassword = sonarPassword;
     }
 
     // todo show message that addition comment in progress as it could take a while
@@ -64,8 +78,9 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                             "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin " +
                             "to trigger build!");
         }
+        final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
 
-        final float masterCoverage = ServiceRegistry.getMasterCoverageRepository(buildLog).get(gitUrl);
+        final float masterCoverage = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword).get(gitHubRepository.getName());
         final float coverage = ServiceRegistry.getCoverageRepository().get(workspace);
 
         final Message message = new Message(coverage, masterCoverage);
@@ -85,7 +100,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                     settingsRepository.getYellowThreshold(),
                     settingsRepository.getGreenThreshold(),
                     settingsRepository.isPrivateJenkinsPublicGitHub());
-            ServiceRegistry.getPullRequestRepository().comment(gitUrl, prId, comment);
+            ServiceRegistry.getPullRequestRepository().comment(gitHubRepository, prId, comment);
         } catch (Exception ex) {
             PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
             ex.printStackTrace(pw);
