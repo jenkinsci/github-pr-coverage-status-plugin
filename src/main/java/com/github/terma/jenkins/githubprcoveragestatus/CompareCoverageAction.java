@@ -102,7 +102,6 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         } catch (Exception ex) {
             PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
             ex.printStackTrace(pw);
-            throw new UnsupportedOperationException(ex.getMessage());
         }
     }
 
