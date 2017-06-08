@@ -68,7 +68,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         buildLog.println("Starting comparison of coverage.");
         final String gitUrl = Strings.isNullOrEmpty(githubUrl) ? Utils.getGitUrl(build, listener) : this.githubUrl;
-        final Integer prId = Strings.isNullOrEmpty(this.changeId) ? Utils.gitPrId(build, listener, buildLog) : Integer.parseInt(this.changeId);
+        final Integer prId = Strings.isNullOrEmpty(changeId) ? Utils.gitPrId(build, listener) : Integer.parseInt(this.changeId);
         buildLog.println("Id to be compared "+prId);
         if (prId == null) {
             throw new UnsupportedOperationException(

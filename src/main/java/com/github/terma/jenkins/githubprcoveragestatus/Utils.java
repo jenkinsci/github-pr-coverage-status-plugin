@@ -87,11 +87,10 @@ class Utils {
         return envVars.get(BUILD_URL_ENV_PROPERTY);
     }
 
-    public static Integer gitPrId(Run build, TaskListener listener, PrintStream buildLog) throws IOException, InterruptedException {
+    public static Integer gitPrId(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
-        buildLog.println(envVars.toString());
-        final String gitPrId = System.getenv(GIT_PR_ID_ENV_PROPERTY);
-        final String changeId = System.getenv(CHANGE_ID_PROPERTY);
+        final String gitPrId =  envVars.get(GIT_PR_ID_ENV_PROPERTY);
+        final String changeId = envVars.get(CHANGE_ID_PROPERTY);
         final String prIdString = gitPrId != null ? gitPrId : changeId;
         if (prIdString == null) {
             return null;

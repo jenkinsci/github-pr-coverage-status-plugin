@@ -18,6 +18,7 @@ limitations under the License.
 package com.github.terma.jenkins.githubprcoveragestatus;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -76,7 +77,7 @@ public class UtilsTest {
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PR_ID);
         when(envVars.get(Utils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
 
-        Assert.assertEquals(PR_ID_INT, Utils.gitPrId(build, listener, null));
+        Assert.assertEquals(PR_ID_INT, Utils.gitPrId(build, listener));
     }
 
     @Test
@@ -84,7 +85,7 @@ public class UtilsTest {
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(null);
         when(envVars.get(Utils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
 
-        Assert.assertEquals(CHANGE_ID_INT, Utils.gitPrId(build, listener, null));
+        Assert.assertEquals(CHANGE_ID_INT, Utils.gitPrId(build, listener));
     }
 
     @Test

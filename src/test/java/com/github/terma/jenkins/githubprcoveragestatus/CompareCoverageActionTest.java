@@ -61,7 +61,7 @@ public class CompareCoverageActionTest {
 
     @Test
     public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
-        new CompareCoverageAction().perform(build, null, null, null);
+        new CompareCoverageAction().perform(build, null, null);
     }
 
     @Test
