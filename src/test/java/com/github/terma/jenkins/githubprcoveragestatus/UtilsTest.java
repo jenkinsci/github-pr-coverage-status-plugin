@@ -18,7 +18,6 @@ limitations under the License.
 package com.github.terma.jenkins.githubprcoveragestatus;
 
 import java.io.IOException;
-import java.io.PrintStream;
 
 import org.junit.Assert;
 import org.junit.Before;
