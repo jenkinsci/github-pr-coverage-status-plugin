@@ -48,8 +48,8 @@ public class ServiceRegistry {
         ServiceRegistry.settingsRepository = settingsRepository;
     }
 
-    public static PullRequestRepository getPullRequestRepository() {
-        return pullRequestRepository != null ? pullRequestRepository : new GitHubPullRequestRepository();
+    public static PullRequestRepository getPullRequestRepository(PrintStream buildLog) {
+        return pullRequestRepository != null ? pullRequestRepository : new GitHubPullRequestRepository(buildLog);
     }
 
     public static void setPullRequestRepository(PullRequestRepository pullRequestRepository) {

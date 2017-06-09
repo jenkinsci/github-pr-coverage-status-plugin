@@ -1,12 +1,20 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import org.kohsuke.github.GHIssueComment;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class GitHubPullRequestRepository implements PullRequestRepository {
+
+    private PrintStream buildLog;
+
+    public GitHubPullRequestRepository(PrintStream buildLog) {
+        this.buildLog = buildLog;
+    }
 
     @Override
     public GHRepository getGitHubRepository(final String gitHubUrl) throws IOException {
@@ -54,7 +62,11 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
 
     @Override
     public void comment(final GHRepository ghRepository, final int prId, final String message) throws IOException {
-        ghRepository.getPullRequest(prId).comment(message);
-    }
+        buildLog.printf("Sending message %s for prId %d", message, prId);
+        buildLog.println();
+        GHIssueComment commentResponse = ghRepository.getPullRequest(prId).comment(message);
+        buildLog.printf("Got response %s, %d, %s", commentResponse.getBody(), commentResponse.getId(), commentResponse.getUser().getName());
+        buildLog.println();
 
+    }
 }

@@ -104,21 +104,6 @@
 
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-release-plugin</artifactId>-->
-                <!--<version>2.5.1</version>-->
-                <!--<configuration>-->
-                    <!--<autoVersionSubmodules>true</autoVersionSubmodules>-->
-                    <!--<preparationGoals>clean package</preparationGoals>-->
-                    <!--<completionGoals>release:clean</completionGoals>-->
-                    <!--<resume>false</resume>-->
-                    <!--<useReleaseProfile>true</useReleaseProfile>-->
-                    <!--<releaseProfiles>nexus</releaseProfiles>-->
-                    <!--<goals>package</goals>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -132,7 +117,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>

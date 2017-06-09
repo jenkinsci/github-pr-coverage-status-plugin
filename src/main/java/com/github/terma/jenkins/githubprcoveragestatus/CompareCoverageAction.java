@@ -17,6 +17,8 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.google.common.base.Strings;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -41,22 +43,13 @@ import org.kohsuke.stapler.DataBoundSetter;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
-    private static final long serialVersionUID = 1L;
     private String sonarLogin;
     private String sonarPassword;
+    private String changeId;
+    private String githubUrl;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
-    }
-
-    @DataBoundSetter
-    public void setSonarLogin(String sonarLogin) {
-        this.sonarLogin = sonarLogin;
-    }
-
-    @DataBoundSetter
-    public void setSonarPassword(String sonarPassword) {
-        this.sonarPassword = sonarPassword;
     }
 
     // todo show message that addition comment in progress as it could take a while
@@ -65,20 +58,25 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public void perform(
             final Run build, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
-        if (build.getResult() != Result.SUCCESS) return;
-
         final PrintStream buildLog = listener.getLogger();
 
-        final String gitUrl = Utils.getGitUrl(build, listener);
-        final Integer prId = Utils.gitPrId(build, listener);
+        if (build.getResult() != Result.SUCCESS) {
+            buildLog.println("Not running coverage plugin, build was not success");
+            return;
+        }
 
+
+        buildLog.println("Starting comparison of coverage.");
+        final String gitUrl = Strings.isNullOrEmpty(githubUrl) ? Utils.getGitUrl(build, listener) : this.githubUrl;
+        final Integer prId = Strings.isNullOrEmpty(changeId) ? Utils.gitPrId(build, listener) : Integer.parseInt(this.changeId);
+        buildLog.println("Id to be compared "+prId);
         if (prId == null) {
             throw new UnsupportedOperationException(
                     "Can't find " + Utils.GIT_PR_ID_ENV_PROPERTY + " please use " +
                             "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin " +
                             "to trigger build!");
         }
-        final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
+        final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository(buildLog).getGitHubRepository(gitUrl);
 
         final float masterCoverage = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword).get(gitHubRepository.getName());
         final float coverage = ServiceRegistry.getCoverageRepository().get(workspace);
@@ -100,7 +98,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                     settingsRepository.getYellowThreshold(),
                     settingsRepository.getGreenThreshold(),
                     settingsRepository.isPrivateJenkinsPublicGitHub());
-            ServiceRegistry.getPullRequestRepository().comment(gitHubRepository, prId, comment);
+            ServiceRegistry.getPullRequestRepository(buildLog).comment(gitHubRepository, prId, comment);
         } catch (Exception ex) {
             PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
             ex.printStackTrace(pw);
@@ -125,6 +123,31 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             return true;
         }
 
+    }
+
+
+    @DataBoundSetter
+    public void setSonarLogin(String sonarLogin) {
+        this.sonarLogin = sonarLogin;
+    }
+
+    public String getSonarLogin() {
+        return sonarLogin;
+    }
+
+    @DataBoundSetter
+    public void setSonarPassword(String sonarPassword) {
+        this.sonarPassword = sonarPassword;
+    }
+
+    @DataBoundSetter
+    public void setChangeId(String changeId) {
+        this.changeId = changeId;
+    }
+
+    @DataBoundSetter
+    public void setGithubUrl(String githubUrl) {
+        this.githubUrl = githubUrl;
     }
 
 }

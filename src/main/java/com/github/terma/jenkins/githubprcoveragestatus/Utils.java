@@ -22,6 +22,7 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,7 +89,7 @@ class Utils {
 
     public static Integer gitPrId(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
-        final String gitPrId = envVars.get(GIT_PR_ID_ENV_PROPERTY);
+        final String gitPrId =  envVars.get(GIT_PR_ID_ENV_PROPERTY);
         final String changeId = envVars.get(CHANGE_ID_PROPERTY);
         final String prIdString = gitPrId != null ? gitPrId : changeId;
         if (prIdString == null) {
