@@ -57,11 +57,12 @@ public class CompareCoverageActionTest {
         ServiceRegistry.setPullRequestRepository(pullRequestRepository);
         when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
         when(envVars.get(Utils.GIT_URL_ENV_PROPERTY)).thenReturn(GIT_URL);
+        when(listener.getLogger()).thenReturn(logger);
     }
 
     @Test
     public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
-        new CompareCoverageAction().perform(build, null, null);
+        new CompareCoverageAction().perform(build, null, null, listener);
     }
 
     @Test
