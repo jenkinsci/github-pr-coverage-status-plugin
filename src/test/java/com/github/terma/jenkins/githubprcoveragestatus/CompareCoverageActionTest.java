@@ -37,7 +37,6 @@ public class CompareCoverageActionTest {
     private static final String GIT_URL = "git@github.com:some/my-project.git";
     private Build build = mock(Build.class);
 
-    private PrintStream logger = mock(PrintStream.class);
     private PrintWriter printWriter = mock(PrintWriter.class);
     private TaskListener listener = mock(TaskListener.class);
 
@@ -57,17 +56,17 @@ public class CompareCoverageActionTest {
         ServiceRegistry.setPullRequestRepository(pullRequestRepository);
         when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
         when(envVars.get(Utils.GIT_URL_ENV_PROPERTY)).thenReturn(GIT_URL);
+        when(listener.getLogger()).thenReturn(System.out);
     }
 
     @Test
     public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
-        new CompareCoverageAction().perform(build, null, null, null);
+        new CompareCoverageAction().perform(build, null, null, listener);
     }
 
     @Test
     public void postCoverageStatusToPullRequestAsComment() throws IOException, InterruptedException {
         when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(listener.getLogger()).thenReturn(logger);
         when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
@@ -80,7 +79,6 @@ public class CompareCoverageActionTest {
     @Test
     public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess() throws IOException, InterruptedException {
         when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(listener.getLogger()).thenReturn(logger);
         when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
@@ -98,7 +96,6 @@ public class CompareCoverageActionTest {
     public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
             throws IOException, InterruptedException {
         when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(listener.getLogger()).thenReturn(logger);
         when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
@@ -113,7 +110,6 @@ public class CompareCoverageActionTest {
     @Test
     public void postCoverageStatusToPullRequestAsCommentWithCustomJenkinsUrlIfConfigured() throws IOException, InterruptedException {
         when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(listener.getLogger()).thenReturn(logger);
         when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");

@@ -32,9 +32,9 @@ import static org.mockito.Mockito.*;
 
 public class UtilsTest {
     private static final String PR_ID = "12";
-    private static final Integer PR_ID_INT = Integer.parseInt(PR_ID);
+    private static final int PR_ID_INT = Integer.parseInt(PR_ID);
     private static final String CHANGE_ID = "13";
-    private static final Integer CHANGE_ID_INT = Integer.parseInt(CHANGE_ID);
+    private static final int CHANGE_ID_INT = Integer.parseInt(CHANGE_ID);
     private Run build = mock(Run.class);
     private EnvVars envVars = mock(EnvVars.class);
     private TaskListener listener = mock(TaskListener.class);
