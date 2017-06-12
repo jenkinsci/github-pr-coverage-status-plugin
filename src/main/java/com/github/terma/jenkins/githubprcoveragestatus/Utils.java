@@ -78,7 +78,10 @@ class Utils {
         final EnvVars envVars = build.getEnvironment(listener);
         final String gitUrl = envVars.get(GIT_URL_ENV_PROPERTY);
         final String changeUrl = envVars.get(CHANGE_URL_PROPERTY);
-        return gitUrl != null ? gitUrl : changeUrl;
+        if (gitUrl != null) return gitUrl;
+        else if (changeUrl != null) return changeUrl;
+        else throw new UnsupportedOperationException("Can't find " + GIT_URL_ENV_PROPERTY
+                    + " or " + CHANGE_URL_PROPERTY + " in envs: " + envVars);
     }
 
     public static String getBuildUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
@@ -86,13 +89,14 @@ class Utils {
         return envVars.get(BUILD_URL_ENV_PROPERTY);
     }
 
-    public static Integer gitPrId(Run build, TaskListener listener) throws IOException, InterruptedException {
+    public static int gitPrId(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
         final String gitPrId = envVars.get(GIT_PR_ID_ENV_PROPERTY);
         final String changeId = envVars.get(CHANGE_ID_PROPERTY);
         final String prIdString = gitPrId != null ? gitPrId : changeId;
         if (prIdString == null) {
-            return null;
+            throw new UnsupportedOperationException("Can't find " + GIT_PR_ID_ENV_PROPERTY
+                    + " or " + CHANGE_ID_PROPERTY + " in envs: " + envVars);
         } else {
             return Integer.parseInt(prIdString);
         }

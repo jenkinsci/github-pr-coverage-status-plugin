@@ -17,13 +17,6 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -36,10 +29,19 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
+
+    private static final String BUILD_LOG_PREFIX = "[GitHub PR Status] ";
 
     private static final long serialVersionUID = 1L;
     private String sonarLogin;
@@ -65,26 +67,30 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public void perform(
             final Run build, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
-        if (build.getResult() != Result.SUCCESS) return;
-
         final PrintStream buildLog = listener.getLogger();
 
-        final String gitUrl = Utils.getGitUrl(build, listener);
-        final Integer prId = Utils.gitPrId(build, listener);
-
-        if (prId == null) {
-            throw new UnsupportedOperationException(
-                    "Can't find " + Utils.GIT_PR_ID_ENV_PROPERTY + " please use " +
-                            "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin " +
-                            "to trigger build!");
+        if (build.getResult() != Result.SUCCESS) {
+            buildLog.println(BUILD_LOG_PREFIX + "skip, build is red");
+            return;
         }
-        final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
 
-        final float masterCoverage = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword).get(gitHubRepository.getName());
+        buildLog.println(BUILD_LOG_PREFIX + "start");
+
+        final String gitUrl = Utils.getGitUrl(build, listener);
+        final int prId = Utils.gitPrId(build, listener);
+
+        buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
+        MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
+        final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
+        final float masterCoverage = masterCoverageRepository.get(gitHubRepository.getName());
+        buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
+
+        buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");
         final float coverage = ServiceRegistry.getCoverageRepository().get(workspace);
+        buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
         final Message message = new Message(coverage, masterCoverage);
-        buildLog.println(message.forConsole());
+        buildLog.println(BUILD_LOG_PREFIX + message.forConsole());
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
@@ -116,6 +122,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         @Override
+        @Nonnull
         public String getDisplayName() {
             return "Publish coverage to GitHub";
         }

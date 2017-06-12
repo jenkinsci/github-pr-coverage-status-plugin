@@ -31,12 +31,14 @@ import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
+    public static final String DISPLAY_NAME = "Record Master Coverage";
     private static final long serialVersionUID = 1L;
 
     @DataBoundConstructor
@@ -67,8 +69,9 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         @Override
+        @Nonnull
         public String getDisplayName() {
-            return "Record Master Coverage";
+            return DISPLAY_NAME;
         }
 
         @Override

@@ -17,19 +17,19 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-import hudson.Extension;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
-import net.sf.json.JSONObject;
+import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("WeakerAccess")
 public class Configuration extends AbstractDescribableImpl<Configuration> {
@@ -87,8 +87,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     }
 
     @SuppressWarnings("unused")
-    public static final class ConfigurationDescriptor extends Descriptor<Configuration>
-            implements MasterCoverageRepository, SettingsRepository {
+    public static final class ConfigurationDescriptor extends Descriptor<Configuration> implements SettingsRepository {
 
         private static final int DEFAULT_YELLOW_THRESHOLD = 80;
         private static final int DEFAULT_GREEN_THRESHOLD = 90;
@@ -117,19 +116,14 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return "Coverage status for GitHub Pull Requests";
         }
 
-        @Override
-        public float get(String repo) {
-            final Float coverage = repo == null ? null : coverageByRepo.get(repo);
-            return coverage == null ? 0 : coverage;
+        @Nonnull
+        public Map<String, Float> getCoverageByRepo() {
+            return coverageByRepo;
         }
 
         public void set(String repo, float coverage) {
             coverageByRepo.put(repo, coverage);
             save();
-        }
-
-        public Map<String, Float> getCoverageByRepo() {
-            return coverageByRepo;
         }
 
         @Override
