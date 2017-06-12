@@ -38,7 +38,7 @@ import java.io.PrintStream;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
-    public static String DISPLAY_NAME = "Record Master Coverage";
+    public static final String DISPLAY_NAME = "Record Master Coverage";
     private static final long serialVersionUID = 1L;
 
     @DataBoundConstructor
