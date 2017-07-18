@@ -39,7 +39,7 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
             throw new IOException("Error while accessing rate limit API", ex);
         }
 
-        final String userRepo = Utils.getUserRepo(gitHubUrl);
+        final String userRepo = GitUtils.getUserRepo(gitHubUrl);
 
         try {
             return gitHub.getRepository(userRepo);
