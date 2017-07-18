@@ -19,6 +19,11 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 
 interface MasterCoverageRepository {
 
-    float get(final String repoName);
+    /**
+     *
+     * @param gitHubRepoUrl - Git Hub Repository URL (full)
+     * @return master coverage or zero if coverage don't exist or not tracked before
+     */
+    float get(final String gitHubRepoUrl);
 
 }

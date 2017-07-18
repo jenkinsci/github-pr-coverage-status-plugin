@@ -17,17 +17,17 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.io.IOException;
-
+import hudson.EnvVars;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import hudson.EnvVars;
-import hudson.model.Run;
-import hudson.model.TaskListener;
+import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class UtilsTest {
@@ -45,22 +45,6 @@ public class UtilsTest {
     }
 
     @Test
-    public void getUserRepo() {
-        Assert.assertEquals(
-                "terma/jenkins-github-coverage-updater",
-                Utils.getUserRepo("https://github.com/terma/jenkins-github-coverage-updater"));
-
-        Assert.assertEquals("terma/jenkins-github-coverage-updater",
-                Utils.getUserRepo("https://github.com/terma/jenkins-github-coverage-updater.git"));
-
-        Assert.assertEquals("terma/jenkins-github-coverage-updater",
-                Utils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater.git"));
-
-        Assert.assertEquals("terma/jenkins-github-coverage-updater",
-                Utils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
-    }
-
-    @Test
     public void getJenkinsUrlFromBuildUrl() {
         Assert.assertEquals(
                 "http://localhost:8080/jenkins",
@@ -72,7 +56,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void gitPrIdPrIdHasPriority() throws IOException, InterruptedException  {
+    public void gitPrIdPrIdHasPriority() throws IOException, InterruptedException {
         when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PR_ID);
         when(envVars.get(Utils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
 
@@ -88,7 +72,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void getGitUrlGitUrlHasPriority() throws IOException, InterruptedException  {
+    public void getGitUrlGitUrlHasPriority() throws IOException, InterruptedException {
         when(envVars.get(Utils.GIT_URL_ENV_PROPERTY)).thenReturn(PR_ID);
         when(envVars.get(Utils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
 

@@ -41,31 +41,8 @@ class Utils {
      */
     public static final String GIT_PR_ID_ENV_PROPERTY = "ghprbPullId";
 
-    public static final Pattern HTTP_GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
-    public static final Pattern SSH_GITHUB_USER_REPO_PATTERN = Pattern.compile("^.+:(.+)");
     public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
     public static final String CHANGE_URL_PROPERTY = "CHANGE_URL";
-
-    public static String getUserRepo(final String url) {
-        String userRepo = null;
-
-        if (url != null) {
-            Matcher m = HTTP_GITHUB_USER_REPO_PATTERN.matcher(url);
-            if (m.matches()) userRepo = m.group(2);
-
-            if (userRepo == null) {
-                m = SSH_GITHUB_USER_REPO_PATTERN.matcher(url);
-                if (m.matches()) userRepo = m.group(1);
-            }
-        }
-
-        if (userRepo == null) {
-            throw new IllegalStateException(String.format("Invalid GitHub project url: %s", url));
-        }
-
-        if (userRepo.endsWith(".git")) userRepo = userRepo.substring(0, userRepo.length() - ".git".length());
-        return userRepo;
-    }
 
     public static String getJenkinsUrlFromBuildUrl(String buildUrl) {
         final String keyword = "/job/";
