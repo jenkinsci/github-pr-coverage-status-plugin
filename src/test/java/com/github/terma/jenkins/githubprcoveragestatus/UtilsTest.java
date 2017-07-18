@@ -44,6 +44,7 @@ public class UtilsTest {
         when(build.getEnvironment(listener)).thenReturn(envVars);
     }
 
+    // todo move to dedicated util class for GIT
     @Test
     public void getUserRepo() {
         Assert.assertEquals(
@@ -58,6 +59,23 @@ public class UtilsTest {
 
         Assert.assertEquals("terma/jenkins-github-coverage-updater",
                 Utils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
+    }
+
+    // todo move to dedicated util class for GIT
+    @Test
+    public void getRepoName() {
+        Assert.assertEquals(
+                "jenkins-github-coverage-updater",
+                Utils.getRepoName("https://github.com/terma/jenkins-github-coverage-updater"));
+
+        Assert.assertEquals("jenkins-github-coverage-updater",
+                Utils.getRepoName("https://github.com/terma/jenkins-github-coverage-updater.git"));
+
+        Assert.assertEquals("jenkins-github-coverage-updater",
+                Utils.getRepoName("git@github.com:terma/jenkins-github-coverage-updater.git"));
+
+        Assert.assertEquals("jenkins-github-coverage-updater",
+                Utils.getRepoName("git@github.com:terma/jenkins-github-coverage-updater"));
     }
 
     @Test

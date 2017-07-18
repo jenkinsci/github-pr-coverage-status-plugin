@@ -43,24 +43,47 @@ class Utils {
 
     public static final Pattern HTTP_GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
     public static final Pattern SSH_GITHUB_USER_REPO_PATTERN = Pattern.compile("^.+:(.+)");
+
     public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
     public static final String CHANGE_URL_PROPERTY = "CHANGE_URL";
 
-    public static String getUserRepo(final String url) {
+    /**
+     * Extract repo name from Git URL.
+     * For example: <code>https://github.com/terma/jenkins-github-coverage-updater.git</code>
+     * Result: <code>jenkins-github-coverage-updater</code>
+     *
+     * @param gitRepoUrl - Git repository URL
+     * @return repo name
+     */
+    public static String getRepoName(String gitRepoUrl) {
+        String[] userRepo = getUserRepo(gitRepoUrl).split("/");
+        if (userRepo.length < 2) throw new IllegalArgumentException("Bad Git repository URL: " + gitRepoUrl);
+        return userRepo[1];
+    }
+
+    /**
+     * Extract user name and repo name from Git URL.
+     * For example: <code>https://github.com/terma/jenkins-github-coverage-updater.git</code>
+     * Result: <code>terma/jenkins-github-coverage-updater</code>
+     *
+     * @param gitRepoUrl - Git repository URL
+     * @return user name with repo name
+     */
+    public static String getUserRepo(final String gitRepoUrl) {
         String userRepo = null;
 
-        if (url != null) {
-            Matcher m = HTTP_GITHUB_USER_REPO_PATTERN.matcher(url);
+        if (gitRepoUrl != null) {
+            Matcher m = HTTP_GITHUB_USER_REPO_PATTERN.matcher(gitRepoUrl);
             if (m.matches()) userRepo = m.group(2);
 
             if (userRepo == null) {
-                m = SSH_GITHUB_USER_REPO_PATTERN.matcher(url);
+                m = SSH_GITHUB_USER_REPO_PATTERN.matcher(gitRepoUrl);
                 if (m.matches()) userRepo = m.group(1);
             }
         }
 
         if (userRepo == null) {
-            throw new IllegalStateException(String.format("Invalid GitHub project url: %s", url));
+            throw new IllegalStateException(String.format("Invalid Git Hub repository URL: %s", gitRepoUrl));
         }
 
         if (userRepo.endsWith(".git")) userRepo = userRepo.substring(0, userRepo.length() - ".git".length());

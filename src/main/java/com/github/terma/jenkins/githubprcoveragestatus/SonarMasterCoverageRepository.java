@@ -35,6 +35,7 @@ import java.util.List;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static org.apache.commons.httpclient.HttpStatus.SC_BAD_REQUEST;
 
+@SuppressWarnings("WeakerAccess")
 public class SonarMasterCoverageRepository implements MasterCoverageRepository {
 
     private static final String SONAR_SEARCH_PROJECTS_API_PATH = "/api/projects/index";
@@ -58,13 +59,14 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
     }
 
     @Override
-    public float get(final String repoName) {
-        log("Getting coverage for %s", repoName);
+    public float get(final String gitHubRepoUrl) {
+        final String repoName = Utils.getRepoName(gitHubRepoUrl);
+        log("Getting coverage for Git Repo URL: %s by repo name: %s", gitHubRepoUrl, repoName);
         try {
             final SonarProject sonarProject = getSonarProject(repoName);
             return getCoverageMeasure(sonarProject);
         } catch (Exception e) {
-            log("Failed to get master coverage for %s", repoName);
+            log("Failed to get master coverage for %s", gitHubRepoUrl);
             log("Exception message '%s'", e);
             e.printStackTrace(buildLog);
             return 0;
