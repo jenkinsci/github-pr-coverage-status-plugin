@@ -103,6 +103,10 @@ To fix that:
 
 ## Changelog
 
+### [1.8.2](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.8.2)
+
+- Fix Master showing 0% even after RecordMasterCoverage is run
+
 ### [1.8.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.8.0) 
 
 - Sonar token & login/password authentication
