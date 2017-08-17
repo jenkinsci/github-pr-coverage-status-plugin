@@ -19,4 +19,6 @@ interface SettingsRepository {
     String getSonarUrl();
 
     String getSonarToken();
+
+    boolean isPrDiscoveryForBranches();
 }

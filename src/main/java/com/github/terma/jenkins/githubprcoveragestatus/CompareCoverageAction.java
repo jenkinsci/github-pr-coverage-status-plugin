@@ -29,6 +29,7 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -37,6 +38,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Map;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
@@ -46,6 +48,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private static final long serialVersionUID = 1L;
     private String sonarLogin;
     private String sonarPassword;
+    private Map<String, String> scmVars;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
@@ -61,6 +64,16 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         this.sonarPassword = sonarPassword;
     }
 
+    @DataBoundSetter
+    public void setScmVars(Map<String, String> scmVars) {
+        this.scmVars = scmVars;
+    }
+
+    // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
+    public Map<String, String> getScmVars() {
+        return scmVars;
+    }
+
     // todo show message that addition comment in progress as it could take a while
     @SuppressWarnings("NullableProblems")
     @Override
@@ -74,10 +87,29 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             return;
         }
 
+
         buildLog.println(BUILD_LOG_PREFIX + "start");
 
-        final String gitUrl = Utils.getGitUrl(build, listener);
-        final int prId = Utils.gitPrId(build, listener);
+        String gitUrl;
+        int prId;
+        try {
+            gitUrl = Utils.getGitUrl(build, listener);
+            prId = Utils.gitPrId(build, listener);
+        } catch (UnsupportedOperationException e) {
+            if (!ServiceRegistry.getSettingsRepository().isPrDiscoveryForBranches()) throw e;
+            if (scmVars == null) throw new IllegalArgumentException("Pass result from 'checkout scm' into scmVars property");
+            gitUrl = scmVars.get("GIT_URL");
+            String branch = scmVars.get("GIT_BRANCH");
+            String sha = scmVars.get("GIT_COMMIT");
+            buildLog.println(BUILD_LOG_PREFIX + String.format("Attempt to discover PR for %s @ %s", branch, sha));
+            try {
+                GHPullRequest pr = ServiceRegistry.getPullRequestRepository().getPullRequestFor(gitUrl, branch, sha);
+                prId =  pr.getNumber();
+                buildLog.println(BUILD_LOG_PREFIX + String.format("Discovered PR %d", prId));
+            } catch (IOException ioe) {
+                throw new UnsupportedOperationException(e);
+            }
+        }
 
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
         MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);

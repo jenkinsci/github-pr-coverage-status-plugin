@@ -19,9 +19,12 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 
 import java.io.IOException;
 
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 
 interface PullRequestRepository {
+
+    GHPullRequest getPullRequestFor(String repo, String branch, String sha) throws IOException;
 
     GHRepository getGitHubRepository(final String gitHubUrl) throws IOException;
 

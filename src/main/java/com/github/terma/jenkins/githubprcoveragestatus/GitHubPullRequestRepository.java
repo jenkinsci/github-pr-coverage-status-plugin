@@ -17,6 +17,8 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
@@ -24,6 +26,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class GitHubPullRequestRepository implements PullRequestRepository {
+
+    @Override
+    public GHPullRequest getPullRequestFor(String gitHubUrl, String branch, String sha) throws IOException {
+        return getGitHubRepository(gitHubUrl).getPullRequests(GHIssueState.OPEN).stream()
+                .filter(pr -> pr.getHead().getRef().equals(branch) && pr.getHead().getSha().equals(sha))
+                .findFirst().orElseThrow(() -> new IOException(String.format("No PR found for %s %s @ %s", gitHubUrl, branch, sha)));
+    }
 
     @Override
     public GHRepository getGitHubRepository(final String gitHubUrl) throws IOException {
