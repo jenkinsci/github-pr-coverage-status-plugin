@@ -29,7 +29,6 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
-import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -73,8 +72,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         try {
             gitUrl = Utils.getGitUrl(build, listener);
         } catch (UnsupportedOperationException e) {
-            if (!ServiceRegistry.getSettingsRepository().isPrDiscoveryForBranches()) throw e;
-            if (scmVars == null) throw new IllegalArgumentException("Pass result from 'checkout scm' into scmVars property");
+            if (scmVars == null) throw new IllegalArgumentException("Please provide PR_ID or scmVarsq");
             gitUrl = scmVars.get("GIT_URL");
         }
 

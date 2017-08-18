@@ -77,10 +77,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.isUseSonarForMasterCoverage();
     }
 
-    public static Boolean isPrDiscoveryForBranches() {
-        return DESCRIPTOR.isPrDiscoveryForBranches();
-    }
-
     public static void setMasterCoverage(final String repo, final float coverage) {
         DESCRIPTOR.set(repo, coverage);
     }
@@ -100,7 +96,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         private String gitHubApiUrl;
         private String personalAccessToken;
-        private boolean prDiscoveryForBranches;
         private String jenkinsUrl;
         private boolean privateJenkinsPublicGitHub;
         private boolean useSonarForMasterCoverage;
@@ -121,8 +116,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return "Coverage status for GitHub Pull Requests";
         }
 
-        // TODO false positive: [INFO] com.github.terma.jenkins.githubprcoveragestatus.Configuration$ConfigurationDescriptor.getCoverageByRepo() may return null, but is declared @Nonnull [com.github.terma.jenkins.githubprcoveragestatus.Configuration$ConfigurationDescriptor, com.github.terma.jenkins.githubprcoveragestatus.Configuration$ConfigurationDescriptor] Returned at Configuration.java:[line 126]Known null at Configuration.java:[line 126] NP_NONNULL_RETURN_VIOLATION
-        @SuppressWarnings("NP_NONNULL_RETURN_VIOLATION")
         @Nonnull
         public Map<String, Float> getCoverageByRepo() {
             return coverageByRepo;
@@ -187,18 +180,12 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
-        public boolean isPrDiscoveryForBranches() {
-            return prDiscoveryForBranches;
-        }
-
-        @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             gitHubApiUrl = StringUtils.trimToNull(formData.getString("gitHubApiUrl"));
             personalAccessToken = StringUtils.trimToNull(formData.getString("personalAccessToken"));
             yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
             greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
             jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
-            prDiscoveryForBranches = BooleanUtils.toBoolean(formData.getString("prDiscoveryForBranches"));
             privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
             useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));
             sonarUrl = StringUtils.trimToNull(formData.getString("sonarUrl"));

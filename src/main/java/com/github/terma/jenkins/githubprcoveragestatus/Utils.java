@@ -28,15 +28,12 @@ import java.util.regex.Pattern;
 @SuppressWarnings("WeakerAccess")
 class Utils {
 
-    public static final String JOB_NAME = "JOB_NAME_ENV_PROPERTY";
-
     /**
      * Injected by Git plugin
      */
     public static final String GIT_URL_ENV_PROPERTY = "GIT_URL";
 
     public static final String BUILD_URL_ENV_PROPERTY = "BUILD_URL";
-
 
     /**
      * Injected by

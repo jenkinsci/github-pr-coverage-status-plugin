@@ -28,10 +28,6 @@ f.section(title: descriptor.displayName) {
         f.textbox()
     }
 
-    f.entry(field: "prDiscoveryForBranches", title: _("Discover PR for branch builds with GH Branch Source plugin")) {
-        f.checkbox()
-    }
-
     f.entry(field: "useSonarForMasterCoverage", title: _("Use Sonar for master coverage")) {
         f.checkbox()
     }

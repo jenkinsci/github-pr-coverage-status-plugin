@@ -87,7 +87,6 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             return;
         }
 
-
         buildLog.println(BUILD_LOG_PREFIX + "start");
 
         String gitUrl;
@@ -96,8 +95,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             gitUrl = Utils.getGitUrl(build, listener);
             prId = Utils.gitPrId(build, listener);
         } catch (UnsupportedOperationException e) {
-            if (!ServiceRegistry.getSettingsRepository().isPrDiscoveryForBranches()) throw e;
-            if (scmVars == null) throw new IllegalArgumentException("Pass result from 'checkout scm' into scmVars property");
+            if (scmVars == null) throw new UnsupportedOperationException("Please provide PR_ID or scmVars");
             gitUrl = scmVars.get("GIT_URL");
             String branch = scmVars.get("GIT_BRANCH");
             String sha = scmVars.get("GIT_COMMIT");

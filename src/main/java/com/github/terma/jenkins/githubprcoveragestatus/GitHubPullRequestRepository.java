@@ -29,9 +29,12 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
 
     @Override
     public GHPullRequest getPullRequestFor(String gitHubUrl, String branch, String sha) throws IOException {
-        return getGitHubRepository(gitHubUrl).getPullRequests(GHIssueState.OPEN).stream()
-                .filter(pr -> pr.getHead().getRef().equals(branch) && pr.getHead().getSha().equals(sha))
-                .findFirst().orElseThrow(() -> new IOException(String.format("No PR found for %s %s @ %s", gitHubUrl, branch, sha)));
+        for (GHPullRequest pr : getGitHubRepository(gitHubUrl).getPullRequests(GHIssueState.OPEN)) {
+            if (pr.getHead().getRef().equals(branch) && pr.getHead().getSha().equals(sha)) {
+                return pr;
+            }
+        }
+        throw new IOException(String.format("No PR found for %s %s @ %s", gitHubUrl, branch, sha));
     }
 
     @Override
