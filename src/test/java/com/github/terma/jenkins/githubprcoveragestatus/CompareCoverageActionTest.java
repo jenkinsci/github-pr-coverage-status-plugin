@@ -89,7 +89,7 @@ public class CompareCoverageActionTest {
         new CompareCoverageAction().perform(build, null, null, listener);
 
         verify(listener).error("Couldn't add comment to pull request #12!");
-        verify(printWriter, atLeastOnce()).println(anyObject());
+        verify(printWriter, atLeastOnce()).println(any(Throwable.class));
     }
 
     @Test

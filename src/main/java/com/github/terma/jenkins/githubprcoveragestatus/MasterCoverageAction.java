@@ -30,10 +30,12 @@ import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Map;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
@@ -41,9 +43,21 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
     public static final String DISPLAY_NAME = "Record Master Coverage";
     private static final long serialVersionUID = 1L;
 
+
+    private Map<String, String> scmVars;
+
     @DataBoundConstructor
     public MasterCoverageAction() {
 
+    }
+
+    @DataBoundSetter
+    public void setScmVars(Map<String, String> scmVars) {
+        this.scmVars = scmVars;
+    }
+    // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
+    public Map<String, String> getScmVars() {
+        return scmVars;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -53,7 +67,14 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         if (build.getResult() != Result.SUCCESS) return;
 
         final PrintStream buildLog = listener.getLogger();
-        final String gitUrl = Utils.getGitUrl(build, listener);
+
+        String gitUrl;
+        try {
+            gitUrl = Utils.getGitUrl(build, listener);
+        } catch (UnsupportedOperationException e) {
+            if (scmVars == null) throw new IllegalArgumentException("Please provide PR_ID or scmVarsq");
+            gitUrl = scmVars.get("GIT_URL");
+        }
 
         final float masterCoverage = ServiceRegistry.getCoverageRepository().get(workspace);
         buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
