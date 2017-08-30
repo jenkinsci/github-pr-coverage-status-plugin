@@ -37,15 +37,17 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Map;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
-    private static final String BUILD_LOG_PREFIX = "[GitHub PR Status] ";
+    public static final String BUILD_LOG_PREFIX = "[GitHub PR Status] ";
 
     private static final long serialVersionUID = 1L;
     private String sonarLogin;
     private String sonarPassword;
+    private Map<String, String> scmVars;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
@@ -59,6 +61,16 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     @DataBoundSetter
     public void setSonarPassword(String sonarPassword) {
         this.sonarPassword = sonarPassword;
+    }
+
+    // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
+    public Map<String, String> getScmVars() {
+        return scmVars;
+    }
+
+    @DataBoundSetter
+    public void setScmVars(Map<String, String> scmVars) {
+        this.scmVars = scmVars;
     }
 
     // todo show message that addition comment in progress as it could take a while
@@ -76,8 +88,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         buildLog.println(BUILD_LOG_PREFIX + "start");
 
-        final String gitUrl = Utils.getGitUrl(build, listener);
-        final int prId = Utils.gitPrId(build, listener);
+        final int prId = PrIdAndUrlUtils.getPrId(scmVars, build, listener);
+        final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
         MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
