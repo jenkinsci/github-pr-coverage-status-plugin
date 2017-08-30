@@ -17,32 +17,11 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import hudson.EnvVars;
-import hudson.model.Run;
-import hudson.model.TaskListener;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 public class UtilsTest {
-    private static final String PR_ID = "12";
-    private static final int PR_ID_INT = Integer.parseInt(PR_ID);
-    private static final String CHANGE_ID = "13";
-    private static final int CHANGE_ID_INT = Integer.parseInt(CHANGE_ID);
-    private Run build = mock(Run.class);
-    private EnvVars envVars = mock(EnvVars.class);
-    private TaskListener listener = mock(TaskListener.class);
-
-    @Before
-    public void initMocks() throws IOException, InterruptedException {
-        when(build.getEnvironment(listener)).thenReturn(envVars);
-    }
 
     @Test
     public void getJenkinsUrlFromBuildUrl() {
@@ -55,35 +34,4 @@ public class UtilsTest {
                 Utils.getJenkinsUrlFromBuildUrl("http://localhost:8080/job/branch/459000"));
     }
 
-    @Test
-    public void gitPrIdPrIdHasPriority() throws IOException, InterruptedException {
-        when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PR_ID);
-        when(envVars.get(Utils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
-
-        Assert.assertEquals(PR_ID_INT, Utils.gitPrId(build, listener));
-    }
-
-    @Test
-    public void gitPrIdIfPrIdIsNullChangeIdIsUsed() throws IOException, InterruptedException {
-        when(envVars.get(Utils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(null);
-        when(envVars.get(Utils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
-
-        Assert.assertEquals(CHANGE_ID_INT, Utils.gitPrId(build, listener));
-    }
-
-    @Test
-    public void getGitUrlGitUrlHasPriority() throws IOException, InterruptedException {
-        when(envVars.get(Utils.GIT_URL_ENV_PROPERTY)).thenReturn(PR_ID);
-        when(envVars.get(Utils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
-
-        Assert.assertEquals(PR_ID, Utils.getGitUrl(build, listener));
-    }
-
-    @Test
-    public void getGitUrlIfGitUrlsNullChangeUrlIsUsed() throws IOException, InterruptedException {
-        when(envVars.get(Utils.GIT_URL_ENV_PROPERTY)).thenReturn(null);
-        when(envVars.get(Utils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
-
-        Assert.assertEquals(CHANGE_ID, Utils.getGitUrl(build, listener));
-    }
 }

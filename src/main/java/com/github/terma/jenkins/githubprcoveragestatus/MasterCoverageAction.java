@@ -51,13 +51,14 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
     }
 
-    @DataBoundSetter
-    public void setScmVars(Map<String, String> scmVars) {
-        this.scmVars = scmVars;
-    }
     // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
     public Map<String, String> getScmVars() {
         return scmVars;
+    }
+
+    @DataBoundSetter
+    public void setScmVars(Map<String, String> scmVars) {
+        this.scmVars = scmVars;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -67,14 +68,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         if (build.getResult() != Result.SUCCESS) return;
 
         final PrintStream buildLog = listener.getLogger();
-
-        String gitUrl;
-        try {
-            gitUrl = Utils.getGitUrl(build, listener);
-        } catch (UnsupportedOperationException e) {
-            if (scmVars == null) throw new IllegalArgumentException("Please provide PR_ID or scmVarsq");
-            gitUrl = scmVars.get("GIT_URL");
-        }
+        final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         final float masterCoverage = ServiceRegistry.getCoverageRepository().get(workspace);
         buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
