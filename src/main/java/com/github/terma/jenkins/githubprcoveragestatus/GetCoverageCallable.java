@@ -32,6 +32,12 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> implements CoverageRepository {
 
+    private final boolean disableSimpleCov;
+
+    GetCoverageCallable(final boolean disableSimpleCov) {
+        this.disableSimpleCov = disableSimpleCov;
+    }
+
     private static List<Float> getFloats(File ws, String path, CoverageReportParser parser) {
         FileSet fs = Util.createFileSet(ws, path);
         DirectoryScanner ds = fs.getDirectoryScanner();
@@ -44,7 +50,7 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> impleme
     @Override
     public float get(final FilePath workspace) throws IOException, InterruptedException {
         if (workspace == null) throw new IllegalArgumentException("Workspace should not be null!");
-        return workspace.act(new GetCoverageCallable());
+        return workspace.act(new GetCoverageCallable(disableSimpleCov));
     }
 
     @Override
@@ -55,7 +61,7 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> impleme
         cov.addAll(getFloats(ws, "**/jacoco.xml", new JacocoParser()));
         cov.addAll(getFloats(ws, "**/jacocoTestReport.xml", new JacocoParser())); //default for gradle
         cov.addAll(getFloats(ws, "**/clover.xml", new CloverParser()));
-        cov.addAll(getFloats(ws, "**/coverage.json", new SimpleCovParser()));
+        if (!disableSimpleCov) cov.addAll(getFloats(ws, "**/coverage.json", new SimpleCovParser()));
 
         float s = 0;
         for (float v : cov) s += v;

@@ -48,4 +48,8 @@ f.section(title: descriptor.displayName) {
         f.password()
     }
 
+    f.entry(field: "disableSimpleCov", title: _("Disable SimpleCov coverage parser")) {
+        f.checkbox()
+    }
+
 }

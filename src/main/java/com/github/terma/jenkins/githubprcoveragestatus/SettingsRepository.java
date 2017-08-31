@@ -16,6 +16,8 @@ interface SettingsRepository {
 
     boolean isUseSonarForMasterCoverage();
 
+    boolean isDisableSimpleCov();
+
     String getSonarUrl();
 
     String getSonarToken();

@@ -51,8 +51,8 @@ public class ServiceRegistry {
         ServiceRegistry.masterCoverageRepository = masterCoverageRepository;
     }
 
-    public static CoverageRepository getCoverageRepository() {
-        return coverageRepository != null ? coverageRepository : new GetCoverageCallable();
+    public static CoverageRepository getCoverageRepository(final boolean disableSimpleCov) {
+        return coverageRepository != null ? coverageRepository : new GetCoverageCallable(disableSimpleCov);
     }
 
     public static void setCoverageRepository(CoverageRepository coverageRepository) {

@@ -88,6 +88,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         buildLog.println(BUILD_LOG_PREFIX + "start");
 
+        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+
         final int prId = PrIdAndUrlUtils.getPrId(scmVars, build, listener);
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
@@ -98,7 +100,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
 
         buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");
-        final float coverage = ServiceRegistry.getCoverageRepository().get(workspace);
+        final float coverage = ServiceRegistry.getCoverageRepository(settingsRepository.isDisableSimpleCov()).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
         final Message message = new Message(coverage, masterCoverage);
@@ -106,10 +108,9 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
-        String jenkinsUrl = ServiceRegistry.getSettingsRepository().getJenkinsUrl();
+        String jenkinsUrl = settingsRepository.getJenkinsUrl();
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
 
-        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
 
         try {
             final String comment = message.forComment(
