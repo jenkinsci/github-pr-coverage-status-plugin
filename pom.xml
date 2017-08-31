@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>github-pr-coverage-status</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.1</version>
     <packaging>hpi</packaging>
 
     <url>https://wiki.jenkins-ci.org/display/JENKINS/GitHub+PR+Coverage+Status+Plugin</url>
@@ -33,7 +33,7 @@
         <connection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
         <developerConnection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
-        <tag>HEAD</tag>
+        <tag>github-pr-coverage-status-1.9.1</tag>
     </scm>
 
     <licenses>
