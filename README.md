@@ -103,6 +103,10 @@ To fix that:
 
 ## Changelog
 
+### [1.9.1](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.9.1)
+
+- Allow to disable SimpleCov Coverage parser
+
 ### [1.9.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.9.0)
 
 - Add support of Workflow SCM Step Plugin
