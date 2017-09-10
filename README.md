@@ -1,7 +1,6 @@
 # GitHub Pull Request Coverage Status Plugin for Jenkins
 
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins/github-pr-coverage-status-plugin/master)](https://ci.jenkins.io/job/Plugins/job/github-pr-coverage-status-plugin/job/master/)
-[![Coverage Status](https://coveralls.io/repos/github/terma/github-pr-coverage-status/badge.svg?branch=master)](https://coveralls.io/github/terma/github-pr-coverage-status?branch=master)
 
 * [Overview](#overview)
 * [Supports coverage reports](#supports-coverage-reports)
