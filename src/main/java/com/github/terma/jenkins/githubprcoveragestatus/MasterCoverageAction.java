@@ -37,6 +37,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Map;
 
+/**
+ * Record coverage of Jenkins Build and assume it as master coverage.
+ * Master coverage will be used to compare Pull Request coverage and provide status message in Pull Request.
+ * Optional step as coverage could be taken from Sonar. Take a look on {@link Configuration}
+ *
+ * @see CompareCoverageAction
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 

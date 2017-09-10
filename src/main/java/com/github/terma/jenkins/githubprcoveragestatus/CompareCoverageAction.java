@@ -39,6 +39,18 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
+/**
+ * Build step to publish pull request coverage status message to GitHub pull request.
+ * <p>
+ * Workflow:
+ * <ul>
+ * <li>find coverage of current build and assume it as pull request coverage</li>
+ * <li>find master coverage for repository URL could be taken by {@link MasterCoverageAction} or Sonar {@link Configuration}</li>
+ * <li>Publish nice status message to GitHub PR page</li>
+ * </ul>
+ *
+ * @see MasterCoverageAction
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
