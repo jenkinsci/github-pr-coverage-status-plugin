@@ -17,17 +17,17 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.io.IOException;
+import com.cdancy.bitbucket.rest.domain.pullrequest.PullRequest;
+import com.cdancy.bitbucket.rest.domain.repository.Repository;
 
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
+import java.io.IOException;
 
 interface PullRequestRepository {
 
-    GHPullRequest getPullRequestFor(String repo, String branch, String sha) throws IOException;
+    PullRequest getPullRequestFor(String repo, String branch, String sha) throws IOException;
 
-    GHRepository getGitHubRepository(final String gitHubUrl) throws IOException;
+    Repository getBitbucketRepository(final String gitHubUrl) throws IOException;
 
-    void comment(GHRepository ghRepository, int prId, String message) throws IOException;
+    void comment(Repository repository, int prId, String message) throws IOException;
 
 }

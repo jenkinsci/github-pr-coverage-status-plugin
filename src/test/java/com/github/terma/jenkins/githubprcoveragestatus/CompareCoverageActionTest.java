@@ -17,19 +17,25 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.cdancy.bitbucket.rest.domain.repository.Repository;
 import hudson.EnvVars;
 import hudson.model.Build;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import org.kohsuke.github.GHRepository;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class CompareCoverageActionTest {
 
@@ -45,7 +51,7 @@ public class CompareCoverageActionTest {
     private CoverageRepository coverageRepository = mock(CoverageRepository.class);
     private SettingsRepository settingsRepository = mock(SettingsRepository.class);
     private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
-    private GHRepository ghRepository = mock(GHRepository.class);
+    private Repository ghRepository = mock(Repository.class);
 
     @Before
     public void initMocks() throws IOException {
@@ -53,7 +59,7 @@ public class CompareCoverageActionTest {
         ServiceRegistry.setCoverageRepository(coverageRepository);
         ServiceRegistry.setSettingsRepository(settingsRepository);
         ServiceRegistry.setPullRequestRepository(pullRequestRepository);
-        when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
+        when(pullRequestRepository.getBitbucketRepository(GIT_URL)).thenReturn(ghRepository);
         when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(GIT_URL);
         when(listener.getLogger()).thenReturn(System.out);
     }
@@ -83,7 +89,7 @@ public class CompareCoverageActionTest {
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
         when(listener.error(anyString())).thenReturn(printWriter);
 
-        doThrow(new IOException("???")).when(pullRequestRepository).comment(any(GHRepository.class), anyInt(), anyString());
+        doThrow(new IOException("???")).when(pullRequestRepository).comment(any(Repository.class), anyInt(), anyString());
 
         new CompareCoverageAction().perform(build, null, null, listener);
 

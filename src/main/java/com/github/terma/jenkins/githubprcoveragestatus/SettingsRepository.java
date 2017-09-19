@@ -21,4 +21,8 @@ interface SettingsRepository {
     String getSonarUrl();
 
     String getSonarToken();
+
+    String getBitbucketProject();
+
+    String getBitbucketRepository();
 }

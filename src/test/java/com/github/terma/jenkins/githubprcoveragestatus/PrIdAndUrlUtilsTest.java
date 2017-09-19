@@ -17,13 +17,13 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.cdancy.bitbucket.rest.domain.pullrequest.PullRequest;
 import hudson.EnvVars;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.kohsuke.github.GHPullRequest;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -46,7 +46,7 @@ public class PrIdAndUrlUtilsTest {
     private EnvVars envVars = mock(EnvVars.class);
     private TaskListener listener = mock(TaskListener.class);
     private PrintStream logger = mock(PrintStream.class);
-    private GHPullRequest ghPullRequest = mock(GHPullRequest.class);
+    private PullRequest ghPullRequest = mock(PullRequest.class);
     private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
     private Map<String, String> scmVars;
 
@@ -90,7 +90,7 @@ public class PrIdAndUrlUtilsTest {
     public void getGitPrIdFromScmVarsIfOtherNull() throws IOException, InterruptedException {
         when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(null);
         when(envVars.get(PrIdAndUrlUtils.CHANGE_ID_PROPERTY)).thenReturn(null);
-        when(ghPullRequest.getNumber()).thenReturn(SCM_ENVS_PR_ID_INT);
+        when(ghPullRequest.id()).thenReturn(SCM_ENVS_PR_ID_INT);
         Assert.assertEquals(SCM_ENVS_PR_ID_INT, PrIdAndUrlUtils.getPrId(scmVars, build, listener));
     }
 

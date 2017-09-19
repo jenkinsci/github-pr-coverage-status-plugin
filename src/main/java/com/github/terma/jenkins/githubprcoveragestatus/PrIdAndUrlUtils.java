@@ -17,10 +17,10 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.cdancy.bitbucket.rest.domain.pullrequest.PullRequest;
 import hudson.EnvVars;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import org.kohsuke.github.GHPullRequest;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -60,8 +60,8 @@ public class PrIdAndUrlUtils {
         final String branch = scmVars.get("GIT_BRANCH");
         final String sha = scmVars.get("GIT_COMMIT");
         buildLog.println(CompareCoverageAction.BUILD_LOG_PREFIX + String.format("Attempt to discover PR for %s @ %s", branch, sha));
-        GHPullRequest gitPr = ServiceRegistry.getPullRequestRepository().getPullRequestFor(url, branch, sha);
-        int id = gitPr.getNumber();
+        PullRequest gitPr = ServiceRegistry.getPullRequestRepository().getPullRequestFor(url, branch, sha);
+        int id = gitPr.id();
         buildLog.println(CompareCoverageAction.BUILD_LOG_PREFIX + String.format("Discovered PR %d", id));
         return id;
     }

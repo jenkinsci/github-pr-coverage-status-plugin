@@ -17,6 +17,7 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import com.cdancy.bitbucket.rest.domain.repository.Repository;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -29,7 +30,6 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
-import org.kohsuke.github.GHRepository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -107,7 +107,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
         MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
-        final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
+        final Repository gitHubRepository = ServiceRegistry.getPullRequestRepository().getBitbucketRepository(gitUrl);
         final float masterCoverage = masterCoverageRepository.get(gitUrl);
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
 

@@ -104,6 +104,8 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private String sonarToken;
         private String sonarLogin;
         private String sonarPassword;
+        private String bitbucketProject;
+        private String bitbucketRepository;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
@@ -173,6 +175,16 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public String getBitbucketProject() {
+            return bitbucketProject;
+        }
+
+        @Override
+        public String getBitbucketRepository() {
+            return bitbucketRepository;
+        }
+
+        @Override
         public String getJenkinsUrl() {
             return jenkinsUrl;
         }
@@ -199,6 +211,8 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
             sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
             sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
+            bitbucketProject = StringUtils.trimToNull(formData.getString("bitbucketProject"));
+            bitbucketRepository = StringUtils.trimToNull(formData.getString("bitbucketRepository"));
             save();
             return super.configure(req, formData);
         }
