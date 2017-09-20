@@ -50,8 +50,7 @@
     </issueManagement>
 
     <properties>
-        <jenkins.version>1.580.1</jenkins.version>
-        <!--<jenkins.version>2.46.3</jenkins.version>-->
+        <jenkins.version>2.7.4</jenkins.version>
         <java.level>7</java.level>
     </properties>
 
@@ -116,6 +115,12 @@
             <artifactId>wiremock</artifactId>
             <version>2.5.1</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>credentials</artifactId>
+            <version>2.1.5</version>
         </dependency>
     </dependencies>
 
