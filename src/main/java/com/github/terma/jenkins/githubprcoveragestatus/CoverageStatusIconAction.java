@@ -1,17 +1,18 @@
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.io.IOException;
-
+import hudson.Extension;
+import hudson.model.UnprotectedRootAction;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import hudson.Extension;
-import hudson.model.UnprotectedRootAction;
+import java.io.IOException;
 
 @Extension
 public class CoverageStatusIconAction implements UnprotectedRootAction {
+
+    public static final String URL_NAME = "stash-coverage-status-icon";
 
     @Override
     public String getIconFileName() {
@@ -25,7 +26,7 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
 
     @Override
     public String getUrlName() {
-        return "coverage-status-icon";
+        return URL_NAME;
     }
 
     /**
@@ -39,6 +40,7 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
     public void doIndex(StaplerRequest request, StaplerResponse response) throws IOException {
         final float coverage = Float.parseFloat(request.getParameter("coverage"));
         final float masterCoverage = Float.parseFloat(request.getParameter("masterCoverage"));
+        final String color = toHexColor(request.getParameter("color"));
 
         response.setContentType("image/svg+xml");
 
@@ -49,13 +51,26 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
         svg = StringUtils.replace(svg, "{{ message }}", message.forIcon());
 
         final int coveragePercent = Percent.of(coverage);
-        String color;
-        if (coveragePercent < Configuration.getYellowThreshold()) color = "#b94947"; // red
-        else if (coveragePercent < Configuration.getGreenThreshold()) color = "#F89406"; // yellow
-        else color = "#97CA00"; // green
         svg = StringUtils.replace(svg, "{{ color }}", color);
 
         response.getWriter().write(svg);
+    }
+
+    private String toHexColor(String color) {
+        if (StringUtils.startsWith(color, "#")) {
+            return color;
+        }
+
+        if (StringUtils.equalsIgnoreCase("red", color)) {
+            return "#b94947"; // red
+        } else if (StringUtils.equalsIgnoreCase("yellow", color)) {
+            return "#F89406"; // yellow
+        } else if (StringUtils.equalsIgnoreCase("brightgreen", color)) {
+            return "#97CA00"; // brightgreen
+        } else if (StringUtils.equalsIgnoreCase("green", color)) {
+            return "#008000"; // green
+        }
+        return color;
     }
 
 }
