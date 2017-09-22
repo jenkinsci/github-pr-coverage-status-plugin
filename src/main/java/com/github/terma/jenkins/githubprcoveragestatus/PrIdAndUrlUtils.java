@@ -17,7 +17,6 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import com.cdancy.bitbucket.rest.domain.pullrequest.PullRequest;
 import hudson.EnvVars;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -37,7 +36,7 @@ public class PrIdAndUrlUtils {
      * Injected by
      * https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
      */
-    public static final String GIT_PR_ID_ENV_PROPERTY = "ghprbPullId";
+    public static final String GIT_PR_ID_ENV_PROPERTY = "pullRequestId";
     public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
     public static final String CHANGE_URL_PROPERTY = "CHANGE_URL";
 
@@ -56,12 +55,11 @@ public class PrIdAndUrlUtils {
     private static Integer getMultiBranch(Map<String, String> scmVars, TaskListener listener) throws IOException {
         if (scmVars == null) return null;
         final PrintStream buildLog = listener.getLogger();
-        final String url = scmVars.get(GIT_URL_PROPERTY);
         final String branch = scmVars.get("GIT_BRANCH");
         final String sha = scmVars.get("GIT_COMMIT");
         buildLog.println(CompareCoverageAction.BUILD_LOG_PREFIX + String.format("Attempt to discover PR for %s @ %s", branch, sha));
-        PullRequest gitPr = ServiceRegistry.getPullRequestRepository().getPullRequestFor(url, branch, sha);
-        int id = gitPr.id();
+        PullRequest gitPr = ServiceRegistry.getPullRequestRepository().getPullRequestForId(branch, sha);
+        int id = Integer.parseInt(gitPr.getId());
         buildLog.println(CompareCoverageAction.BUILD_LOG_PREFIX + String.format("Discovered PR %d", id));
         return id;
     }

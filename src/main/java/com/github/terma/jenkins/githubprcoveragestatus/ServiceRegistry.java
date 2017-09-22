@@ -24,10 +24,11 @@ public class ServiceRegistry {
     private static MasterCoverageRepository masterCoverageRepository;
     private static CoverageRepository coverageRepository;
     private static SettingsRepository settingsRepository;
-    private static PullRequestRepository pullRequestRepository;
+    private static BitbucketApi pullRequestRepository;
 
     public static MasterCoverageRepository getMasterCoverageRepository(PrintStream buildLog, final String login, final String password) {
-        if (masterCoverageRepository != null) return masterCoverageRepository;
+        if (masterCoverageRepository != null)
+            return masterCoverageRepository;
 
         if (Configuration.isUseSonarForMasterCoverage()) {
             final String sonarUrl = Configuration.getSonarUrl();
@@ -67,11 +68,11 @@ public class ServiceRegistry {
         ServiceRegistry.settingsRepository = settingsRepository;
     }
 
-    public static PullRequestRepository getPullRequestRepository() {
-        return pullRequestRepository != null ? pullRequestRepository : new GitHubPullRequestRepository();
+    public static BitbucketApi getPullRequestRepository() {
+        return pullRequestRepository;
     }
 
-    public static void setPullRequestRepository(PullRequestRepository pullRequestRepository) {
+    public static void setPullRequestRepository(BitbucketApi pullRequestRepository) {
         ServiceRegistry.pullRequestRepository = pullRequestRepository;
     }
 }

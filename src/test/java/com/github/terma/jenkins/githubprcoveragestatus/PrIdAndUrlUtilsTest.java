@@ -17,7 +17,6 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import com.cdancy.bitbucket.rest.domain.pullrequest.PullRequest;
 import hudson.EnvVars;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -47,13 +46,13 @@ public class PrIdAndUrlUtilsTest {
     private TaskListener listener = mock(TaskListener.class);
     private PrintStream logger = mock(PrintStream.class);
     private PullRequest ghPullRequest = mock(PullRequest.class);
-    private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
+    private BitbucketApi pullRequestRepository = mock(BitbucketApi.class);
     private Map<String, String> scmVars;
 
     @Before
     public void initMocks() throws IOException, InterruptedException {
         ServiceRegistry.setPullRequestRepository(pullRequestRepository);
-        when(pullRequestRepository.getPullRequestFor(anyString(), anyString(), anyString())).thenReturn(ghPullRequest);
+        when(pullRequestRepository.getPullRequestForId(anyString(), anyString())).thenReturn(ghPullRequest);
 
         when(listener.getLogger()).thenReturn(logger);
         when(build.getEnvironment(listener)).thenReturn(envVars);
@@ -90,7 +89,7 @@ public class PrIdAndUrlUtilsTest {
     public void getGitPrIdFromScmVarsIfOtherNull() throws IOException, InterruptedException {
         when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(null);
         when(envVars.get(PrIdAndUrlUtils.CHANGE_ID_PROPERTY)).thenReturn(null);
-        when(ghPullRequest.id()).thenReturn(SCM_ENVS_PR_ID_INT);
+        when(ghPullRequest.getId()).thenReturn(String.valueOf(SCM_ENVS_PR_ID_INT));
         Assert.assertEquals(SCM_ENVS_PR_ID_INT, PrIdAndUrlUtils.getPrId(scmVars, build, listener));
     }
 

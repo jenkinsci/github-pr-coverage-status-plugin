@@ -17,17 +17,12 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import com.cdancy.bitbucket.rest.domain.pullrequest.PullRequest;
-import com.cdancy.bitbucket.rest.domain.repository.Repository;
-
 import java.io.IOException;
 
-interface PullRequestRepository {
+interface BitbucketApi {
 
-    PullRequest getPullRequestFor(String repo, String branch, String sha) throws IOException;
+    PullRequest getPullRequestForId(String branch, String sha) throws IOException;
 
-    Repository getBitbucketRepository(final String gitHubUrl) throws IOException;
-
-    void comment(Repository repository, int prId, String message) throws IOException;
+    void comment(String prId, String message) throws IOException;
 
 }

@@ -7,13 +7,16 @@
   <f:entry title="Bitbucket Credentials (username/password)" field="credentialsId">
     <c:select />
   </f:entry>
-  <f:validateButton title="${%Test Connection}" progress="${%Testing...}" method="testConnection" with="bitbucketHost,credentialsId" />
   <f:entry title="Project" field="projectCode">
     <f:textbox />
   </f:entry>
   <f:entry title="Repository Name" field="repositoryName">
     <f:textbox />
   </f:entry>
+    <f:entry title="Ignore SSL" field="ignoreSSL">
+      <f:checkbox default="false"/>
+    </f:entry>
+  <f:validateButton title="${%Test Connection}" progress="${%Testing...}" method="testConnection" with="bitbucketHost,credentialsId,projectCode,repositoryName,ignoreSSL" />
   <f:advanced>
     <f:entry title="Jenkins URL for icon in Pull Request" field="jenkinsUrl">
       <f:textbox default=""/>
