@@ -30,6 +30,9 @@
     <f:entry title="Green Threshold 0-100%" field="greenThreshold">
       <f:textbox default="90" />
     </f:entry>
+    <f:entry title="Negative coverage will become red" field="negativeCoverageIsRed">
+      <f:checkbox default="false"/>
+    </f:entry>
     <f:entry title="Use Sonar for master coverage" field="useSonarForMasterCoverage">
       <f:checkbox default="false"/>
     </f:entry>

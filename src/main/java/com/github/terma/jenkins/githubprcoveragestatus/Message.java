@@ -48,20 +48,23 @@ class Message {
     public String forComment(
             final String buildUrl, final String jenkinsUrl,
             final int yellowThreshold, final int greenThreshold,
+        final boolean negativeCoverageIsRed,
             final boolean useShieldsIo) {
         final String icon = forIcon();
+        final String color = getColor(yellowThreshold, greenThreshold, negativeCoverageIsRed);
+
         if (useShieldsIo) {
-            return "[![" + icon + "](" + shieldIoUrl(icon, yellowThreshold, greenThreshold) + ")](" + buildUrl + ")";
+            return "[![" + icon + "](" + shieldIoUrl(icon, color) + ")](" + buildUrl + ")";
         } else {
-            return "[![" + icon + "](" + jenkinsUrl + "/coverage-status-icon/" +
+            return "[![" + icon + "](" + jenkinsUrl + "/" + CoverageStatusIconAction.URL_NAME + "/" +
                     "?coverage=" + coverage +
                     "&masterCoverage=" + masterCoverage +
+                "&color=" + color +
                     ")](" + buildUrl + ")";
         }
     }
 
-    private String shieldIoUrl(String icon, final int yellowThreshold, final int greenThreshold) {
-        final String color = getColor(yellowThreshold, greenThreshold);
+    private String shieldIoUrl(String icon, final String color) {
         // dash should be encoded as two dash
         icon = icon.replace("-", "--");
         try {
@@ -71,10 +74,12 @@ class Message {
         }
     }
 
-    private String getColor(int yellowThreshold, int greenThreshold) {
+    private String getColor(int yellowThreshold, int greenThreshold, boolean negativeCoverageIsRed) {
         String color = COLOR_GREEN;
         final int coveragePercent = Percent.of(coverage);
-        if (coveragePercent < yellowThreshold) {
+        if (negativeCoverageIsRed && (coverage < masterCoverage) && (coveragePercent < greenThreshold)) {
+            color = COLOR_RED;
+        } else if (coveragePercent < yellowThreshold) {
             color = COLOR_RED;
         } else if (coveragePercent < greenThreshold) {
             color = COLOR_YELLOW;

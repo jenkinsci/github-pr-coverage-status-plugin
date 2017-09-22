@@ -94,6 +94,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private String sonarLogin;
     private String sonarPassword;
     private boolean disableSimpleCov;
+    private boolean negativeCoverageIsRed;
 
     private boolean ignoreSsl;
 
@@ -116,7 +117,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         String sonarLogin,
         String sonarPassword,
         boolean disableSimpleCov,
-        boolean ignoreSsl
+        boolean ignoreSsl,
+        boolean negativeCoverageIsRed
     ) {
         this.bitbucketHost = bitbucketHost;
         this.credentialsId = credentialsId;
@@ -133,6 +135,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         this.sonarPassword = sonarPassword;
         this.disableSimpleCov = disableSimpleCov;
         this.ignoreSsl = ignoreSsl;
+        this.negativeCoverageIsRed = negativeCoverageIsRed;
     }
 
     public String getBitbucketHost() {
@@ -193,6 +196,10 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
     public boolean isIgnoreSsl() {
         return ignoreSsl;
+    }
+
+    public boolean isNegativeCoverageIsRed() {
+        return negativeCoverageIsRed;
     }
 
     private static StandardUsernamePasswordCredentials getCredentials(String host, String credentialsId) {
@@ -270,6 +277,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                     jenkinsUrl,
                 getYellowThreshold(),
                 getGreenThreshold(),
+                isNegativeCoverageIsRed(),
                 isPrivateJenkins());
             ServiceRegistry.getPullRequestRepository().comment(Integer.toString(prId), comment);
         } catch (Exception ex) {

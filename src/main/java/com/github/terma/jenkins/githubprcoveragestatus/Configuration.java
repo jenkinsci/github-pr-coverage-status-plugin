@@ -34,6 +34,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("WeakerAccess")
 public class Configuration extends AbstractDescribableImpl<Configuration> {
 
+    public static final int DEFAULT_YELLOW_THRESHOLD = 80;
+    public static final int DEFAULT_GREEN_THRESHOLD = 90;
+    public static final boolean DEFAULT_NEGATIVE_COVERAGE_IS_RED = false;
+
     @Extension
     public static final ConfigurationDescriptor DESCRIPTOR = new ConfigurationDescriptor();
 
