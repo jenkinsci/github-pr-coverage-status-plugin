@@ -43,6 +43,8 @@ import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
+import lombok.Builder;
+import lombok.Getter;
 import net.sf.json.JSONObject;
 import org.acegisecurity.Authentication;
 import org.apache.commons.lang.StringUtils;
@@ -80,25 +82,28 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
     private static final long serialVersionUID = 1L;
     private Map<String, String> scmVars;
-    private String bitbucketHost;
-    private String credentialsId;
-    private String projectCode;
-    private String repositoryName;
-    private String jenkinsUrl;
-    private boolean privateJenkins;
-    private String yellowThreshold;
-    private String greenThreshold;
-    private boolean useSonarForMasterCoverage;
-    private String sonarUrl;
-    private String sonarToken;
-    private String sonarLogin;
-    private String sonarPassword;
-    private boolean disableSimpleCov;
-    private boolean negativeCoverageIsRed;
 
-    private boolean ignoreSsl;
+    private final Config config;
 
-    public CompareCoverageAction() {
+    @Builder
+    @Getter
+    public static class Config {
+        private final String bitbucketHost;
+        private final String credentialsId;
+        private final String projectCode;
+        private final String repositoryName;
+        private final String jenkinsUrl;
+        private final boolean privateJenkins;
+        private final int yellowThreshold;
+        private final int greenThreshold;
+        private final boolean useSonarForMasterCoverage;
+        private final String sonarUrl;
+        private final String sonarToken;
+        private final String sonarLogin;
+        private final String sonarPassword;
+        private final boolean disableSimpleCov;
+        private final boolean negativeCoverageIsRed;
+        private final boolean ignoreSsl;
     }
 
     @DataBoundConstructor
@@ -120,86 +125,24 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         boolean ignoreSsl,
         boolean negativeCoverageIsRed
     ) {
-        this.bitbucketHost = bitbucketHost;
-        this.credentialsId = credentialsId;
-        this.projectCode = projectCode;
-        this.repositoryName = repositoryName;
-        this.jenkinsUrl = jenkinsUrl;
-        this.privateJenkins = privateJenkins;
-        this.yellowThreshold = yellowThreshold;
-        this.greenThreshold = greenThreshold;
-        this.useSonarForMasterCoverage = useSonarForMasterCoverage;
-        this.sonarUrl = sonarUrl;
-        this.sonarToken = sonarToken;
-        this.sonarLogin = sonarLogin;
-        this.sonarPassword = sonarPassword;
-        this.disableSimpleCov = disableSimpleCov;
-        this.ignoreSsl = ignoreSsl;
-        this.negativeCoverageIsRed = negativeCoverageIsRed;
-    }
-
-    public String getBitbucketHost() {
-        return bitbucketHost;
-    }
-
-    public String getCredentialsId() {
-        return credentialsId;
-    }
-
-    public String getProjectCode() {
-        return projectCode;
-    }
-
-    public String getRepositoryName() {
-        return repositoryName;
-    }
-
-    public String getJenkinsUrl() {
-        return jenkinsUrl;
-    }
-
-    public boolean isPrivateJenkins() {
-        return privateJenkins;
-    }
-
-    public int getYellowThreshold() {
-        return NumberUtils.toInt(yellowThreshold, 70);
-    }
-
-    public int getGreenThreshold() {
-        return NumberUtils.toInt(greenThreshold, 90);
-    }
-
-    public boolean isUseSonarForMasterCoverage() {
-        return useSonarForMasterCoverage;
-    }
-
-    public String getSonarUrl() {
-        return sonarUrl;
-    }
-
-    public String getSonarToken() {
-        return sonarToken;
-    }
-
-    public String getSonarLogin() {
-        return sonarLogin;
-    }
-
-    public String getSonarPassword() {
-        return sonarPassword;
-    }
-
-    public boolean isDisableSimpleCov() {
-        return disableSimpleCov;
-    }
-
-    public boolean isIgnoreSsl() {
-        return ignoreSsl;
-    }
-
-    public boolean isNegativeCoverageIsRed() {
-        return negativeCoverageIsRed;
+        config = Config.builder()
+            .bitbucketHost(bitbucketHost)
+            .credentialsId(credentialsId)
+            .projectCode(projectCode)
+            .repositoryName(repositoryName)
+            .jenkinsUrl(jenkinsUrl)
+            .privateJenkins(privateJenkins)
+            .yellowThreshold(NumberUtils.toInt(yellowThreshold, 70))
+            .greenThreshold(NumberUtils.toInt(greenThreshold, 90))
+            .useSonarForMasterCoverage(useSonarForMasterCoverage)
+            .sonarUrl(sonarUrl)
+            .sonarToken(sonarToken)
+            .sonarLogin(sonarLogin)
+            .sonarPassword(sonarPassword)
+            .disableSimpleCov(disableSimpleCov)
+            .ignoreSsl(ignoreSsl)
+            .negativeCoverageIsRed(negativeCoverageIsRed)
+            .build();
     }
 
     private static StandardUsernamePasswordCredentials getCredentials(String host, String credentialsId) {
@@ -215,11 +158,11 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     }
 
     public String getUsername() {
-        return this.getCredentials(bitbucketHost, credentialsId).getUsername();
+        return this.getCredentials(config.getBitbucketHost(), config.getCredentialsId()).getUsername();
     }
 
     public String getPassword() {
-        return this.getCredentials(bitbucketHost, credentialsId).getPassword().getPlainText();
+        return this.getCredentials(config.getBitbucketHost(), config.getCredentialsId()).getPassword().getPlainText();
     }
 
     // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
@@ -247,19 +190,20 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         buildLog.println(BUILD_LOG_PREFIX + "start");
 
         ServiceRegistry.setPullRequestRepository(
-            new GitHubPullRequestRepository(getStashApiClient(bitbucketHost, credentialsId, projectCode, repositoryName, ignoreSsl))
+            new GitHubPullRequestRepository(getStashApiClient(config))
         );
 
         final int prId = PrIdAndUrlUtils.getPrId(scmVars, build, listener);
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
-        MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
+        MasterCoverageRepository masterCoverageRepository = ServiceRegistry
+            .getMasterCoverageRepository(buildLog, config.getSonarLogin(), config.getSonarPassword());
         final float masterCoverage = masterCoverageRepository.get(gitUrl);
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
 
         buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");
-        final float coverage = ServiceRegistry.getCoverageRepository(isDisableSimpleCov()).get(workspace);
+        final float coverage = ServiceRegistry.getCoverageRepository(config.isDisableSimpleCov()).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
         final Message message = new Message(coverage, masterCoverage);
@@ -267,7 +211,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
-        String jenkinsUrl = getJenkinsUrl();
+        String jenkinsUrl = config.getJenkinsUrl();
         if (StringUtils.isBlank(jenkinsUrl))
             jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
 
@@ -275,10 +219,10 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             final String comment = message.forComment(
                     buildUrl,
                     jenkinsUrl,
-                getYellowThreshold(),
-                getGreenThreshold(),
-                isNegativeCoverageIsRed(),
-                isPrivateJenkins());
+                config.getYellowThreshold(),
+                config.getGreenThreshold(),
+                config.isNegativeCoverageIsRed(),
+                config.isPrivateJenkins());
             ServiceRegistry.getPullRequestRepository().comment(Integer.toString(prId), comment);
         } catch (Exception ex) {
             listener.error(ex.getMessage());
@@ -333,7 +277,9 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             @QueryParameter("ignoreSSL") final Boolean ignoreSsl
         ) throws IOException, ServletException {
 
-            StashApiClient client = getStashApiClient(bitbucketHost, credentialsId, projectCode, repositoryName, ignoreSsl);
+            StashApiClient client = getStashApiClient(
+                Config.builder().bitbucketHost(bitbucketHost).credentialsId(credentialsId).projectCode(projectCode).repositoryName(repositoryName)
+                    .ignoreSsl(ignoreSsl).build());
 
             final List<StashPullRequestResponseValue> pullRequests = client.getPullRequests();
 
@@ -346,17 +292,13 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         }
     }
 
-    private static StashApiClient getStashApiClient(final String bitbucketHost,
-        final String credentialsId,
-        final String projectCode,
-        final String repositoryName,
-        final Boolean ignoreSsl) {
-        final StandardUsernamePasswordCredentials credentials = getCredentials(bitbucketHost, credentialsId);
+    private static StashApiClient getStashApiClient(final Config config) {
+        final StandardUsernamePasswordCredentials credentials = getCredentials(config.getBitbucketHost(), config.getCredentialsId());
         if (credentials == null) {
-            throw new RuntimeException("No credentials found for ID: " + credentialsId);
+            throw new RuntimeException("No credentials found for ID: " + config.getCredentialsId());
         }
-        return new StashApiClient(bitbucketHost, credentials.getUsername(), credentials.getPassword().getPlainText(), projectCode,
-            repositoryName, ignoreSsl);
+        return new StashApiClient(config.getBitbucketHost(), credentials.getUsername(), credentials.getPassword().getPlainText(), config.getProjectCode(),
+            config.getRepositoryName(), config.isIgnoreSsl());
     }
 
 }
