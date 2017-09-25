@@ -281,6 +281,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                 isPrivateJenkins());
             ServiceRegistry.getPullRequestRepository().comment(Integer.toString(prId), comment);
         } catch (Exception ex) {
+            listener.error(ex.getMessage());
             PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
             ex.printStackTrace(pw);
         }
@@ -351,6 +352,9 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final String repositoryName,
         final Boolean ignoreSsl) {
         final StandardUsernamePasswordCredentials credentials = getCredentials(bitbucketHost, credentialsId);
+        if (credentials == null) {
+            throw new RuntimeException("No credentials found for ID: " + credentialsId);
+        }
         return new StashApiClient(bitbucketHost, credentials.getUsername(), credentials.getPassword().getPlainText(), projectCode,
             repositoryName, ignoreSsl);
     }
