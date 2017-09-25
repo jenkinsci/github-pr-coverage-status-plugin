@@ -29,8 +29,8 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -55,30 +55,21 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
     private Map<String, String> scmVars;
 
-    private final Config config;
-
-    @Builder
-    @Getter
-    public static class Config {
-        private final boolean useSonarForMasterCoverage;
-        private final String sonarUrl;
-        private final String sonarToken;
-        private final String sonarLogin;
-        private final String sonarPassword;
-        private final boolean disableSimpleCov;
-    }
+    @Getter @Setter @DataBoundSetter
+    private boolean useSonarForMasterCoverage;
+    @Getter @Setter @DataBoundSetter
+    private String sonarUrl;
+    @Getter @Setter @DataBoundSetter
+    private String sonarToken;
+    @Getter @Setter @DataBoundSetter
+    private String sonarLogin;
+    @Getter @Setter @DataBoundSetter
+    private String sonarPassword;
+    @Getter @Setter @DataBoundSetter
+    private boolean disableSimpleCov;
 
     @DataBoundConstructor
-    public MasterCoverageAction(
-        boolean useSonarForMasterCoverage,
-        String sonarUrl,
-        String sonarToken,
-        String sonarLogin,
-        String sonarPassword,
-        boolean disableSimpleCov
-    ) {
-        config = Config.builder().useSonarForMasterCoverage(useSonarForMasterCoverage).sonarUrl(sonarUrl).sonarToken(sonarToken).sonarLogin(sonarLogin)
-            .sonarPassword(sonarPassword).disableSimpleCov(disableSimpleCov).build();
+    public MasterCoverageAction() {
     }
 
     // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
@@ -100,7 +91,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         final PrintStream buildLog = listener.getLogger();
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
-        final float masterCoverage = ServiceRegistry.getCoverageRepository(config.isDisableSimpleCov()).get(workspace);
+        final float masterCoverage = ServiceRegistry.getCoverageRepository(isDisableSimpleCov()).get(workspace);
         buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }

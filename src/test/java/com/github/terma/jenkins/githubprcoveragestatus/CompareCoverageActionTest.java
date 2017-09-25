@@ -211,21 +211,23 @@ public class CompareCoverageActionTest {
         final String sonarToken = "";
         final String sonarLogin = "";
         final String sonarPassword = "";
-        return new CompareCoverageAction(BITBUCKETHOST,
-            CREDENTIALID,
-            PROJECTCODE,
-            REPOSITORYNAME,
-            jenkinsUrl,
-            privateJenkins,
-            yellowThreshold,
-            greenThreshold,
-            useSonarForMasterCoverage,
-            sonarUrl,
-            sonarToken,
-            sonarLogin,
-            sonarPassword,
-            disableSimpleCov,
-            ignoreSsl,
-            negativeCoverageIsRed);
+        final CompareCoverageAction compareCoverageAction = new CompareCoverageAction();
+        compareCoverageAction.setBitbucketHost(BITBUCKETHOST);
+        compareCoverageAction.setCredentialsId(CREDENTIALID);
+        compareCoverageAction.setProjectCode(PROJECTCODE);
+        compareCoverageAction.setRepositoryName(REPOSITORYNAME);
+        compareCoverageAction.setJenkinsUrl(jenkinsUrl);
+        compareCoverageAction.setPrivateJenkins(privateJenkins);
+        compareCoverageAction.setYellowThreshold(yellowThreshold);
+        compareCoverageAction.setGreenThreshold(greenThreshold);
+        compareCoverageAction.setUseSonarForMasterCoverage(useSonarForMasterCoverage);
+        compareCoverageAction.setSonarUrl(sonarUrl);
+        compareCoverageAction.setSonarToken(sonarToken);
+        compareCoverageAction.setSonarLogin(sonarLogin);
+        compareCoverageAction.setSonarPassword(sonarPassword);
+        compareCoverageAction.setDisableSimpleCov(disableSimpleCov);
+        compareCoverageAction.setIgnoreSsl(ignoreSsl);
+        compareCoverageAction.setNegativeCoverageIsRed(negativeCoverageIsRed);
+        return compareCoverageAction;
     }
 }

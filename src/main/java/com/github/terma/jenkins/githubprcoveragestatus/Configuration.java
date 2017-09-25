@@ -45,22 +45,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     public Configuration() {
     }
 
-    public static String getGitHubApiUrl() {
-        return DESCRIPTOR.getGitHubApiUrl();
-    }
-
-    public static int getYellowThreshold() {
-        return DESCRIPTOR.getYellowThreshold();
-    }
-
-    public static int getGreenThreshold() {
-        return DESCRIPTOR.getGreenThreshold();
-    }
-
-    public static String getPersonalAccessToken() {
-        return DESCRIPTOR.getPersonalAccessToken();
-    }
-
     public static String getSonarUrl() {
         return DESCRIPTOR.getSonarUrl();
     }
