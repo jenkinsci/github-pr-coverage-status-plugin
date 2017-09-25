@@ -33,6 +33,9 @@ public class MasterCoverageActionTest {
     }
 
     private MasterCoverageAction getMasterCoverageAction() {
-        return new MasterCoverageAction(false, "", "", "", "", false);
+        final MasterCoverageAction masterCoverageAction = new MasterCoverageAction();
+        masterCoverageAction.setDisableSimpleCov(false);
+        masterCoverageAction.setUseSonarForMasterCoverage(false);
+        return masterCoverageAction;
     }
 }

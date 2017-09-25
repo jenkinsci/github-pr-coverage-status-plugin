@@ -17,31 +17,29 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.PrintStream;
 
 public class ServiceRegistry {
 
     private static MasterCoverageRepository masterCoverageRepository;
     private static CoverageRepository coverageRepository;
-    private static SettingsRepository settingsRepository;
     private static BitbucketApi pullRequestRepository;
 
-    public static MasterCoverageRepository getMasterCoverageRepository(PrintStream buildLog, final String login, final String password) {
+    public static MasterCoverageRepository getMasterCoverageRepository(PrintStream buildLog, boolean useSonarForMasterCoverage,
+        final String sonarUrl, final String sonarLogin, final String sonarPassword, final String sonarToken
+    ) {
         if (masterCoverageRepository != null)
             return masterCoverageRepository;
 
-        if (Configuration.isUseSonarForMasterCoverage()) {
-            final String sonarUrl = Configuration.getSonarUrl();
-            if (login != null && password != null) {
-                buildLog.println("take master coverage from sonar by login/password");
-                return new SonarMasterCoverageRepository(sonarUrl, login, password, buildLog);
-            }
-            if (Configuration.getSonarToken() != null) {
+        if (useSonarForMasterCoverage) {
+            if (StringUtils.isNotBlank(sonarToken)) {
                 buildLog.println("take master coverage from sonar by token");
-                return new SonarMasterCoverageRepository(sonarUrl, Configuration.getSonarToken(), "", buildLog);
+                return new SonarMasterCoverageRepository(sonarUrl, sonarToken, "", buildLog);
             }
             buildLog.println("take master coverage from sonar by login/password");
-            return new SonarMasterCoverageRepository(sonarUrl, Configuration.getSonarLogin(), Configuration.getSonarPassword(), buildLog);
+            return new SonarMasterCoverageRepository(sonarUrl, sonarLogin, sonarPassword, buildLog);
         } else {
             buildLog.println("use default coverage repo");
             return new BuildMasterCoverageRepository(buildLog);
@@ -58,14 +56,6 @@ public class ServiceRegistry {
 
     public static void setCoverageRepository(CoverageRepository coverageRepository) {
         ServiceRegistry.coverageRepository = coverageRepository;
-    }
-
-    public static SettingsRepository getSettingsRepository() {
-        return settingsRepository != null ? settingsRepository : Configuration.DESCRIPTOR;
-    }
-
-    public static void setSettingsRepository(SettingsRepository settingsRepository) {
-        ServiceRegistry.settingsRepository = settingsRepository;
     }
 
     public static BitbucketApi getPullRequestRepository() {

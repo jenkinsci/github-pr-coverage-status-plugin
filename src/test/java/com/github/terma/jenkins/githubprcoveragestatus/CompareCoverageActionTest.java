@@ -65,7 +65,6 @@ public class CompareCoverageActionTest {
 
     private MasterCoverageRepository masterCoverageRepository = mock(MasterCoverageRepository.class);
     private CoverageRepository coverageRepository = mock(CoverageRepository.class);
-    private SettingsRepository settingsRepository = mock(SettingsRepository.class);
 
     final String CREDENTIALID = "7982374987234";
     final String PROJECTCODE = "ProjectCode";
@@ -85,7 +84,6 @@ public class CompareCoverageActionTest {
 
         ServiceRegistry.setMasterCoverageRepository(masterCoverageRepository);
         ServiceRegistry.setCoverageRepository(coverageRepository);
-        ServiceRegistry.setSettingsRepository(settingsRepository);
         when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(GIT_URL);
         when(listener.getLogger()).thenReturn(System.out);
     }
@@ -163,8 +161,6 @@ public class CompareCoverageActionTest {
         when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
         when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PULLREQUESTID);
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-
-        when(settingsRepository.isPrivateJenkinsPublicGitHub()).thenReturn(true);
 
         compareCoverageAction(null, true).perform(build, null, null, listener);
 
