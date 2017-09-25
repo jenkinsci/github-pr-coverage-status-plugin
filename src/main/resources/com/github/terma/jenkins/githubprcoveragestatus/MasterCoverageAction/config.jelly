@@ -1,23 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
-  <f:advanced>
-    <f:entry title="Use Sonar for master coverage" field="useSonarForMasterCoverage">
-      <f:checkbox default="false"/>
-    </f:entry>
-    <f:entry title="Sonar endpoint URL" field="sonarUrl">
-      <f:textbox default=""/>
-    </f:entry>
-    <f:entry title="Sonar access token" field="sonarToken">
-        <f:password default=""/>
-    </f:entry>
-    <f:entry title="Sonar login" field="sonarLogin">
-      <f:textbox default=""/>
-    </f:entry>
-    <f:entry title="Sonar password" field="sonarPassword">
-      <f:password default=""/>
-    </f:entry>
-    <f:entry title="Disable SimpleCov coverage parser" field="disableSimpleCov">
-      <f:checkbox default="false" />
-    </f:entry>
-  </f:advanced>
+  <f:entry title="Disable SimpleCov coverage parser" field="disableSimpleCov">
+    <f:checkbox default="false" />
+  </f:entry>
 </j:jelly>

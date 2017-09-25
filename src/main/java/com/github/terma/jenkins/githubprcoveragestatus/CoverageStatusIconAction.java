@@ -50,7 +50,6 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
         final Message message = new Message(coverage, masterCoverage);
         svg = StringUtils.replace(svg, "{{ message }}", message.forIcon());
 
-        final int coveragePercent = Percent.of(coverage);
         svg = StringUtils.replace(svg, "{{ color }}", color);
 
         response.getWriter().write(svg);

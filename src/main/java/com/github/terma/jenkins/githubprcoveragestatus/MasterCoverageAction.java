@@ -52,34 +52,14 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
     public static final String DISPLAY_NAME = "Record Master Coverage";
     private static final long serialVersionUID = 1L;
 
-
+    @Getter @Setter @DataBoundSetter
     private Map<String, String> scmVars;
-
-    @Getter @Setter @DataBoundSetter
-    private boolean useSonarForMasterCoverage;
-    @Getter @Setter @DataBoundSetter
-    private String sonarUrl;
-    @Getter @Setter @DataBoundSetter
-    private String sonarToken;
-    @Getter @Setter @DataBoundSetter
-    private String sonarLogin;
-    @Getter @Setter @DataBoundSetter
-    private String sonarPassword;
+    
     @Getter @Setter @DataBoundSetter
     private boolean disableSimpleCov;
 
     @DataBoundConstructor
     public MasterCoverageAction() {
-    }
-
-    // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
-    public Map<String, String> getScmVars() {
-        return scmVars;
-    }
-
-    @DataBoundSetter
-    public void setScmVars(Map<String, String> scmVars) {
-        this.scmVars = scmVars;
     }
 
     @SuppressWarnings("NullableProblems")
