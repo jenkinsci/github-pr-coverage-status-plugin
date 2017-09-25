@@ -29,6 +29,8 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import lombok.Builder;
+import lombok.Getter;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -53,9 +55,30 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
     private Map<String, String> scmVars;
 
-    @DataBoundConstructor
-    public MasterCoverageAction() {
+    private final Config config;
 
+    @Builder
+    @Getter
+    public static class Config {
+        private final boolean useSonarForMasterCoverage;
+        private final String sonarUrl;
+        private final String sonarToken;
+        private final String sonarLogin;
+        private final String sonarPassword;
+        private final boolean disableSimpleCov;
+    }
+
+    @DataBoundConstructor
+    public MasterCoverageAction(
+        boolean useSonarForMasterCoverage,
+        String sonarUrl,
+        String sonarToken,
+        String sonarLogin,
+        String sonarPassword,
+        boolean disableSimpleCov
+    ) {
+        config = Config.builder().useSonarForMasterCoverage(useSonarForMasterCoverage).sonarUrl(sonarUrl).sonarToken(sonarToken).sonarLogin(sonarLogin)
+            .sonarPassword(sonarPassword).disableSimpleCov(disableSimpleCov).build();
     }
 
     // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
@@ -77,8 +100,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         final PrintStream buildLog = listener.getLogger();
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
-        final boolean disableSimpleCov = ServiceRegistry.getSettingsRepository().isDisableSimpleCov();
-        final float masterCoverage = ServiceRegistry.getCoverageRepository(disableSimpleCov).get(workspace);
+        final float masterCoverage = ServiceRegistry.getCoverageRepository(config.isDisableSimpleCov()).get(workspace);
         buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }

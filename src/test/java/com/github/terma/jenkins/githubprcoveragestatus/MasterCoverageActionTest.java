@@ -29,7 +29,10 @@ public class MasterCoverageActionTest {
 
     @Test
     public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
-        new MasterCoverageAction().perform(build, null, null, null);
+        getMasterCoverageAction().perform(build, null, null, null);
     }
 
+    private MasterCoverageAction getMasterCoverageAction() {
+        return new MasterCoverageAction(false, "", "", "", "", false);
+    }
 }
