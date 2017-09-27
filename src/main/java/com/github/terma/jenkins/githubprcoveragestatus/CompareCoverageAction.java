@@ -105,6 +105,14 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final int prId = PrIdAndUrlUtils.getPrId(scmVars, build, listener);
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
+        if (settingsRepository.getSonarCoverageMetric() != null) {
+            buildLog.println(BUILD_LOG_PREFIX + "using coverage metrics: " + settingsRepository.getSonarCoverageMetric());
+        }
+    
+        if (settingsRepository.getCoverageRoundingDigits() != 0) {
+            buildLog.println(BUILD_LOG_PREFIX + "using round-up to digits: " + settingsRepository.getCoverageRoundingDigits());
+        }
+
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
         MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
         final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);

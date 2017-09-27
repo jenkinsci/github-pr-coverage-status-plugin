@@ -23,4 +23,6 @@ interface SettingsRepository {
     String getSonarToken();
 
     String getSonarCoverageMetric();
+    
+    int getCoverageRoundingDigits();
 }

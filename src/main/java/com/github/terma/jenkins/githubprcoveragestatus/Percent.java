@@ -42,6 +42,11 @@ class Percent {
         return ((float) Math.round(value * 10000)) / 10000;
     }
 
+    public static float roundCustomAfterDigit(float value, int places) {
+      double scale = Math.pow(10, places);
+      return (float) (Math.ceil(value * scale) / scale);
+    }
+
     public static String toWholeString(float value) {
         return (value < 0 ? "-" : value > 0 ? "+" : "") + toWholeNoSignString(value);
     }

@@ -78,7 +78,11 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     }
 
     public static String getSonarCoverageMetric() {
-      return DESCRIPTOR.getSonarCoverageMetric();
+        return DESCRIPTOR.getSonarCoverageMetric();
+    }
+
+    public static int getCoverageRoundingDigits() {
+        return DESCRIPTOR.getCoverageRoundingDigits();
     }
 
     public static void setMasterCoverage(final String repo, final float coverage) {
@@ -112,6 +116,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
+        private int coverageRoundingDigits;
 
         public ConfigurationDescriptor() {
             load();
@@ -190,8 +195,14 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return sonarPassword;
         }
         
+        @Override
         public String getSonarCoverageMetric() {
             return sonarCoverageMetric;
+        }
+
+        @Override
+        public int getCoverageRoundingDigits() {
+            return coverageRoundingDigits;
         }
 
         @Override
@@ -209,6 +220,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
             sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
             sonarCoverageMetric = StringUtils.trimToNull(formData.getString("sonarCoverageMetric"));
+            coverageRoundingDigits = NumberUtils.toInt(formData.getString("coverageRoundingDigits"), 0);
             save();
             return super.configure(req, formData);
         }
