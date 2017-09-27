@@ -31,8 +31,12 @@ import java.io.IOException;
  */
 class JacocoParser implements CoverageReportParser {
 
-    private static final String MISSED_XPATH = "/report/counter[@type='LINE']/@missed";
-    private static final String COVERAGE_XPATH = "/report/counter[@type='LINE']/@covered";
+    private static final String MISSED_INSTRUCTION_XPATH = "/report/counter[@type='INSTRUCTION']/@missed";
+    private static final String COVERAGE_INSTRUCTION_XPATH = "/report/counter[@type='INSTRUCTION']/@covered";
+    private static final String MISSED_LINE_XPATH = "/report/counter[@type='LINE']/@missed";
+    private static final String COVERAGE_LINE_XPATH = "/report/counter[@type='LINE']/@covered";
+    private static final String MISSED_BRANCH_XPATH = "/report/counter[@type='BRANCH']/@missed";
+    private static final String COVERAGE_BRANCH_XPATH = "/report/counter[@type='BRANCH']/@covered";
 
     private float getByXpath(final String filePath, final String content, final String xpath) {
         try {
@@ -56,13 +60,27 @@ class JacocoParser implements CoverageReportParser {
                     "Can't read Jacoco report by path: " + jacocoFilePath);
         }
 
-        final float lineMissed = getByXpath(jacocoFilePath, content, MISSED_XPATH);
-        final float lineCovered = getByXpath(jacocoFilePath, content, COVERAGE_XPATH);
-        final float lines = lineCovered + lineMissed;
-        if (lines == 0) {
+        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+        String missedMetric;
+        String coverageMetric;
+        if (settingsRepository.getSonarCoverageMetric() != null && SonarMasterCoverageRepository.SONAR_OVERALL_INSTRUCTION_COVERAGE_METRIC_NAME.equalsIgnoreCase(settingsRepository.getSonarCoverageMetric())) {
+            missedMetric = MISSED_INSTRUCTION_XPATH;
+            coverageMetric = COVERAGE_INSTRUCTION_XPATH;
+        } else if (settingsRepository.getSonarCoverageMetric() != null && SonarMasterCoverageRepository.SONAR_OVERALL_BRANCH_COVERAGE_METRIC_NAME.equalsIgnoreCase(settingsRepository.getSonarCoverageMetric())) {
+            missedMetric = MISSED_BRANCH_XPATH;
+            coverageMetric = COVERAGE_BRANCH_XPATH;
+        } else {
+            missedMetric = MISSED_LINE_XPATH;
+            coverageMetric = COVERAGE_LINE_XPATH;
+        }
+        
+        final float countMissed = getByXpath(jacocoFilePath, content, missedMetric);
+        final float countCovered = getByXpath(jacocoFilePath, content, coverageMetric);
+        final float count = countCovered + countMissed;
+        if (count == 0) {
             return 0;
         } else {
-            return lineCovered / (lines);
+            return countCovered / (count);
         }
     }
 

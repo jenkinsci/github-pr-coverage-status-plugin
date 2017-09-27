@@ -4,7 +4,7 @@
     "key": "my-project:origin/master",
     "measures": [
       {
-        "metric": "coverage",
+        "metric": "branch_coverage",
         "periods": [
           {
             "index": 1,
@@ -19,7 +19,7 @@
             "value": "0.0"
           }
         ],
-        "value": "95.3"
+        "value": "75.3"
       }
     ],
     "name": "my-project origin/master",

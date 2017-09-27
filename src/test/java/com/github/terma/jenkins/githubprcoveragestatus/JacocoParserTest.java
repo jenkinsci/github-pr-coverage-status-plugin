@@ -18,17 +18,56 @@ limitations under the License.
 package com.github.terma.jenkins.githubprcoveragestatus;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 
 public class JacocoParserTest {
 
+    private SettingsRepository settingsRepository = mock(SettingsRepository.class);
+    
+    @Before
+    public void initMocks() throws IOException {
+        ServiceRegistry.setSettingsRepository(settingsRepository);
+    }
+    
     @Test
-    public void extractCoverageFromJacocoReport() throws IOException {
+    public void extractCoverageFromJacocoReportDefault() throws IOException {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
 
+        Mockito.when(settingsRepository.getSonarCoverageMetric()).thenReturn(null);
+        Assert.assertEquals(0.22, new JacocoParser().get(filePath), 0.1);
+    }
+
+    @Test
+    public void extractCoverageFromJacocoReportInstruction() throws IOException {
+        String filePath = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+
+        Mockito.when(settingsRepository.getSonarCoverageMetric()).thenReturn(SonarMasterCoverageRepository.SONAR_OVERALL_INSTRUCTION_COVERAGE_METRIC_NAME);
+        Assert.assertEquals(0.22, new JacocoParser().get(filePath), 0.1);
+    }
+
+    @Test
+    public void extractCoverageFromJacocoReportLine() throws IOException {
+        String filePath = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+
+        Mockito.when(settingsRepository.getSonarCoverageMetric()).thenReturn(SonarMasterCoverageRepository.SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME);
+        Assert.assertEquals(0.22, new JacocoParser().get(filePath), 0.1);
+    }
+
+    @Test
+    public void extractCoverageFromJacocoReportBranch() throws IOException {
+        String filePath = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+
+        Mockito.when(settingsRepository.getSonarCoverageMetric()).thenReturn(SonarMasterCoverageRepository.SONAR_OVERALL_BRANCH_COVERAGE_METRIC_NAME);
         Assert.assertEquals(0.22, new JacocoParser().get(filePath), 0.1);
     }
 
@@ -59,7 +98,7 @@ public class JacocoParserTest {
                             "        \"report.dtd\">\n" +
                             "<report name=\"GitHub Pull Request Coverage Status\">\n" +
                             "</report>",
-                    messageWithoutAbsolutePath);
+                    messageWithoutAbsolutePath.replace("\r\n", "\n"));
         }
     }
 
@@ -83,7 +122,7 @@ public class JacocoParserTest {
                             "<report name=\"GitHub Pull Request Coverage Status\">\n" +
                             "    <counter type=\"LINE\" missed=\"X\" covered=\"0\"/>\n" +
                             "</report>",
-                    messageWithoutAbsolutePath);
+                    messageWithoutAbsolutePath.replace("\r\n", "\n"));
         }
     }
 
@@ -107,7 +146,7 @@ public class JacocoParserTest {
                             "<report name=\"GitHub Pull Request Coverage Status\">\n" +
                             "    <counter type=\"LINE\" missed=\"0\" covered=\"X\"/>\n" +
                             "</report>",
-                    messageWithoutAbsolutePath);
+                    messageWithoutAbsolutePath.replace("\r\n", "\n"));
         }
     }
 

@@ -48,6 +48,10 @@ f.section(title: descriptor.displayName) {
         f.password()
     }
 
+    f.entry(field: "sonarCoverageMetric", title: _("Sonar coverage metric")) {
+        f.password()
+    }
+
     f.entry(field: "disableSimpleCov", title: _("Disable SimpleCov coverage parser")) {
         f.checkbox()
     }

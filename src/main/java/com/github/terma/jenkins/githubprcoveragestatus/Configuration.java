@@ -77,6 +77,10 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.isUseSonarForMasterCoverage();
     }
 
+    public static String getSonarCoverageMetric() {
+      return DESCRIPTOR.getSonarCoverageMetric();
+    }
+
     public static void setMasterCoverage(final String repo, final float coverage) {
         DESCRIPTOR.set(repo, coverage);
     }
@@ -104,6 +108,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private String sonarToken;
         private String sonarLogin;
         private String sonarPassword;
+        private String sonarCoverageMetric;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
@@ -184,6 +189,10 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         public String getSonarPassword() {
             return sonarPassword;
         }
+        
+        public String getSonarCoverageMetric() {
+            return sonarCoverageMetric;
+        }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
@@ -199,6 +208,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
             sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
             sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
+            sonarCoverageMetric = StringUtils.trimToNull(formData.getString("sonarCoverageMetric"));
             save();
             return super.configure(req, formData);
         }
