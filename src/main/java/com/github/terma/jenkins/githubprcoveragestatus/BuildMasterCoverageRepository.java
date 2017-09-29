@@ -29,7 +29,9 @@ public class BuildMasterCoverageRepository implements MasterCoverageRepository {
 
     @Override
     public float get(final String gitHubRepoUrl) {
+
         if (gitHubRepoUrl == null) return 0;
+
         final Float coverage = Configuration.DESCRIPTOR.getCoverageByRepo().get(gitHubRepoUrl);
         if (coverage == null) {
             buildLog.println("Can't find master coverage repository: " + gitHubRepoUrl

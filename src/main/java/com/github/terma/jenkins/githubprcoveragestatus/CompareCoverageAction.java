@@ -103,12 +103,25 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
 
         final int prId = PrIdAndUrlUtils.getPrId(scmVars, build, listener);
-        final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
+        buildLog.println(BUILD_LOG_PREFIX + "scmVars: " + scmVars);
+
+        final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
+        buildLog.println(BUILD_LOG_PREFIX + "gitUrl: " + gitUrl);
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
         MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
         final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
-        final float masterCoverage = masterCoverageRepository.get(gitUrl);
+        float masterCoverage;
+        if (gitUrl.contains("pull/")) {
+            final String myCorrectURL = "https://github.com/" + GitUtils.getUserRepo(gitUrl);
+            // Using  masterCoverageRepository.get(myCorrectURL); is failing because URL is
+            // https://github.com/USER/REPO/pull/PR_ID
+            buildLog.println(BUILD_LOG_PREFIX + "myCorrectURL:" + myCorrectURL);
+            masterCoverage = masterCoverageRepository.get(myCorrectURL);
+        } else {
+            masterCoverage = masterCoverageRepository.get(gitUrl);
+        }
+
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
 
         buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");

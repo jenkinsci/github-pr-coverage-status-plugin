@@ -76,14 +76,24 @@ public class PrIdAndUrlUtils {
     }
 
     public static String getGitUrl(final Map<String, String> scmVars, final Run build, final TaskListener listener) throws IOException, InterruptedException {
+        final PrintStream buildLog = listener.getLogger();
         Map<String, String> envVars = build.getEnvironment(listener);
         final String gitUrl = envVars.get(GIT_URL_PROPERTY);
         final String changeUrl = envVars.get(CHANGE_URL_PROPERTY);
-        if (gitUrl != null) return gitUrl;
-        else if (changeUrl != null) return changeUrl;
-        else if (scmVars != null && scmVars.containsKey(GIT_URL_PROPERTY)) return scmVars.get(GIT_URL_PROPERTY);
-        else throw new UnsupportedOperationException("Can't find " + GIT_URL_PROPERTY
+        if (gitUrl != null) {
+            buildLog.println("gitUrl :" + gitUrl);
+            return gitUrl;
+        }
+        else if (changeUrl != null) {
+            return changeUrl;
+        }
+        else if (scmVars != null && scmVars.containsKey(GIT_URL_PROPERTY)) {
+            //buildLog.println("Found scmVars :" + gitUrl);
+            return scmVars.get(GIT_URL_PROPERTY);
+        } else {
+            throw new UnsupportedOperationException("Can't find " + GIT_URL_PROPERTY
                     + " or " + CHANGE_URL_PROPERTY + " in envs: " + envVars);
+        }
     }
 
 }

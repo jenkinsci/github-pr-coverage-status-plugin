@@ -39,6 +39,7 @@ public class GitUtilsTest {
                 GitUtils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
     }
 
+
     @Test
     public void getRepoName() {
         Assert.assertEquals(
