@@ -20,5 +20,8 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 interface CoverageReportParser {
 
     float get(String filePath);
+    
+    boolean canAggregate();
 
+    float getAggregate();
 }

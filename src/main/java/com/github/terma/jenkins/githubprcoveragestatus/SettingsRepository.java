@@ -17,6 +17,8 @@ interface SettingsRepository {
     boolean isUseSonarForMasterCoverage();
 
     boolean isDisableSimpleCov();
+    
+    boolean isUseAggregatesForCoverage();
 
     String getSonarUrl();
 

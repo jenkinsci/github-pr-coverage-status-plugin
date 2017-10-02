@@ -31,14 +31,14 @@ import java.io.IOException;
  */
 class JacocoParser implements CoverageReportParser {
 
-    private static final String MISSED_INSTRUCTION_XPATH = "/report/counter[@type='INSTRUCTION']/@missed";
-    private static final String COVERAGE_INSTRUCTION_XPATH = "/report/counter[@type='INSTRUCTION']/@covered";
-    private static final String MISSED_LINE_XPATH = "/report/counter[@type='LINE']/@missed";
-    private static final String COVERAGE_LINE_XPATH = "/report/counter[@type='LINE']/@covered";
-    private static final String MISSED_BRANCH_XPATH = "/report/counter[@type='BRANCH']/@missed";
-    private static final String COVERAGE_BRANCH_XPATH = "/report/counter[@type='BRANCH']/@covered";
+    public static final String MISSED_INSTRUCTION_XPATH = "/report/counter[@type='INSTRUCTION']/@missed";
+    public static final String COVERAGE_INSTRUCTION_XPATH = "/report/counter[@type='INSTRUCTION']/@covered";
+    public static final String MISSED_LINE_XPATH = "/report/counter[@type='LINE']/@missed";
+    public static final String COVERAGE_LINE_XPATH = "/report/counter[@type='LINE']/@covered";
+    public static final String MISSED_BRANCH_XPATH = "/report/counter[@type='BRANCH']/@missed";
+    public static final String COVERAGE_BRANCH_XPATH = "/report/counter[@type='BRANCH']/@covered";
 
-    private float getByXpath(final String filePath, final String content, final String xpath) {
+    public static float getByXpath(final String filePath, final String content, final String xpath) {
         try {
             return Float.parseFloat(XmlUtils.findInXml(content, xpath));
         } catch (NumberFormatException e) {
@@ -49,7 +49,16 @@ class JacocoParser implements CoverageReportParser {
                             "from:\n" + content);
         }
     }
+    
+    @Override
+    public boolean canAggregate() {
+      final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+      return settingsRepository.isUseAggregatesForCoverage();
+    }
 
+    private volatile float totalCovered = 0.0f;
+    private volatile float totalMissed = 0.0f;
+    
     @Override
     public float get(final String jacocoFilePath) {
         final String content;
@@ -76,12 +85,27 @@ class JacocoParser implements CoverageReportParser {
         
         final float countMissed = getByXpath(jacocoFilePath, content, missedMetric);
         final float countCovered = getByXpath(jacocoFilePath, content, coverageMetric);
+
+        totalCovered += countCovered;
+        totalMissed += countMissed;
+        
         final float count = countCovered + countMissed;
         if (count == 0) {
             return 0;
         } else {
             return countCovered / (count);
         }
+    }
+    
+    @Override
+    public float getAggregate () {
+      final float count = totalCovered + totalMissed;
+      if (count == 0) {
+          return 0;
+      } else {
+          return totalCovered / (count);
+      }
+
     }
 
 }

@@ -56,6 +56,10 @@ f.section(title: descriptor.displayName) {
         f.textbox()
     }
 
+    f.entry(field: "useAggregatesForCoverage", title: _("Use aggregate calculations for coverage")) {
+        f.checkbox()
+    }
+
     f.entry(field: "disableSimpleCov", title: _("Disable SimpleCov coverage parser")) {
         f.checkbox()
     }

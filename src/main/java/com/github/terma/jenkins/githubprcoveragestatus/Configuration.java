@@ -89,6 +89,10 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         DESCRIPTOR.set(repo, coverage);
     }
 
+    public static Boolean isUseAggregatesForCoverage() {
+        return DESCRIPTOR.isUseAggregatesForCoverage();
+    }
+
     @Override
     public ConfigurationDescriptor getDescriptor() {
         return DESCRIPTOR;
@@ -108,6 +112,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private String jenkinsUrl;
         private boolean privateJenkinsPublicGitHub;
         private boolean useSonarForMasterCoverage;
+        private boolean useAggregatesForCoverage;
         private String sonarUrl;
         private String sonarToken;
         private String sonarLogin;
@@ -168,6 +173,11 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public boolean isUseAggregatesForCoverage() {
+            return useAggregatesForCoverage;
+        }
+
+        @Override
         public boolean isDisableSimpleCov() {
             return disableSimpleCov;
         }
@@ -221,6 +231,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
             sonarCoverageMetric = StringUtils.trimToNull(formData.getString("sonarCoverageMetric"));
             coverageRoundingDigits = NumberUtils.toInt(formData.getString("coverageRoundingDigits"), 0);
+            useAggregatesForCoverage = BooleanUtils.toBoolean(formData.getString("useAggregatesForCoverage"));
             save();
             return super.configure(req, formData);
         }

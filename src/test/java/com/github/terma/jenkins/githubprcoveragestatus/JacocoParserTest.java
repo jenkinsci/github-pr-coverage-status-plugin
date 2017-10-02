@@ -54,6 +54,34 @@ public class JacocoParserTest {
     }
 
     @Test
+    public void extractCoverageFromJacocoReportAggregate() throws IOException {
+        String filePath1 = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+        String filePath2 = JacocoParserTest.class.getResource(
+            "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-multiple.xml").getFile();
+
+        Mockito.when(settingsRepository.isUseAggregatesForCoverage()).thenReturn(true);
+        JacocoParser parser = new JacocoParser();
+        parser.get(filePath1);
+        parser.get(filePath2);
+        Assert.assertEquals(0.22, parser.getAggregate(), 0.1);
+    }
+
+    @Test
+    public void extractCoverageFromJacocoReportNoAggregate() throws IOException {
+        String filePath1 = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+        String filePath2 = JacocoParserTest.class.getResource(
+            "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-multiple.xml").getFile();
+
+        Mockito.when(settingsRepository.isUseAggregatesForCoverage()).thenReturn(false);
+        JacocoParser parser = new JacocoParser();
+        Float a = parser.get(filePath1);
+        Float b = parser.get(filePath2);
+        Assert.assertEquals(0.61, (a+b)/2, 0.1);
+    }
+
+    @Test
     public void extractCoverageFromJacocoReportLine() throws IOException {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
