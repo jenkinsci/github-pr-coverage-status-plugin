@@ -7,32 +7,32 @@
         <relativePath />
     </parent>
 
-    <artifactId>github-pr-coverage-status</artifactId>
-    <version>1.9.2-SNAPSHOT</version>
+    <artifactId>bitbucket-pr-coverage-status</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/GitHub+PR+Coverage+Status+Plugin</url>
+    <!--<url>https://wiki.jenkins-ci.org/display/JENKINS/GitHub+PR+Coverage+Status+Plugin</url>-->
 
-    <name>GitHub Pull Request Coverage Status</name>
+    <name>Bitbucket Pull Request Coverage Status</name>
 
     <description>
-        Addon for https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
+        Addon for https://wiki.jenkins-ci.org/display/JENKINS/Stash+pull+request+builder+plugin
         give you possibility to publish code coverage status (Cobertura and Jenkins) to Pull Request Commits.
         So you will see coverage of your PR and comparision with master.
     </description>
 
     <developers>
         <developer>
-            <id>terma</id>
-            <name>Artem Stasiuk</name>
-            <email>artem.stasuk@gmail.com</email>
+            <id>adiesner</id>
+            <name>Andreas Diesner</name>
+            <email>andreas.diesner@gmail.com</email>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
-        <developerConnection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
+        <connection>scm:git:https://github.com/adiesner/bitbucket-pr-coverage-status-plugin.git</connection>
+        <developerConnection>scm:git:https://github.com/adiesner/bitbucket-pr-coverage-status-plugin.git</developerConnection>
+        <url>https://github.com/adiesner/bitbucket-pr-coverage-status-plugin</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -46,14 +46,12 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/terma/github-pr-coverage-status/issues</url>
+        <url>https://github.com/adiesner/bitbucket-pr-coverage-status/issues</url>
     </issueManagement>
 
     <properties>
-        <jenkins.version>1.580.1</jenkins.version>
-        <!--<jenkins.version>2.46.3</jenkins.version>-->
-        <java.level>6</java.level>
-        <!--<java.level>7</java.level>-->
+        <jenkins.version>2.7.4</jenkins.version>
+        <java.level>8</java.level>
     </properties>
 
     <repositories>
@@ -72,6 +70,23 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-base</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>1.8.5</version>
@@ -85,15 +100,32 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>github-api</artifactId>
-            <version>1.71</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.8.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.9</version>
+        </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <version>2.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -102,6 +134,20 @@
             <version>2.5.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>credentials</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -124,7 +170,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
+                <version>0.7.9</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -133,6 +179,18 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                    <check/>
+                </configuration>
             </plugin>
         </plugins>
     </build>

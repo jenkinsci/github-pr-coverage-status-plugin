@@ -17,73 +17,36 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import org.kohsuke.github.GHIssueState;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import com.github.terma.jenkins.githubprcoveragestatus.stash.StashApiClient;
+import com.github.terma.jenkins.githubprcoveragestatus.stash.StashPullRequestResponseValue;
+import org.apache.commons.lang.StringUtils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
-public class GitHubPullRequestRepository implements PullRequestRepository {
+public class GitHubPullRequestRepository implements BitbucketApi {
 
-    @Override
-    public GHPullRequest getPullRequestFor(String gitHubUrl, String branch, String sha) throws IOException {
-        for (GHPullRequest pr : getGitHubRepository(gitHubUrl).getPullRequests(GHIssueState.OPEN)) {
-            if (pr.getHead().getRef().equals(branch) && pr.getHead().getSha().equals(sha)) {
-                return pr;
-            }
-        }
-        throw new IOException(String.format("No PR found for %s %s @ %s", gitHubUrl, branch, sha));
+    private final StashApiClient stashApiClient;
+
+    public GitHubPullRequestRepository(StashApiClient stashApiClient) {
+        this.stashApiClient = stashApiClient;
     }
 
     @Override
-    public GHRepository getGitHubRepository(final String gitHubUrl) throws IOException {
-        GitHub gitHub = getGitHub();
-
-        try {
-            if (gitHub.getRateLimit().remaining == 0) {
-                throw new IOException("Exceeded rate limit for repository");
-            }
-        } catch (FileNotFoundException ex) {
-            throw new IOException("Rate limit API not found.");
-        } catch (IOException ex) {
-            throw new IOException("Error while accessing rate limit API", ex);
-        }
-
-        final String userRepo = GitUtils.getUserRepo(gitHubUrl);
-
-        try {
-            return gitHub.getRepository(userRepo);
-        } catch (IOException ex) {
-            throw new IOException("Could not retrieve GitHub repository named " + userRepo
-                    + " (Do you have properly set 'GitHub project' field in job configuration?)", ex);
-        }
-    }
-
-    private static GitHub getGitHub() throws IOException {
-        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
-        final String apiUrl = settingsRepository.getGitHubApiUrl();
-        final String personalAccessToken = settingsRepository.getPersonalAccessToken();
-
-        if (apiUrl != null) {
-            if (personalAccessToken != null) {
-                return GitHub.connectToEnterprise(apiUrl, personalAccessToken);
-            } else {
-                return GitHub.connectToEnterpriseAnonymously(apiUrl);
-            }
-        } else {
-            if (personalAccessToken != null) {
-                return GitHub.connectUsingOAuth(personalAccessToken);
-            } else {
-                return GitHub.connectAnonymously();
+    public PullRequest getPullRequestForId(String branch, String sha) throws IOException {
+        final List<StashPullRequestResponseValue> pullRequests = stashApiClient.getPullRequests();
+        for (StashPullRequestResponseValue pullRequest : pullRequests) {
+            if ((StringUtils.equals(pullRequest.getFromRef().getBranch().getName(), branch)) &&
+                ((StringUtils.equals(pullRequest.getFromRef().getCommit().getHash(), sha)))) {
+                return new PullRequest(pullRequest.getId(), pullRequest.getTitle());
             }
         }
+        throw new IOException(String.format("No PR found for %s @ %s", branch, sha));
     }
 
     @Override
-    public void comment(final GHRepository ghRepository, final int prId, final String message) throws IOException {
-        ghRepository.getPullRequest(prId).comment(message);
+    public void comment(final String prId, final String message) throws IOException {
+        stashApiClient.postPullRequestComment(prId, message);
     }
 
 }

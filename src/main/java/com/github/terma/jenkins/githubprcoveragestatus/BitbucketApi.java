@@ -19,15 +19,10 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 
 import java.io.IOException;
 
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
+interface BitbucketApi {
 
-interface PullRequestRepository {
+    PullRequest getPullRequestForId(String branch, String sha) throws IOException;
 
-    GHPullRequest getPullRequestFor(String repo, String branch, String sha) throws IOException;
-
-    GHRepository getGitHubRepository(final String gitHubUrl) throws IOException;
-
-    void comment(GHRepository ghRepository, int prId, String message) throws IOException;
+    void comment(String prId, String message) throws IOException;
 
 }

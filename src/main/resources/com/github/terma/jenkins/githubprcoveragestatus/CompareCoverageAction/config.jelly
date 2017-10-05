@@ -1,0 +1,55 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+
+  <f:entry title="Bitbucket Host" field="bitbucketHost">
+      <f:textbox />
+  </f:entry>
+  <f:entry title="Bitbucket Credentials (username/password)" field="credentialsId">
+    <c:select />
+  </f:entry>
+  <f:entry title="Project" field="projectCode">
+    <f:textbox />
+  </f:entry>
+  <f:entry title="Repository Name" field="repositoryName">
+    <f:textbox />
+  </f:entry>
+    <f:entry title="Ignore SSL" field="ignoreSSL">
+      <f:checkbox default="false"/>
+    </f:entry>
+  <f:validateButton title="${%Test Connection}" progress="${%Testing...}" method="testConnection" with="bitbucketHost,credentialsId,projectCode,repositoryName,ignoreSSL" />
+  <f:advanced>
+    <f:entry title="Jenkins URL for icon in Pull Request" field="jenkinsUrl">
+      <f:textbox default=""/>
+    </f:entry>
+    <f:entry title="Jenkins is not accessible for Bitbucket" field="privateJenkins">
+      <f:checkbox default="false"/>
+    </f:entry>
+    <f:entry title="Yellow threshold 0-100%" field="yellowThreshold">
+      <f:textbox default="70" />
+    </f:entry>
+    <f:entry title="Green Threshold 0-100%" field="greenThreshold">
+      <f:textbox default="90" />
+    </f:entry>
+    <f:entry title="Negative coverage will become red" field="negativeCoverageIsRed">
+      <f:checkbox default="false"/>
+    </f:entry>
+    <f:entry title="Use Sonar for master coverage" field="useSonarForMasterCoverage">
+      <f:checkbox default="false"/>
+    </f:entry>
+    <f:entry title="Sonar endpoint URL" field="sonarUrl">
+      <f:textbox default=""/>
+    </f:entry>
+    <f:entry title="Sonar access token" field="sonarToken">
+        <f:password default=""/>
+    </f:entry>
+    <f:entry title="Sonar login" field="sonarLogin">
+      <f:textbox default=""/>
+    </f:entry>
+    <f:entry title="Sonar password" field="sonarPassword">
+      <f:password default=""/>
+    </f:entry>
+    <f:entry title="Disable SimpleCov coverage parser" field="disableSimpleCov">
+      <f:checkbox default="false" />
+    </f:entry>
+  </f:advanced>
+</j:jelly>

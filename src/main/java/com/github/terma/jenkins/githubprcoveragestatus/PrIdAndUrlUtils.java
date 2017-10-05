@@ -20,7 +20,8 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 import hudson.EnvVars;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import org.kohsuke.github.GHPullRequest;
+import lombok.SneakyThrows;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -32,12 +33,15 @@ public class PrIdAndUrlUtils {
      * Injected by Git plugin
      */
     public static final String GIT_URL_PROPERTY = "GIT_URL";
+    public static final String GIT_BRANCH_PROPERTY = "GIT_BRANCH";
 
     /**
      * Injected by
      * https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
      */
-    public static final String GIT_PR_ID_ENV_PROPERTY = "ghprbPullId";
+    public static final String GIT_PR_ID_ENV_PROPERTY = "pullRequestId";
+    public static final String GIT_TARGETBRANCH_ENV_PROPERTY = "targetBranch";
+
     public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
     public static final String CHANGE_URL_PROPERTY = "CHANGE_URL";
 
@@ -56,12 +60,11 @@ public class PrIdAndUrlUtils {
     private static Integer getMultiBranch(Map<String, String> scmVars, TaskListener listener) throws IOException {
         if (scmVars == null) return null;
         final PrintStream buildLog = listener.getLogger();
-        final String url = scmVars.get(GIT_URL_PROPERTY);
         final String branch = scmVars.get("GIT_BRANCH");
         final String sha = scmVars.get("GIT_COMMIT");
         buildLog.println(CompareCoverageAction.BUILD_LOG_PREFIX + String.format("Attempt to discover PR for %s @ %s", branch, sha));
-        GHPullRequest gitPr = ServiceRegistry.getPullRequestRepository().getPullRequestFor(url, branch, sha);
-        int id = gitPr.getNumber();
+        PullRequest gitPr = ServiceRegistry.getPullRequestRepository().getPullRequestForId(branch, sha);
+        int id = Integer.parseInt(gitPr.getId());
         buildLog.println(CompareCoverageAction.BUILD_LOG_PREFIX + String.format("Discovered PR %d", id));
         return id;
     }
@@ -75,15 +78,51 @@ public class PrIdAndUrlUtils {
         return id;
     }
 
-    public static String getGitUrl(final Map<String, String> scmVars, final Run build, final TaskListener listener) throws IOException, InterruptedException {
+    /**
+     * Returns the target branch read from environment variables targetBranch or GIT_BRANCH.
+     * Removes prefix "origin/"
+     * If branch could not be determined, it will return "master"
+     *
+     * @param envVars
+     * @return
+     */
+    public static String getTargetBranch(Map<String, String> envVars) {
+        final String branch = StringUtils.defaultIfBlank(envVars.get(GIT_TARGETBRANCH_ENV_PROPERTY), envVars.get(GIT_BRANCH_PROPERTY));
+        if (StringUtils.isBlank(branch)) {
+            return "master";
+        }
+
+        if (StringUtils.startsWith(branch, "origin/")) {
+            return branch.substring(7);
+        }
+        return branch;
+    }
+
+    @SneakyThrows
+    public static String getGitUrlWithBranch(Run build, TaskListener listener) {
         Map<String, String> envVars = build.getEnvironment(listener);
         final String gitUrl = envVars.get(GIT_URL_PROPERTY);
-        final String changeUrl = envVars.get(CHANGE_URL_PROPERTY);
-        if (gitUrl != null) return gitUrl;
-        else if (changeUrl != null) return changeUrl;
-        else if (scmVars != null && scmVars.containsKey(GIT_URL_PROPERTY)) return scmVars.get(GIT_URL_PROPERTY);
-        else throw new UnsupportedOperationException("Can't find " + GIT_URL_PROPERTY
-                    + " or " + CHANGE_URL_PROPERTY + " in envs: " + envVars);
+        final String branch = envVars.get(GIT_BRANCH_PROPERTY);
+
+        if (StringUtils.isBlank(branch)) {
+            return gitUrl;
+        }
+        String combined = gitUrl + "#";
+        if (StringUtils.startsWith(branch, "origin/")) {
+            combined += branch.substring(7);
+        } else {
+            combined += branch;
+        }
+        return combined;
+    }
+
+    @SneakyThrows
+    public static String getGitUrlForTargetBranch(Run build, TaskListener listener) {
+        Map<String, String> envVars = build.getEnvironment(listener);
+        final String gitUrl = envVars.get(GIT_URL_PROPERTY);
+
+        String branch = getTargetBranch(envVars);
+        return gitUrl + "#" + branch;
     }
 
 }

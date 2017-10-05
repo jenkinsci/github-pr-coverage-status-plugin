@@ -1,16 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="20" width="255">
+<svg xmlns="http://www.w3.org/2000/svg" height="20" width="{{ totalwidth }}">
     <linearGradient id="a" x2="0" y2="100%">
         <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
         <stop offset="1" stop-opacity=".1"/>
     </linearGradient>
-    <rect rx="3" width="255" height="20" fill="#555"/>
-    <rect rx="3" x="63" width="192" height="20" fill="{{ color }}"/>
+    <rect rx="3" width="{{ totalwidth }}" height="20" fill="{{ color }}"/>
+    <rect rx="3" x="0" width="63" height="20" fill="#555"/>
     <path fill="{{ color }}" d="M63 0h4v20h-4z"/>
     <rect rx="3" height="245" width="99" fill="url(#a)"/>
     <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
         <text x="32.5" y="15" fill="#010101" fill-opacity=".3">coverage</text>
         <text x="32.5" y="14">coverage</text>
-        <text x="158" y="15" fill="#010101" fill-opacity=".3">{{ message }}</text>
-        <text x="158" y="14">{{ message }}</text>
+        <text x="{{ fontXPos }}" y="15" fill="#010101" fill-opacity=".3">{{ message }}</text>
+        <text x="{{ fontXPos }}" y="14">{{ message }}</text>
     </g>
 </svg>

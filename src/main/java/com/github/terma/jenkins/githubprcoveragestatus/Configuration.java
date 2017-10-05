@@ -21,9 +21,6 @@ import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -34,47 +31,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("WeakerAccess")
 public class Configuration extends AbstractDescribableImpl<Configuration> {
 
+    public static final int DEFAULT_YELLOW_THRESHOLD = 80;
+    public static final int DEFAULT_GREEN_THRESHOLD = 90;
+    public static final boolean DEFAULT_NEGATIVE_COVERAGE_IS_RED = false;
+
     @Extension
     public static final ConfigurationDescriptor DESCRIPTOR = new ConfigurationDescriptor();
 
     @DataBoundConstructor
     public Configuration() {
-    }
-
-    public static String getGitHubApiUrl() {
-        return DESCRIPTOR.getGitHubApiUrl();
-    }
-
-    public static int getYellowThreshold() {
-        return DESCRIPTOR.getYellowThreshold();
-    }
-
-    public static int getGreenThreshold() {
-        return DESCRIPTOR.getGreenThreshold();
-    }
-
-    public static String getPersonalAccessToken() {
-        return DESCRIPTOR.getPersonalAccessToken();
-    }
-
-    public static String getSonarUrl() {
-        return DESCRIPTOR.getSonarUrl();
-    }
-
-    public static String getSonarToken() {
-        return DESCRIPTOR.getSonarToken();
-    }
-
-    public static String getSonarLogin() {
-        return DESCRIPTOR.getSonarLogin();
-    }
-
-    public static String getSonarPassword() {
-        return DESCRIPTOR.getSonarPassword();
-    }
-
-    public static Boolean isUseSonarForMasterCoverage() {
-        return DESCRIPTOR.isUseSonarForMasterCoverage();
     }
 
     public static void setMasterCoverage(final String repo, final float coverage) {
@@ -87,26 +52,9 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
     }
 
     @SuppressWarnings("unused")
-    public static final class ConfigurationDescriptor extends Descriptor<Configuration> implements SettingsRepository {
+    public static final class ConfigurationDescriptor extends Descriptor<Configuration> {
 
-        private static final int DEFAULT_YELLOW_THRESHOLD = 80;
-        private static final int DEFAULT_GREEN_THRESHOLD = 90;
-
-        private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<String, Float>();
-
-        private boolean disableSimpleCov;
-        private String gitHubApiUrl;
-        private String personalAccessToken;
-        private String jenkinsUrl;
-        private boolean privateJenkinsPublicGitHub;
-        private boolean useSonarForMasterCoverage;
-        private String sonarUrl;
-        private String sonarToken;
-        private String sonarLogin;
-        private String sonarPassword;
-
-        private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
-        private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
+        private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<>();
 
         public ConfigurationDescriptor() {
             load();
@@ -128,77 +76,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
-        public String getGitHubApiUrl() {
-            return gitHubApiUrl;
-        }
-
-        @Override
-        public String getPersonalAccessToken() {
-            return personalAccessToken;
-        }
-
-        @Override
-        public int getYellowThreshold() {
-            return yellowThreshold;
-        }
-
-        @Override
-        public int getGreenThreshold() {
-            return greenThreshold;
-        }
-
-        @Override
-        public boolean isPrivateJenkinsPublicGitHub() {
-            return privateJenkinsPublicGitHub;
-        }
-
-        @Override
-        public boolean isUseSonarForMasterCoverage() {
-            return useSonarForMasterCoverage;
-        }
-
-        @Override
-        public boolean isDisableSimpleCov() {
-            return disableSimpleCov;
-        }
-
-        @Override
-        public String getSonarUrl() {
-            return sonarUrl;
-        }
-
-        @Override
-        public String getSonarToken() {
-            return sonarToken;
-        }
-
-        @Override
-        public String getJenkinsUrl() {
-            return jenkinsUrl;
-        }
-
-        public String getSonarLogin() {
-            return sonarLogin;
-        }
-
-        public String getSonarPassword() {
-            return sonarPassword;
-        }
-
-        @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            gitHubApiUrl = StringUtils.trimToNull(formData.getString("gitHubApiUrl"));
-            personalAccessToken = StringUtils.trimToNull(formData.getString("personalAccessToken"));
-            yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
-            greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
-            jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
-            privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
-            useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));
-            disableSimpleCov = BooleanUtils.toBoolean(formData.getString("disableSimpleCov"));
-            sonarUrl = StringUtils.trimToNull(formData.getString("sonarUrl"));
-            sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
-            sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
-            sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
             save();
             return super.configure(req, formData);
         }

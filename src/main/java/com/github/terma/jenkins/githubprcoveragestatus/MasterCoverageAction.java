@@ -29,6 +29,8 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import lombok.Getter;
+import lombok.Setter;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -50,22 +52,14 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
     public static final String DISPLAY_NAME = "Record Master Coverage";
     private static final long serialVersionUID = 1L;
 
-
+    @Getter @Setter @DataBoundSetter
     private Map<String, String> scmVars;
+
+    @Getter @Setter @DataBoundSetter
+    private boolean disableSimpleCov;
 
     @DataBoundConstructor
     public MasterCoverageAction() {
-
-    }
-
-    // TODO why is this needed for no public field ‘scmVars’ (or getter method) found in class ....
-    public Map<String, String> getScmVars() {
-        return scmVars;
-    }
-
-    @DataBoundSetter
-    public void setScmVars(Map<String, String> scmVars) {
-        this.scmVars = scmVars;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -75,11 +69,10 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         if (build.getResult() != Result.SUCCESS) return;
 
         final PrintStream buildLog = listener.getLogger();
-        final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
+        final String gitUrl = PrIdAndUrlUtils.getGitUrlWithBranch(build, listener);
 
-        final boolean disableSimpleCov = ServiceRegistry.getSettingsRepository().isDisableSimpleCov();
-        final float masterCoverage = ServiceRegistry.getCoverageRepository(disableSimpleCov).get(workspace);
-        buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
+        final float masterCoverage = ServiceRegistry.getCoverageRepository(isDisableSimpleCov()).get(workspace);
+        buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage) + " for " + gitUrl);
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }
 
