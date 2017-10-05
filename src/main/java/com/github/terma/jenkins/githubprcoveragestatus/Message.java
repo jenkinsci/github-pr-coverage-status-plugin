@@ -32,16 +32,19 @@ class Message {
 
     private final float coverage;
     private final float masterCoverage;
+    private final String branchName;
 
-    public Message(float coverage, float masterCoverage) {
+    public Message(float coverage, float masterCoverage, String branchName) {
         this.coverage = Percent.roundFourAfterDigit(coverage);
         this.masterCoverage = Percent.roundFourAfterDigit(masterCoverage);
+        this.branchName = branchName;
     }
 
     public String forConsole() {
-        return String.format("Coverage %s changed %s vs master %s",
+        return String.format("Coverage %s changed %s vs %s %s",
                 Percent.toWholeNoSignString(coverage),
                 Percent.toString(Percent.change(coverage, masterCoverage)),
+            branchName,
                 Percent.toWholeNoSignString(masterCoverage));
     }
 
@@ -60,6 +63,7 @@ class Message {
                     "?coverage=" + coverage +
                     "&masterCoverage=" + masterCoverage +
                 "&color=" + color +
+                "&branch=" + branchName +
                     ")](" + buildUrl + ")";
         }
     }
@@ -91,9 +95,10 @@ class Message {
      * Example: 92% (+23%) vs master 70%
      */
     public String forIcon() {
-        return String.format("%s (%s) vs master %s",
+        return String.format("%s (%s) vs %s %s",
                 Percent.toWholeNoSignString(coverage),
                 Percent.toString(Percent.change(coverage, masterCoverage)),
+            branchName,
                 Percent.toWholeNoSignString(masterCoverage));
     }
 }

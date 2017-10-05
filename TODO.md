@@ -1,5 +1,4 @@
 #Open points
-- Remove global configuration
 - Update documentation (readme.md)
 - Update jenkins help files
 - Add sample jobdsl
@@ -7,3 +6,5 @@
 
 #Done:
 - Add parameter "decreased coverage is red" ==> negativeCoverageIsRed
+- Remove global configuration
+- Badge now shows target branch

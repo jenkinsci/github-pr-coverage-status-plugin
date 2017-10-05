@@ -133,7 +133,7 @@ public class CompareCoverageActionTest {
         compareCoverageAction().perform(build, null, null, listener);
 
         String expectedComment =
-            "[![0% (0.0%) vs master 0%](" + JENKINSURL + "/stash-coverage-status-icon/?coverage=0.0&masterCoverage=0.0&color=red)](aaa/job/a)";
+            "[![0% (0.0%) vs develop 0%](" + JENKINSURL + "/stash-coverage-status-icon/?coverage=0.0&masterCoverage=0.0&color=red&branch=develop)](aaa/job/a)";
         WireMock.verify(postRequestedFor(
             urlEqualTo("/bitbucket/rest/api/1.0/projects/" + PROJECTCODE + "/repos/" + REPOSITORYNAME + "/pull-requests/" + PULLREQUESTID + "/comments"))
             .withRequestBody(equalToJson("{\n"
@@ -165,7 +165,7 @@ public class CompareCoverageActionTest {
         compareCoverageAction(null, true).perform(build, null, null, listener);
 
         String expectedComment =
-            "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-red.svg)](aaa/job/a)";
+            "[![0% (0.0%) vs develop 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20develop%200%25-red.svg)](aaa/job/a)";
         WireMock.verify(postRequestedFor(
             urlEqualTo("/bitbucket/rest/api/1.0/projects/" + PROJECTCODE + "/repos/" + REPOSITORYNAME + "/pull-requests/" + PULLREQUESTID + "/comments"))
             .withRequestBody(equalToJson("{\n"
@@ -180,7 +180,7 @@ public class CompareCoverageActionTest {
         compareCoverageAction(null, false).perform(build, null, null, listener);
 
         String expectedComment =
-            "[![0% (0.0%) vs master 0%](https://somewhere.local/jenkins/stash-coverage-status-icon/?coverage=0.0&masterCoverage=0.0&color=red)](https://somewhere.local/jenkins/job/a)";
+            "[![0% (0.0%) vs develop 0%](https://somewhere.local/jenkins/stash-coverage-status-icon/?coverage=0.0&masterCoverage=0.0&color=red&branch=develop)](https://somewhere.local/jenkins/job/a)";
         WireMock.verify(postRequestedFor(
             urlEqualTo("/bitbucket/rest/api/1.0/projects/" + PROJECTCODE + "/repos/" + REPOSITORYNAME + "/pull-requests/" + PULLREQUESTID + "/comments"))
             .withRequestBody(equalToJson("{\n"

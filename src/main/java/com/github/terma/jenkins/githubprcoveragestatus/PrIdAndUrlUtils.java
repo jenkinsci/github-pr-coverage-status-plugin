@@ -78,6 +78,26 @@ public class PrIdAndUrlUtils {
         return id;
     }
 
+    /**
+     * Returns the target branch read from environment variables targetBranch or GIT_BRANCH.
+     * Removes prefix "origin/"
+     * If branch could not be determined, it will return "master"
+     *
+     * @param envVars
+     * @return
+     */
+    public static String getTargetBranch(Map<String, String> envVars) {
+        final String branch = StringUtils.defaultIfBlank(envVars.get(GIT_TARGETBRANCH_ENV_PROPERTY), envVars.get(GIT_BRANCH_PROPERTY));
+        if (StringUtils.isBlank(branch)) {
+            return "master";
+        }
+
+        if (StringUtils.startsWith(branch, "origin/")) {
+            return branch.substring(7);
+        }
+        return branch;
+    }
+
     @SneakyThrows
     public static String getGitUrlWithBranch(Run build, TaskListener listener) {
         Map<String, String> envVars = build.getEnvironment(listener);
@@ -100,18 +120,9 @@ public class PrIdAndUrlUtils {
     public static String getGitUrlForTargetBranch(Run build, TaskListener listener) {
         Map<String, String> envVars = build.getEnvironment(listener);
         final String gitUrl = envVars.get(GIT_URL_PROPERTY);
-        final String branch = StringUtils.defaultIfBlank(envVars.get(GIT_TARGETBRANCH_ENV_PROPERTY), envVars.get(GIT_BRANCH_PROPERTY));
 
-        if (StringUtils.isBlank(branch)) {
-            return gitUrl;
-        }
-        String combined = gitUrl + "#";
-        if (StringUtils.startsWith(branch, "origin/")) {
-            combined += branch.substring(7);
-        } else {
-            combined += branch;
-        }
-        return combined;
+        String branch = getTargetBranch(envVars);
+        return gitUrl + "#" + branch;
     }
 
 }

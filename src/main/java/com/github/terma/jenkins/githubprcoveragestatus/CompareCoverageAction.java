@@ -181,7 +181,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final float coverage = ServiceRegistry.getCoverageRepository(isDisableSimpleCov()).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "Build coverage: " + coverage);
 
-        final Message message = new Message(coverage, masterCoverage);
+        final String targetBranch = PrIdAndUrlUtils.getTargetBranch(build.getEnvironment(listener));
+        final Message message = new Message(coverage, masterCoverage, targetBranch);
         buildLog.println(BUILD_LOG_PREFIX + message.forConsole());
 
         final String buildUrl = Utils.getBuildUrl(build, listener);

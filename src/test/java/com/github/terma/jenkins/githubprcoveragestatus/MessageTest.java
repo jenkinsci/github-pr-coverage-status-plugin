@@ -30,26 +30,27 @@ public class MessageTest {
 
     @Test
     public void buildNiceForConsole() {
-        Assert.assertEquals("Coverage 100% changed 0.0% vs master 100%", new Message(1, 1).forConsole());
-        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0, 0).forConsole());
-        Assert.assertEquals("Coverage 50% changed +50.0% vs master 0%", new Message(0.5f, 0).forConsole());
-        Assert.assertEquals("Coverage 0% changed -50.0% vs master 50%", new Message(0, 0.5f).forConsole());
-        Assert.assertEquals("Coverage 70% changed +20.0% vs master 50%", new Message(0.7f, 0.5f).forConsole());
-        Assert.assertEquals("Coverage 0% changed +0.02% vs master 0%", new Message(0.0007f, 0.0005f).forConsole());
-        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0.000007f, 0.000005f).forConsole());
+        Assert.assertEquals("Coverage 100% changed 0.0% vs master 100%", new Message(1, 1, "master").forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0, 0, "master").forConsole());
+        Assert.assertEquals("Coverage 50% changed +50.0% vs master 0%", new Message(0.5f, 0, "master").forConsole());
+        Assert.assertEquals("Coverage 0% changed -50.0% vs master 50%", new Message(0, 0.5f, "master").forConsole());
+        Assert.assertEquals("Coverage 70% changed +20.0% vs master 50%", new Message(0.7f, 0.5f, "master").forConsole());
+        Assert.assertEquals("Coverage 0% changed +0.02% vs master 0%", new Message(0.0007f, 0.0005f, "master").forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0.000007f, 0.000005f, "master").forConsole());
     }
 
     @Test
     public void buildNiceForIcon() {
-        Assert.assertEquals("100% (0.0%) vs master 100%", new Message(1, 1).forIcon());
-        Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0, 0).forIcon());
-        Assert.assertEquals("50% (+50.0%) vs master 0%", new Message(0.5f, 0).forIcon());
-        Assert.assertEquals("0% (-50.0%) vs master 50%", new Message(0, 0.5f).forIcon());
-        Assert.assertEquals("70% (+20.0%) vs master 50%", new Message(0.7f, 0.5f).forIcon());
-        Assert.assertEquals("69% (-0.7%) vs master 69%", new Message(0.686f, 0.693f).forIcon());
-        Assert.assertEquals("60% (+0.06%) vs master 60%", new Message(0.6007f, 0.6001f).forIcon());
-        Assert.assertEquals("0% (+0.01%) vs master 0%", new Message(0.00007f, 0.00001f).forIcon());
-        Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0.000007f, 0.000001f).forIcon());
+        Assert.assertEquals("100% (0.0%) vs master 100%", new Message(1, 1, "master").forIcon());
+        Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0, 0, "master").forIcon());
+        Assert.assertEquals("50% (+50.0%) vs master 0%", new Message(0.5f, 0, "master").forIcon());
+        Assert.assertEquals("0% (-50.0%) vs master 50%", new Message(0, 0.5f, "master").forIcon());
+        Assert.assertEquals("70% (+20.0%) vs master 50%", new Message(0.7f, 0.5f, "master").forIcon());
+        Assert.assertEquals("69% (-0.7%) vs master 69%", new Message(0.686f, 0.693f, "master").forIcon());
+        Assert.assertEquals("60% (+0.06%) vs master 60%", new Message(0.6007f, 0.6001f, "master").forIcon());
+        Assert.assertEquals("0% (+0.01%) vs master 0%", new Message(0.00007f, 0.00001f, "master").forIcon());
+        Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0.000007f, 0.000001f, "master").forIcon());
+        Assert.assertEquals("0% (0.0%) vs develop 0%", new Message(0.000007f, 0.000001f, "develop").forIcon());
     }
 
     @Test
@@ -57,23 +58,23 @@ public class MessageTest {
         String buildUrl = "http://terma.com/jenkins/job/ama";
         Assert.assertEquals(
                 "[![100% (0.0%) vs master 100%](https://img.shields.io/badge/coverage-100%25%20(0.0%25)%20vs%20master%20100%25-brightgreen.svg)](http://terma.com/jenkins/job/ama)",
-            new Message(1, 1).forComment(buildUrl, null, 80, 90, false, true));
+            new Message(1, 1, "master").forComment(buildUrl, null, 80, 90, false, true));
 
         Assert.assertEquals(
                 "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-red.svg)](http://terma.com/jenkins/job/ama)",
-            new Message(0, 0).forComment(buildUrl, null, 80, 90, false, true));
+            new Message(0, 0, "master").forComment(buildUrl, null, 80, 90, false, true));
 
         Assert.assertEquals(
                 "[![50% (+50.0%) vs master 0%](https://img.shields.io/badge/coverage-50%25%20(%2B50.0%25)%20vs%20master%200%25-red.svg)](http://terma.com/jenkins/job/ama)",
-            new Message(0.5f, 0).forComment(buildUrl, null, 80, 90, false, true));
+            new Message(0.5f, 0, "master").forComment(buildUrl, null, 80, 90, false, true));
 
         Assert.assertEquals(
                 "[![0% (-50.0%) vs master 50%](https://img.shields.io/badge/coverage-0%25%20(--50.0%25)%20vs%20master%2050%25-red.svg)](http://terma.com/jenkins/job/ama)",
-            new Message(0, 0.5f).forComment(buildUrl, null, 80, 90, false, true));
+            new Message(0, 0.5f, "master").forComment(buildUrl, null, 80, 90, false, true));
 
         Assert.assertEquals(
                 "[![85% (+35.0%) vs master 50%](https://img.shields.io/badge/coverage-85%25%20(%2B35.0%25)%20vs%20master%2050%25-yellow.svg)](http://terma.com/jenkins/job/ama)",
-            new Message(0.85f, 0.5f).forComment(buildUrl, null, 80, 90, false, true));
+            new Message(0.85f, 0.5f, "master").forComment(buildUrl, null, 80, 90, false, true));
     }
 
     @Test
@@ -82,28 +83,28 @@ public class MessageTest {
         String jenkinsUrl = "jenkinsUrl";
         Assert.assertEquals(
             "[![100% (0.0%) vs master 100%](jenkinsUrl/" + CoverageStatusIconAction.URL_NAME
-                + "/?coverage=1.0&masterCoverage=1.0&color=brightgreen)](http://terma.com/jenkins/job/ama)",
-            new Message(1, 1).forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
+                + "/?coverage=1.0&masterCoverage=1.0&color=brightgreen&branch=master)](http://terma.com/jenkins/job/ama)",
+            new Message(1, 1, "master").forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
 
         Assert.assertEquals(
             "[![0% (0.0%) vs master 0%](jenkinsUrl/" + CoverageStatusIconAction.URL_NAME
-                + "/?coverage=0.0&masterCoverage=0.0&color=brightgreen)](http://terma.com/jenkins/job/ama)",
-            new Message(0, 0).forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
+                + "/?coverage=0.0&masterCoverage=0.0&color=brightgreen&branch=master)](http://terma.com/jenkins/job/ama)",
+            new Message(0, 0, "master").forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
 
         Assert.assertEquals(
             "[![50% (+50.0%) vs master 0%](jenkinsUrl/" + CoverageStatusIconAction.URL_NAME
-                + "/?coverage=0.5&masterCoverage=0.0&color=brightgreen)](http://terma.com/jenkins/job/ama)",
-            new Message(0.5f, 0).forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
+                + "/?coverage=0.5&masterCoverage=0.0&color=brightgreen&branch=master)](http://terma.com/jenkins/job/ama)",
+            new Message(0.5f, 0, "master").forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
 
         Assert.assertEquals(
             "[![0% (-50.0%) vs master 50%](jenkinsUrl/" + CoverageStatusIconAction.URL_NAME
-                + "/?coverage=0.0&masterCoverage=0.5&color=brightgreen)](http://terma.com/jenkins/job/ama)",
-            new Message(0, 0.5f).forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
+                + "/?coverage=0.0&masterCoverage=0.5&color=brightgreen&branch=master)](http://terma.com/jenkins/job/ama)",
+            new Message(0, 0.5f, "master").forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
 
         Assert.assertEquals(
             "[![70% (+20.0%) vs master 50%](jenkinsUrl/" + CoverageStatusIconAction.URL_NAME
-                + "/?coverage=0.7&masterCoverage=0.5&color=brightgreen)](http://terma.com/jenkins/job/ama)",
-            new Message(0.7f, 0.5f).forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
+                + "/?coverage=0.7&masterCoverage=0.5&color=brightgreen&branch=master)](http://terma.com/jenkins/job/ama)",
+            new Message(0.7f, 0.5f, "master").forComment(buildUrl, jenkinsUrl, 0, 0, false, false));
     }
 
     @Test
@@ -116,12 +117,12 @@ public class MessageTest {
 
         // Coverage increases
         final String colorCoverageIncrease = extractColor(
-            new Message(0.7f, 0.6f).forComment(buildUrl, jenkinsUrl, YELLOWTHRESHOLD, GREENTHRESHOLD, true, false));
+            new Message(0.7f, 0.6f, "master").forComment(buildUrl, jenkinsUrl, YELLOWTHRESHOLD, GREENTHRESHOLD, true, false));
         Assert.assertEquals("yellow", colorCoverageIncrease);
 
         // Coverage decreases but is still over yellow threshold
         final String colorCoverageDecrease = extractColor(
-            new Message(0.55f, 0.6f).forComment(buildUrl, jenkinsUrl, YELLOWTHRESHOLD, GREENTHRESHOLD, true, false));
+            new Message(0.55f, 0.6f, "master").forComment(buildUrl, jenkinsUrl, YELLOWTHRESHOLD, GREENTHRESHOLD, true, false));
         Assert.assertEquals("red", colorCoverageDecrease);
     }
 
@@ -134,7 +135,7 @@ public class MessageTest {
         final int GREENTHRESHOLD = 80;
 
         final String colorCoverageDecrease = extractColor(
-            new Message(0.89f, 0.9f).forComment(buildUrl, jenkinsUrl, YELLOWTHRESHOLD, GREENTHRESHOLD, true, false));
+            new Message(0.89f, 0.9f, "master").forComment(buildUrl, jenkinsUrl, YELLOWTHRESHOLD, GREENTHRESHOLD, true, false));
         Assert.assertEquals("brightgreen", colorCoverageDecrease);
     }
 
