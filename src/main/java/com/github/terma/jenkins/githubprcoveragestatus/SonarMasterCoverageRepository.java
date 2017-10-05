@@ -94,7 +94,13 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
                 log("Found project for repo name %s - %s", repoName, sonarProjects.get(0));
                 return sonarProjects.get(0);
             } else {
-                log("Found multiple projects for repo name %s - found %s - returning first result", repoName, sonarProjects);
+                log("Found multiple projects for repo name %s - found %s - looking for repo/key exact match", repoName, sonarProjects);
+                for (SonarProject project: sonarProjects) {
+                  if (project.getKey().equalsIgnoreCase(repoName)) {
+                    return project;
+                  }
+                }
+                log("No repo/key exact match, returning first result");
                 return sonarProjects.get(0);
             }
         } catch (final Exception e) {
