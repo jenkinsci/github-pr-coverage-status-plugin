@@ -27,6 +27,7 @@ import hudson.model.Build;
 import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
+import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -35,6 +36,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
@@ -56,12 +58,13 @@ public class CompareCoverageActionTest {
     public JenkinsRule jenkinsRule = new JenkinsRule();
 
     private static final String GIT_URL = "git@github.com:some/my-project.git";
+    private static final String GIT_targetBranch = "develop";
     private Build build = mock(Build.class);
 
     private PrintWriter printWriter = mock(PrintWriter.class);
     private TaskListener listener = mock(TaskListener.class);
 
-    private EnvVars envVars = mock(EnvVars.class);
+    private EnvVars envVars;
 
     private MasterCoverageRepository masterCoverageRepository = mock(MasterCoverageRepository.class);
     private CoverageRepository coverageRepository = mock(CoverageRepository.class);
@@ -78,23 +81,33 @@ public class CompareCoverageActionTest {
 
 
     @Before
+    @SneakyThrows
     public void initMocks() throws IOException {
+        envVars = new EnvVars();
+        envVars.put("GIT_URL", GIT_URL);
+        envVars.put("targetBranch", GIT_targetBranch);
+        envVars.put("pullRequestId", PULLREQUESTID);
+        envVars.put(Utils.BUILD_URL_ENV_PROPERTY, "aaa/job/a");
+
         initializeJenkinsMock();
         initializeBitbucketMock();
 
         ServiceRegistry.setMasterCoverageRepository(masterCoverageRepository);
         ServiceRegistry.setCoverageRepository(coverageRepository);
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(GIT_URL);
         when(listener.getLogger()).thenReturn(System.out);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(build.getResult()).thenReturn(Result.SUCCESS);
     }
 
+    @SneakyThrows
     private void initializeJenkinsMock() {
         SystemCredentialsProvider.getInstance().getCredentials().add(
             new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL, CREDENTIALID, "Desc", "bitbucket", "secret"));
 
         EnvironmentVariablesNodeProperty prop = new EnvironmentVariablesNodeProperty();
-        EnvVars envVars = prop.getEnvVars();
-        envVars.put("pullRequestId", PULLREQUESTID);
+        for (Map.Entry<String, String> entry : envVars.entrySet()) {
+            prop.getEnvVars().put(entry.getKey(), entry.getValue());
+        }
         jenkinsRule.jenkins.getGlobalNodeProperties().add(prop);
     }
 
@@ -111,16 +124,12 @@ public class CompareCoverageActionTest {
 
     @Test
     public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
+        when(build.getResult()).thenReturn(Result.FAILURE);
         compareCoverageAction().perform(build, null, null, listener);
     }
 
     @Test
     public void postCoverageStatusToPullRequestAsComment() throws IOException, InterruptedException {
-        when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PULLREQUESTID);
-        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-
         compareCoverageAction().perform(build, null, null, listener);
 
         String expectedComment =
@@ -134,10 +143,6 @@ public class CompareCoverageActionTest {
 
     @Test
     public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess() throws IOException, InterruptedException {
-        when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PULLREQUESTID);
-        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
         when(listener.error(anyString())).thenReturn(printWriter);
 
         wireMockRule.stubFor(post(
@@ -157,11 +162,6 @@ public class CompareCoverageActionTest {
     @Test
     public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
         throws IOException, InterruptedException {
-        when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PULLREQUESTID);
-        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-
         compareCoverageAction(null, true).perform(build, null, null, listener);
 
         String expectedComment =
@@ -175,11 +175,7 @@ public class CompareCoverageActionTest {
 
     @Test
     public void postCoverageStatusToPullRequestAsCommentWithNoCustomJenkinsUrlConfigured() throws IOException, InterruptedException {
-
-        when(build.getResult()).thenReturn(Result.SUCCESS);
-        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PULLREQUESTID);
-        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("https://somewhere.local/jenkins/job/a");
+        envVars.put(Utils.BUILD_URL_ENV_PROPERTY, "https://somewhere.local/jenkins/job/a");
 
         compareCoverageAction(null, false).perform(build, null, null, listener);
 

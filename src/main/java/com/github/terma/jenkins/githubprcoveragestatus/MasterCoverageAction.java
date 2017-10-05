@@ -54,7 +54,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
     @Getter @Setter @DataBoundSetter
     private Map<String, String> scmVars;
-    
+
     @Getter @Setter @DataBoundSetter
     private boolean disableSimpleCov;
 
@@ -69,10 +69,10 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         if (build.getResult() != Result.SUCCESS) return;
 
         final PrintStream buildLog = listener.getLogger();
-        final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
+        final String gitUrl = PrIdAndUrlUtils.getGitUrlWithBranch(build, listener);
 
         final float masterCoverage = ServiceRegistry.getCoverageRepository(isDisableSimpleCov()).get(workspace);
-        buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
+        buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage) + " for " + gitUrl);
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }
 
