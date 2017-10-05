@@ -7,12 +7,16 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @Extension
 public class CoverageStatusIconAction implements UnprotectedRootAction {
 
     public static final String URL_NAME = "stash-coverage-status-icon";
+    private final int baseIconWidth = 70;
+    private final int baseFontXPos = 65;
 
     @Override
     public String getIconFileName() {
@@ -49,9 +53,13 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
                 "/com/github/terma/jenkins/githubprcoveragestatus/Icon/icon.svg"));
 
         final Message message = new Message(coverage, masterCoverage, branch);
-        svg = StringUtils.replace(svg, "{{ message }}", message.forIcon());
+        final String iconMessage = message.forIcon();
+        svg = StringUtils.replace(svg, "{{ message }}", iconMessage);
 
         svg = StringUtils.replace(svg, "{{ color }}", color);
+        final int fontPixel = getFontPixel(iconMessage);
+        svg = StringUtils.replace(svg, "{{ totalwidth }}", String.valueOf(baseIconWidth + fontPixel));
+        svg = StringUtils.replace(svg, "{{ fontXPos }}", String.valueOf(baseFontXPos + fontPixel / 2));
 
         response.getWriter().write(svg);
     }
@@ -71,6 +79,16 @@ public class CoverageStatusIconAction implements UnprotectedRootAction {
             return "#008000"; // green
         }
         return color;
+    }
+
+    private int getFontPixel(String text) {
+        Font defaultFont = new Font("DejaVu Sans", Font.PLAIN, 11);
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+        FontMetrics fm = g2d.getFontMetrics(defaultFont);
+        final int textSize = fm.stringWidth(text);
+        g2d.dispose();
+        return textSize;
     }
 
 }

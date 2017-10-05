@@ -83,7 +83,10 @@ public class CoverageStatusIconActionTest {
     private String getExpectedBody(String message, String color) {
         String svg = IOUtils.toString(this.getClass().getResourceAsStream(
             "/com/github/terma/jenkins/githubprcoveragestatus/Icon/icon.svg"));
-        return svg.replace("{{ message }}", message).replace("{{ color }}", color);
+        return svg.replace("{{ message }}", message)
+            .replace("{{ color }}", color)
+            .replace("{{ totalwidth }}", "233")
+            .replace("{{ fontXPos }}", "146");
     }
 
 }
