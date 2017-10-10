@@ -102,6 +102,46 @@ where first one is Pull Request ID (number) and second link to repository
     * Optionally use can specify here sonar login and sonar password like this:
         ```step([$class: 'CompareCoverageAction', sonarLogin: "login", sonarPassword: "password"])```
 
+* Simple Multibranch Pipeline example
+```
+ pipeline {
+    agent {
+        label 'linux'
+    }
+    tools {
+        maven 'maven-3.0.3' 
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Record Coverage') {
+            when { branch 'master' }
+            steps {
+                script {
+                    currentBuild.result = 'SUCCESS'
+                 }
+                step([$class: 'MasterCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])
+            }
+        }
+        stage('PR Coverage to Github') {
+            when { allOf {not { branch 'master' }; expression { return env.CHANGE_ID != null }} }
+            steps {
+                script {
+                    currentBuild.result = 'SUCCESS'
+                 }
+                step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])
+            }
+        }
+    }
+```
 ## Troubleshooting
 
 ### No coverage picture and my Jenkins is in private network and not accessible for GitHub
