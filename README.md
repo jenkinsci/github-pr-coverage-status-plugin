@@ -95,10 +95,10 @@ where first one is Pull Request ID (number) and second link to repository
 ## How to use with Jenkins Pipelines
 * After running tests set build result to Success
     * ```currentBuild.result = 'SUCCESS'```
-* Trigger MasterCoverageAction to collect master coverage
-    *  ```step([$class: 'MasterCoverageAction'])```
-* Trigger CompareCoverageAction to compare coverage and publish results
-    *  ```step([$class: 'CompareCoverageAction'])```
+* Trigger MasterCoverageAction to collect master coverage (scmVars is needed for multibranch)
+    *  ```step([$class: 'MasterCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
+* Trigger CompareCoverageAction to compare coverage and publish results (scmVars is needed for multibranch)
+    *  ```step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
     * Optionally use can specify here sonar login and sonar password like this:
         ```step([$class: 'CompareCoverageAction', sonarLogin: "login", sonarPassword: "password"])```
 
