@@ -79,9 +79,9 @@ public class PrIdAndUrlUtils {
         Map<String, String> envVars = build.getEnvironment(listener);
         final String gitUrl = envVars.get(GIT_URL_PROPERTY);
         final String changeUrl = envVars.get(CHANGE_URL_PROPERTY);
-        if (gitUrl != null) return gitUrl;
+        if (scmVars != null && scmVars.containsKey(GIT_URL_PROPERTY)) return scmVars.get(GIT_URL_PROPERTY);
+        else if (gitUrl != null) return gitUrl;
         else if (changeUrl != null) return changeUrl;
-        else if (scmVars != null && scmVars.containsKey(GIT_URL_PROPERTY)) return scmVars.get(GIT_URL_PROPERTY);
         else throw new UnsupportedOperationException("Can't find " + GIT_URL_PROPERTY
                     + " or " + CHANGE_URL_PROPERTY + " in envs: " + envVars);
     }
