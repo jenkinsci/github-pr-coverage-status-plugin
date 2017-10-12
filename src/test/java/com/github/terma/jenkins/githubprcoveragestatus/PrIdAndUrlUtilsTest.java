@@ -148,4 +148,11 @@ public class PrIdAndUrlUtilsTest {
         PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
     }
 
+    @Test
+    public void getGitUrlScmVarsHasPriority() throws IOException, InterruptedException {
+        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(PR_ID);
+        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
+
+        Assert.assertEquals("SCM_VARS_GIT_URL", PrIdAndUrlUtils.getGitUrl(scmVars, build, listener));
+    }
 }
