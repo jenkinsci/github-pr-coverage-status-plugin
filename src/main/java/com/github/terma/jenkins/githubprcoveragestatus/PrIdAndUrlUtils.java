@@ -75,12 +75,20 @@ public class PrIdAndUrlUtils {
         return id;
     }
 
+    /**
+     * @param scmVars  - scmVars
+     * @param build    - build
+     * @param listener - listener
+     * @return - Git URL always Repo URL even if CHANGE_URL passed which in general PR URL
+     * @throws IOException          inherited
+     * @throws InterruptedException inherited
+     */
     public static String getGitUrl(final Map<String, String> scmVars, final Run build, final TaskListener listener) throws IOException, InterruptedException {
         Map<String, String> envVars = build.getEnvironment(listener);
         final String gitUrl = envVars.get(GIT_URL_PROPERTY);
         final String changeUrl = envVars.get(CHANGE_URL_PROPERTY);
         if (gitUrl != null) return gitUrl;
-        else if (changeUrl != null) return changeUrl;
+        else if (changeUrl != null) return GitUtils.getRepoUrl(changeUrl); // change URL is full path to PR, so we normalize it to repo URL before return
         else if (scmVars != null && scmVars.containsKey(GIT_URL_PROPERTY)) return scmVars.get(GIT_URL_PROPERTY);
         else throw new UnsupportedOperationException("Can't find " + GIT_URL_PROPERTY
                     + " or " + CHANGE_URL_PROPERTY + " in envs: " + envVars);
