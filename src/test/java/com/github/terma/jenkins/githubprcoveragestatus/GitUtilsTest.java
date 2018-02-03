@@ -37,6 +37,9 @@ public class GitUtilsTest {
 
         Assert.assertEquals("terma/jenkins-github-coverage-updater",
                 GitUtils.getUserRepo("git@github.com:terma/jenkins-github-coverage-updater"));
+
+        Assert.assertEquals("apache/kafka",
+                GitUtils.getUserRepo("https://github.com/apache/kafka/"));
     }
 
     @Test
