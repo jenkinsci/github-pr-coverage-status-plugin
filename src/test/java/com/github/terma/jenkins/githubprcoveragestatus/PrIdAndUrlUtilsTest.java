@@ -41,6 +41,7 @@ public class PrIdAndUrlUtilsTest {
     private static final int PR_ID_INT = 12;
     private static final int CHANGE_ID_INT = 13;
     private static final int SCM_ENVS_PR_ID_INT = 14;
+    private static final String CHANGE_URL = "http://test.github.com/terma/test-repo/pr/123";
 
     private Run build = mock(Run.class);
     private EnvVars envVars = mock(EnvVars.class);
@@ -120,9 +121,9 @@ public class PrIdAndUrlUtilsTest {
     @Test
     public void getGitUrlIfGitUrlsNullChangeUrlIsUsed() throws IOException, InterruptedException {
         when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
+        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_URL);
 
-        Assert.assertEquals(CHANGE_ID, PrIdAndUrlUtils.getGitUrl(null, build, listener));
+        Assert.assertEquals("http://test.github.com/terma/test-repo", PrIdAndUrlUtils.getGitUrl(null, build, listener));
     }
 
     @Test

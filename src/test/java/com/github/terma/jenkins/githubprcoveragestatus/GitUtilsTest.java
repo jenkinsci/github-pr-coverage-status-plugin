@@ -43,6 +43,38 @@ public class GitUtilsTest {
     }
 
     @Test
+    public void getRepoUrl() {
+        try {
+           GitUtils.getRepoUrl(null);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // all good
+        }
+
+        Assert.assertEquals(
+                "https://github.com/terma/jenkins-github-coverage-updater",
+                GitUtils.getRepoUrl("https://github.com/terma/jenkins-github-coverage-updater"));
+
+        Assert.assertEquals("https://github.com/terma/jenkins-github-coverage-updater",
+                GitUtils.getRepoUrl("https://github.com/terma/jenkins-github-coverage-updater.git"));
+
+        Assert.assertEquals("git@github.com:terma/jenkins-github-coverage-updater",
+                GitUtils.getRepoUrl("git@github.com:terma/jenkins-github-coverage-updater.git"));
+
+        Assert.assertEquals("git@github.com:terma/jenkins-github-coverage-updater",
+                GitUtils.getRepoUrl("git@github.com:terma/jenkins-github-coverage-updater"));
+
+        Assert.assertEquals("https://github.com/terma/test",
+                GitUtils.getRepoUrl("https://github.com/terma/test/pull/1"));
+
+        Assert.assertEquals("http://github.com/terma/test",
+                GitUtils.getRepoUrl("http://github.com/terma/test/pull/1"));
+
+        Assert.assertEquals("https://github.com/terma/test",
+                GitUtils.getRepoUrl("https://github.com/terma/test/tree/branch"));
+    }
+
+    @Test
     public void getRepoName() {
         Assert.assertEquals(
                 "jenkins-github-coverage-updater",

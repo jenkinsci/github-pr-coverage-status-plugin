@@ -50,7 +50,7 @@ public class JacocoParserTest {
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
             String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH");
-            Assert.assertEquals(
+            assertStringEqualsIgnoreSlashR(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
                             "Can't extract float value by XPath: /report/counter[@type='LINE']/@missed\n" +
@@ -73,7 +73,7 @@ public class JacocoParserTest {
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
             String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH");
-            Assert.assertEquals(
+            assertStringEqualsIgnoreSlashR(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
                             "Can't extract float value by XPath: /report/counter[@type='LINE']/@missed\n" +
@@ -97,7 +97,7 @@ public class JacocoParserTest {
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
             String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH");
-            Assert.assertEquals(
+            assertStringEqualsIgnoreSlashR(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
                             "Can't extract float value by XPath: /report/counter[@type='LINE']/@covered\n" +
@@ -119,6 +119,10 @@ public class JacocoParserTest {
         } catch (Exception e) {
             Assert.assertEquals("Can't read Jacoco report by path: /jacoco-no-file.xml", e.getMessage());
         }
+    }
+
+    private static void assertStringEqualsIgnoreSlashR(String a, String b) {
+        Assert.assertEquals(a.replaceAll("\\r", ""), b.replaceAll("\\r", ""));
     }
 
 }

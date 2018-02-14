@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings("WeakerAccess")
 public class GitUtils {
 
+    public static final Pattern HTTP_GITHUB_REPO_URL = Pattern.compile("^(http[s]?://[^/]*/[^/]*/[^/]*).*");
+
     public static final Pattern HTTP_GITHUB_USER_REPO_PATTERN = Pattern.compile("^(http[s]?://[^/]*)/([^/]*/[^/]*).*");
     public static final Pattern SSH_GITHUB_USER_REPO_PATTERN = Pattern.compile("^.+:(.+)");
 
@@ -38,6 +40,33 @@ public class GitUtils {
         String[] userRepo = getUserRepo(gitRepoUrl).split("/");
         if (userRepo.length < 2) throw new IllegalArgumentException("Bad Git repository URL: " + gitRepoUrl);
         return userRepo[1];
+    }
+
+    /**
+     * Extract repo URL part form Git URL. For example <code>https://github.com/terma/test/pull/1</code>
+     * should be converted to <code>https://github.com/terma/test</code>
+     *
+     * @param gitUrl - any type of Git URL
+     * @return repo URL exclude branches or pull request parts
+     */
+    public static String getRepoUrl(String gitUrl) {
+        String repoUrl = null;
+
+        if (gitUrl != null) {
+            if (gitUrl.startsWith("git@")) {
+                repoUrl = gitUrl;
+            } else {
+                Matcher m = HTTP_GITHUB_REPO_URL.matcher(gitUrl);
+                if (m.matches()) repoUrl = m.group(1);
+            }
+        }
+
+        if (repoUrl == null) {
+            throw new IllegalArgumentException(String.format("Invalid Git Hub repository URL: %s", gitUrl));
+        }
+
+        if (repoUrl.endsWith(".git")) repoUrl = repoUrl.substring(0, repoUrl.length() - ".git".length());
+        return repoUrl;
     }
 
     /**
@@ -62,7 +91,7 @@ public class GitUtils {
         }
 
         if (userRepo == null) {
-            throw new IllegalStateException(String.format("Invalid Git Hub repository URL: %s", gitRepoUrl));
+            throw new IllegalArgumentException(String.format("Invalid Git Hub repository URL: %s", gitRepoUrl));
         }
 
         if (userRepo.endsWith(".git")) userRepo = userRepo.substring(0, userRepo.length() - ".git".length());
