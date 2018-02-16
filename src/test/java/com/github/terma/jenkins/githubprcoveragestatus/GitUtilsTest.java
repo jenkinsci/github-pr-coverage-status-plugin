@@ -42,6 +42,7 @@ public class GitUtilsTest {
                 GitUtils.getUserRepo("https://github.com/apache/kafka/"));
     }
 
+
     @Test
     public void getRepoName() {
         Assert.assertEquals(
