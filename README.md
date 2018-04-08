@@ -181,6 +181,10 @@ To fix that:
 
 ## Changelog
 
+### [1.10.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.10.0)
+
+- Use scmVars before env variables for git url detection
+
 ### [1.9.1](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.9.1)
 
 - Allow to disable SimpleCov Coverage parser
