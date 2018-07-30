@@ -142,6 +142,15 @@ where first one is Pull Request ID (number) and second link to repository
         }
     }
 ```
+
+### Making the build fail on coverage drop
+
+It is also possible to just make the build fail if the coverage drops instead of commenting on the PR.
+
+The setup is identical apart from the arguments into the `CompareCoverageAction` you have to pass an additional
+`failBuildOnConverageDecrease: true` into the step.
+
+
 ## Troubleshooting
 
 ### No coverage picture and my Jenkins is in private network and not accessible for GitHub

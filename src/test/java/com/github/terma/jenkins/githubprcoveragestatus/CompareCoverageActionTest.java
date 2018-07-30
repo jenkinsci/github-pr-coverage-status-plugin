@@ -120,4 +120,35 @@ public class CompareCoverageActionTest {
         verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
+    @Test
+    public void doNotCommentButFailBuildIfConfiguredToDoSo() throws IOException, InterruptedException {
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+        when(listener.error(anyString())).thenReturn(printWriter);
+        when(masterCoverageRepository.get(anyString())).thenReturn(0.999f);
+
+        CompareCoverageAction underTest = new CompareCoverageAction();
+        underTest.setFailBuildOnConverageDecrease(true);
+        underTest.perform(build, null, null, listener);
+
+        verify(build, atLeastOnce()).setResult(Result.FAILURE);
+    }
+
+    @Test
+    public void doNotCommentButPassBuildIfConfiguredToDoSo() throws IOException, InterruptedException {
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
+        when(listener.error(anyString())).thenReturn(printWriter);
+
+        CompareCoverageAction underTest = new CompareCoverageAction();
+        underTest.setFailBuildOnConverageDecrease(true);
+        underTest.perform(build, null, null, listener);
+
+        verify(build, never()).setResult(Result.FAILURE);
+    }
+
 }
