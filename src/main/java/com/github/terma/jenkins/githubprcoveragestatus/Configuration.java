@@ -77,8 +77,20 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.isUseSonarForMasterCoverage();
     }
 
+    public static String getSonarCoverageMetric() {
+        return DESCRIPTOR.getSonarCoverageMetric();
+    }
+
+    public static int getCoverageRoundingDigits() {
+        return DESCRIPTOR.getCoverageRoundingDigits();
+    }
+
     public static void setMasterCoverage(final String repo, final float coverage) {
         DESCRIPTOR.set(repo, coverage);
+    }
+
+    public static Boolean isUseAggregatesForCoverage() {
+        return DESCRIPTOR.isUseAggregatesForCoverage();
     }
 
     @Override
@@ -100,13 +112,16 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private String jenkinsUrl;
         private boolean privateJenkinsPublicGitHub;
         private boolean useSonarForMasterCoverage;
+        private boolean useAggregatesForCoverage;
         private String sonarUrl;
         private String sonarToken;
         private String sonarLogin;
         private String sonarPassword;
+        private String sonarCoverageMetric;
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
+        private int coverageRoundingDigits;
 
         public ConfigurationDescriptor() {
             load();
@@ -158,6 +173,11 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         }
 
         @Override
+        public boolean isUseAggregatesForCoverage() {
+            return useAggregatesForCoverage;
+        }
+
+        @Override
         public boolean isDisableSimpleCov() {
             return disableSimpleCov;
         }
@@ -184,6 +204,16 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         public String getSonarPassword() {
             return sonarPassword;
         }
+        
+        @Override
+        public String getSonarCoverageMetric() {
+            return sonarCoverageMetric;
+        }
+
+        @Override
+        public int getCoverageRoundingDigits() {
+            return coverageRoundingDigits;
+        }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
@@ -199,6 +229,9 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
             sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
             sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
+            sonarCoverageMetric = StringUtils.trimToNull(formData.getString("sonarCoverageMetric"));
+            coverageRoundingDigits = NumberUtils.toInt(formData.getString("coverageRoundingDigits"), 0);
+            useAggregatesForCoverage = BooleanUtils.toBoolean(formData.getString("useAggregatesForCoverage"));
             save();
             return super.configure(req, formData);
         }

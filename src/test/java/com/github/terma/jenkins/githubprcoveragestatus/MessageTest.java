@@ -17,13 +17,26 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import static org.mockito.Mockito.mock;
+
+import java.io.IOException;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class MessageTest {
+    private SettingsRepository settingsRepository = mock(SettingsRepository.class);
+  
+    @Before
+    public void initMocks() throws IOException {
+        ServiceRegistry.setSettingsRepository(settingsRepository);
+    }
 
     @Test
-    public void buildNiceForConsole() {
+    public void buildNiceForConsoleDefault() {
+        Mockito.when(settingsRepository.getCoverageRoundingDigits()).thenReturn(0);
         Assert.assertEquals("Coverage 100% changed 0.0% vs master 100%", new Message(1, 1).forConsole());
         Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0, 0).forConsole());
         Assert.assertEquals("Coverage 50% changed +50.0% vs master 0%", new Message(0.5f, 0).forConsole());
@@ -34,7 +47,21 @@ public class MessageTest {
     }
 
     @Test
+    public void buildNiceForConsoleSonar3Rounding() {
+        Mockito.when(settingsRepository.getCoverageRoundingDigits()).thenReturn(3);
+        Assert.assertEquals("Coverage 100% changed 0.0% vs master 100%", new Message(1, 1).forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0, 0).forConsole());
+        Assert.assertEquals("Coverage 50% changed +50.0% vs master 0%", new Message(0.5f, 0).forConsole());
+        Assert.assertEquals("Coverage 0% changed -50.0% vs master 50%", new Message(0, 0.5f).forConsole());
+        Assert.assertEquals("Coverage 70% changed +20.0% vs master 50%", new Message(0.7f, 0.5f).forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0.0007f, 0.0005f).forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0.000007f, 0.000005f).forConsole());
+        Assert.assertEquals("Coverage 0% changed 0.0% vs master 0%", new Message(0.0041317f, 0.005f).forConsole());
+    }
+
+    @Test
     public void buildNiceForIcon() {
+        Mockito.when(settingsRepository.getCoverageRoundingDigits()).thenReturn(0);
         Assert.assertEquals("100% (0.0%) vs master 100%", new Message(1, 1).forIcon());
         Assert.assertEquals("0% (0.0%) vs master 0%", new Message(0, 0).forIcon());
         Assert.assertEquals("50% (+50.0%) vs master 0%", new Message(0.5f, 0).forIcon());

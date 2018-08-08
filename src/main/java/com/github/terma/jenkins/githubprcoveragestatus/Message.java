@@ -34,8 +34,14 @@ class Message {
     private final float masterCoverage;
 
     public Message(float coverage, float masterCoverage) {
-        this.coverage = Percent.roundFourAfterDigit(coverage);
-        this.masterCoverage = Percent.roundFourAfterDigit(masterCoverage);
+        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+        if (settingsRepository.getCoverageRoundingDigits() == 0) {
+            this.coverage = Percent.roundFourAfterDigit(coverage);
+            this.masterCoverage = Percent.roundFourAfterDigit(masterCoverage);
+        } else {
+            this.coverage = Percent.roundCustomAfterDigit(coverage, settingsRepository.getCoverageRoundingDigits());
+            this.masterCoverage = Percent.roundCustomAfterDigit(masterCoverage, settingsRepository.getCoverageRoundingDigits());
+        }
     }
 
     public String forConsole() {

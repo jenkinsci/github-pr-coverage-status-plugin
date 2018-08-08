@@ -14,6 +14,15 @@ public class SimpleCovParser implements CoverageReportParser {
     private static final String METRIC_PATH = "$.metrics.covered_percent";
 
     @Override
+    public boolean canAggregate() {
+      return false;
+    }
+    @Override
+    public float getAggregate() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
     public float get(String simpleCovFilePath) {
         final String content;
         try {

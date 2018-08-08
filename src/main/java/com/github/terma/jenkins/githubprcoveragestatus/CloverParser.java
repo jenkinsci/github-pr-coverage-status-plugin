@@ -36,6 +36,15 @@ class CloverParser implements CoverageReportParser {
     private static final String TOTAL_STATEMENTS_XPATH = "/coverage/project/metrics/@statements";
     private static final String COVER_STATEMENTS_XPATH = "/coverage/project/metrics/@coveredstatements";
 
+    @Override
+    public boolean canAggregate() {
+      return false;
+    }
+    @Override
+    public float getAggregate() {
+      throw new UnsupportedOperationException();
+    }
+
     private int getByXpath(final String filePath, final String content, final String xpath) {
         try {
             return Integer.parseInt(XmlUtils.findInXml(content, xpath));

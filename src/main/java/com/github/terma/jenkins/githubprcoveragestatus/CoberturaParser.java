@@ -29,6 +29,15 @@ import java.util.regex.Pattern;
  */
 class CoberturaParser implements CoverageReportParser {
 
+    @Override
+    public boolean canAggregate() {
+      return false;
+    }
+    @Override
+    public float getAggregate() {
+      throw new UnsupportedOperationException();
+    }
+
     private static String findFirst(String string, String pattern) {
         String result = findFirstOrNull(string, pattern);
         if (result != null) {

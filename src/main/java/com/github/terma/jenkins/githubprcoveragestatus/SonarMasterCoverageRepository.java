@@ -40,7 +40,9 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
 
     private static final String SONAR_SEARCH_PROJECTS_API_PATH = "/api/projects/index";
     private static final String SONAR_COMPONENT_MEASURE_API_PATH = "/api/measures/component";
-    public static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "coverage";
+    public static final String SONAR_OVERALL_INSTRUCTION_COVERAGE_METRIC_NAME = "coverage";
+    public static final String SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME = "line_coverage";
+    public static final String SONAR_OVERALL_BRANCH_COVERAGE_METRIC_NAME = "branch_coverage";
 
     private final String sonarUrl;
     private final String login;
@@ -92,7 +94,13 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
                 log("Found project for repo name %s - %s", repoName, sonarProjects.get(0));
                 return sonarProjects.get(0);
             } else {
-                log("Found multiple projects for repo name %s - found %s - returning first result", repoName, sonarProjects);
+                log("Found multiple projects for repo name %s - found %s - looking for repo/key exact match", repoName, sonarProjects);
+                for (SonarProject project: sonarProjects) {
+                  if (project.getKey().equalsIgnoreCase(repoName)) {
+                    return project;
+                  }
+                }
+                log("No repo/key exact match, returning first result");
                 return sonarProjects.get(0);
             }
         } catch (final Exception e) {
@@ -107,7 +115,10 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
      * @throws SonarCoverageMeasureRetrievalException if an error occurred during retrieval of the coverage
      */
     private float getCoverageMeasure(SonarProject project) throws SonarCoverageMeasureRetrievalException {
-        final String uri = MessageFormat.format("{0}{1}?componentKey={2}&metricKeys={3}", sonarUrl, SONAR_COMPONENT_MEASURE_API_PATH, URLEncoder.encode(project.getKey()), SONAR_OVERALL_LINE_COVERAGE_METRIC_NAME);
+        final SettingsRepository settingsRepository = ServiceRegistry.getSettingsRepository();
+        String metricName = settingsRepository.getSonarCoverageMetric();
+        if (metricName == null) metricName = SONAR_OVERALL_INSTRUCTION_COVERAGE_METRIC_NAME;
+        final String uri = MessageFormat.format("{0}{1}?componentKey={2}&metricKeys={3}", sonarUrl, SONAR_COMPONENT_MEASURE_API_PATH, URLEncoder.encode(project.getKey()), metricName);
         try {
             final GetMethod method = executeGetRequest(uri);
             String value = JsonUtils.findInJson(method.getResponseBodyAsString(), "component.measures[0].value");

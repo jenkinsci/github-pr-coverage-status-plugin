@@ -48,6 +48,18 @@ f.section(title: descriptor.displayName) {
         f.password()
     }
 
+    f.entry(field: "sonarCoverageMetric", title: _("Sonar coverage metric")) {
+        f.textbox()
+    }
+
+    f.entry(field: "coverageRoundingDigits", title: _("Rounding digits")) {
+        f.textbox()
+    }
+
+    f.entry(field: "useAggregatesForCoverage", title: _("Use aggregate calculations for coverage")) {
+        f.checkbox()
+    }
+
     f.entry(field: "disableSimpleCov", title: _("Disable SimpleCov coverage parser")) {
         f.checkbox()
     }
