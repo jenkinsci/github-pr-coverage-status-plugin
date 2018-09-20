@@ -64,5 +64,4 @@ class CloverParser implements CoverageReportParser {
         if (statements == 0) return 0;
         else return coveredStatements / statements;
     }
-
 }

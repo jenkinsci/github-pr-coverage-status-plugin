@@ -29,5 +29,4 @@ interface PullRequestRepository {
     GHRepository getGitHubRepository(final String gitHubUrl) throws IOException;
 
     void comment(GHRepository ghRepository, int prId, String message) throws IOException;
-
 }

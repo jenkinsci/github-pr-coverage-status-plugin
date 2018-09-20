@@ -20,5 +20,4 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 interface CoverageReportParser {
 
     float get(String filePath);
-
 }
