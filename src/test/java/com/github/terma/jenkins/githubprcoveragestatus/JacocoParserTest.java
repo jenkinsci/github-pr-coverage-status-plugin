@@ -41,6 +41,22 @@ public class JacocoParserTest {
     }
 
     @Test
+    public void extractInstructionCoverageFromJacocoReportWhenCoverageTypeNull() throws IOException {
+        String filePath = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+
+        Assert.assertEquals(0.22, new JacocoParser(null).get(filePath), 0.1);
+    }
+
+    @Test
+    public void extractInstructionCoverageFromJacocoReportWhenCoverageTypeUnknown() throws IOException {
+        String filePath = JacocoParserTest.class.getResource(
+                "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
+
+        Assert.assertEquals(0.22, new JacocoParser("random").get(filePath), 0.1);
+    }
+
+    @Test
     public void throwExceptionWhenExtractCoverageFromJacocoAndNoLineTag() throws IOException {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-no-line-tag.xml").getFile();

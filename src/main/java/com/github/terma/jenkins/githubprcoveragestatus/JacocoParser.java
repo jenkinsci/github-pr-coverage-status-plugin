@@ -31,7 +31,6 @@ import java.util.List;
     <counter type="METHOD" missed="1" covered="2"/>
     <counter type="CLASS" missed="0" covered="1"/>
  */
-
 class JacocoParser implements CoverageReportParser {
 
     private List<String> coverageTypes = new ArrayList<String>() {{
