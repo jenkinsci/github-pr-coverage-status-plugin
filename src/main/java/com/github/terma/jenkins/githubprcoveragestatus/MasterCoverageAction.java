@@ -52,7 +52,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
 
     private Map<String, String> scmVars;
-    private String coverageType;
+    private String jacocoCoverageType;
 
     @DataBoundConstructor
     public MasterCoverageAction() {
@@ -70,8 +70,8 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
     }
 
     @DataBoundSetter
-    public void setCoverageType(String coverageType) {
-        this.coverageType = coverageType;
+    public void setJacocoCoverageType(String jacocoCoverageType) {
+        this.jacocoCoverageType = jacocoCoverageType;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -84,8 +84,9 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         final boolean disableSimpleCov = ServiceRegistry.getSettingsRepository().isDisableSimpleCov();
-        final String coverageType = this.coverageType;
-        final float masterCoverage = ServiceRegistry.getCoverageRepository(disableSimpleCov, coverageType).get(workspace);
+        final String jacocoCoverageType = this.jacocoCoverageType;
+        final float masterCoverage = ServiceRegistry.getCoverageRepository(disableSimpleCov, jacocoCoverageType)
+                .get(workspace);
         buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }

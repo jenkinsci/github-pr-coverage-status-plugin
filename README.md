@@ -96,15 +96,13 @@ where first one is Pull Request ID (number) and second link to repository
 * After running tests set build result to Success
     * ```currentBuild.result = 'SUCCESS'```
 * Trigger MasterCoverageAction to collect master coverage (scmVars is needed for multibranch)
-    *  ```step([$class: 'MasterCoverageAction',
-                coverageType: 'INSTRUCTION',
-                scmVars: [GIT_URL: env.GIT_URL]])```
+    *  ```step([$class: 'MasterCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
+    * Optionally you can specify jacoco coverage type like this:
+    ```step([$class: 'MasterCoverageAction', jacocoCoverageType: 'INSTRUCTION', scmVars: [GIT_URL: env.GIT_URL]])```
 * Trigger CompareCoverageAction to compare coverage and publish results (scmVars is needed for multibranch)
-    *  ```step([$class: 'CompareCoverageAction',
-                coverageType: 'INSTRUCTION',
-                scmVars: [GIT_URL: env.GIT_URL]])```
-    * Optionally use can specify here sonar login and sonar password like this:
-        ```step([$class: 'CompareCoverageAction', sonarLogin: "login", sonarPassword: "password"])```
+    *  ```step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
+    * Optionally use can specify here jacoco coverage type and sonar login and sonar password like this:
+        ```step([$class: 'CompareCoverageAction', jacocoCoverageType: 'INSTRUCTION', sonarLogin: "login", sonarPassword: "password"])```
 
 * Simple Multibranch Pipeline example
 ```
@@ -132,9 +130,7 @@ where first one is Pull Request ID (number) and second link to repository
                 script {
                     currentBuild.result = 'SUCCESS'
                  }
-                step([$class: 'MasterCoverageAction',
-                      coverageType: 'INSTRUCTION',
-                      scmVars: [GIT_URL: env.GIT_URL]])
+                step([$class: 'MasterCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])
             }
         }
         stage('PR Coverage to Github') {
@@ -143,9 +139,7 @@ where first one is Pull Request ID (number) and second link to repository
                 script {
                     currentBuild.result = 'SUCCESS'
                  }
-                step([$class: 'CompareCoverageAction',
-                      coverageType: 'INSTRUCTION',
-                      scmVars: [GIT_URL: env.GIT_URL]])
+                step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])
             }
         }
     }

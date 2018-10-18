@@ -60,7 +60,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private String sonarLogin;
     private String sonarPassword;
     private Map<String, String> scmVars;
-    private String coverageType;
+    private String jacocoCoverageType;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
@@ -87,8 +87,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     }
 
     @DataBoundSetter
-    public void setCoverageType(String coverageType) {
-        this.coverageType = coverageType;
+    public void setJacocoCoverageType(String jacocoCoverageType) {
+        this.jacocoCoverageType = jacocoCoverageType;
     }
 
     // todo show message that addition comment in progress as it could take a while
@@ -119,7 +119,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");
         final float coverage = ServiceRegistry.getCoverageRepository(settingsRepository.isDisableSimpleCov(),
-                coverageType).get(workspace);
+                jacocoCoverageType).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
         final Message message = new Message(coverage, masterCoverage);
