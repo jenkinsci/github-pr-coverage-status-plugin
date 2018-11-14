@@ -64,9 +64,15 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private String sonarPassword;
     private Map<String, String> scmVars;
     private String jacocoCoverageCounter;
+    private String publishResultAs;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
+    }
+
+    @DataBoundSetter
+    public void setPublishResultAs(String publishResultAs) {
+        this.publishResultAs = publishResultAs;
     }
 
     @DataBoundSetter
@@ -132,29 +138,9 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         String jenkinsUrl = settingsRepository.getJenkinsUrl();
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
-        try {
-            List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
-            for (int i = 0; i < commits.size(); i++) {
-                if (i == commits.size() - 1) {
-                    gitHubRepository.createCommitStatus(commits.get(i).getSha(), GHCommitState.SUCCESS, gitUrl, "50% vs 52%");
-                }
-            }
-        } catch (Exception e) {
-            PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");
-            e.printStackTrace(pw);
-        }
-        try {
-            final String comment = message.forComment(
-                    buildUrl,
-                    jenkinsUrl,
-                    settingsRepository.getYellowThreshold(),
-                    settingsRepository.getGreenThreshold(),
-                    settingsRepository.isPrivateJenkinsPublicGitHub());
-            ServiceRegistry.getPullRequestRepository().comment(gitHubRepository, prId, comment);
-        } catch (Exception ex) {
-            PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
-            ex.printStackTrace(pw);
-        }
+
+        ResultPublisher resultPublisher = new ResultPublisher();
+        resultPublisher.publish(publishResultAs, gitHubRepository, prId, buildUrl, masterCoverage, coverage, listener, message, jenkinsUrl, settingsRepository);
     }
 
     @Override
