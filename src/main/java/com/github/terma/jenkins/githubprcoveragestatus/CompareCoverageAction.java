@@ -29,6 +29,8 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.github.GHCommitState;
+import org.kohsuke.github.GHPullRequestCommitDetail;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -37,6 +39,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -129,7 +132,17 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         String jenkinsUrl = settingsRepository.getJenkinsUrl();
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
-        
+        try {
+            List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
+            for (int i = 0; i < commits.size(); i++) {
+                if (i == commits.size() - 1) {
+                    gitHubRepository.createCommitStatus(commits.get(i).getSha(), GHCommitState.SUCCESS, gitUrl, "50% vs 52%");
+                }
+            }
+        } catch (Exception e) {
+            PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");
+            e.printStackTrace(pw);
+        }
         try {
             final String comment = message.forComment(
                     buildUrl,
