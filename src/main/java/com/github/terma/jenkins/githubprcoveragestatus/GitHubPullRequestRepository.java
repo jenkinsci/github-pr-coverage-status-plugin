@@ -17,10 +17,7 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import org.kohsuke.github.GHIssueState;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.kohsuke.github.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -86,4 +83,8 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
         ghRepository.getPullRequest(prId).comment(message);
     }
 
+    @Override
+    public void createCommitStatus(String sha1, GHCommitState state, String targetUrl, String description) {
+        ServiceRegistry.getPullRequestRepository().createCommitStatus(sha1, GHCommitState.SUCCESS, targetUrl, description);
+    }
 }

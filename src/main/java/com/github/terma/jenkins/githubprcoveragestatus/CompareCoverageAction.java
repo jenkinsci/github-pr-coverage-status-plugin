@@ -139,8 +139,44 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         String jenkinsUrl = settingsRepository.getJenkinsUrl();
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
 
-        ResultPublisher resultPublisher = new ResultPublisher();
-        resultPublisher.publish(publishResultAs, gitHubRepository, prId, buildUrl, masterCoverage, coverage, listener, message, jenkinsUrl, settingsRepository);
+        if ("comment".equalsIgnoreCase(publishResultAs)) {
+            publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener);
+        } else {
+            publishStatusCheck(gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
+        }
+    }
+
+    private void publishComment(
+            Message message, String buildUrl, String jenkinsUrl, SettingsRepository settingsRepository,
+            GHRepository gitHubRepository, int prId, TaskListener listener) {
+        try {
+            final String comment = message.forComment(
+                    buildUrl,
+                    jenkinsUrl,
+                    settingsRepository.getYellowThreshold(),
+                    settingsRepository.getGreenThreshold(),
+                    settingsRepository.isPrivateJenkinsPublicGitHub());
+            ServiceRegistry.getPullRequestRepository().comment(gitHubRepository, prId, comment);
+        } catch (Exception ex) {
+            PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
+            ex.printStackTrace(pw);
+        }
+    }
+
+    private void publishStatusCheck(GHRepository gitHubRepository, int prId, float targetCoverage,
+                                    float coverage, String buildUrl, TaskListener listener) {
+        try {
+            List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
+            for (int i = 0; i < commits.size(); i++) {
+                if (i == commits.size() - 1) {
+                    ServiceRegistry.getPullRequestRepository().createCommitStatus(commits.get(i).getSha(), GHCommitState.SUCCESS, buildUrl,
+                            targetCoverage + " vs " + coverage);
+                }
+            }
+        } catch (Exception e) {
+            PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");
+            e.printStackTrace(pw);
+        }
     }
 
     @Override

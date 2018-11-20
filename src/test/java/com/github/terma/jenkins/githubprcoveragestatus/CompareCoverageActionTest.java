@@ -21,13 +21,14 @@ import hudson.EnvVars;
 import hudson.model.Build;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import org.kohsuke.github.GHRepository;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -35,10 +36,8 @@ public class CompareCoverageActionTest {
 
     private static final String GIT_URL = "git@github.com:some/my-project.git";
     private Build build = mock(Build.class);
-
     private PrintWriter printWriter = mock(PrintWriter.class);
     private TaskListener listener = mock(TaskListener.class);
-
     private EnvVars envVars = mock(EnvVars.class);
 
     private MasterCoverageRepository masterCoverageRepository = mock(MasterCoverageRepository.class);
@@ -46,78 +45,112 @@ public class CompareCoverageActionTest {
     private SettingsRepository settingsRepository = mock(SettingsRepository.class);
     private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
     private GHRepository ghRepository = mock(GHRepository.class);
+    private GHPullRequestCommitDetail commit = mock(GHPullRequestCommitDetail.class);
 
-//    @Before
-//    public void initMocks() throws IOException {
-//        ServiceRegistry.setMasterCoverageRepository(masterCoverageRepository);
-//        ServiceRegistry.setCoverageRepository(coverageRepository);
-//        ServiceRegistry.setSettingsRepository(settingsRepository);
-//        ServiceRegistry.setPullRequestRepository(pullRequestRepository);
-//        when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
-//        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(GIT_URL);
-//        when(listener.getLogger()).thenReturn(System.out);
-//    }
-//
-//    @Test
-//    public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
-//        new CompareCoverageAction().perform(build, null, null, listener);
-//    }
-//
-//    @Test
-//    public void postCoverageStatusToPullRequestAsComment() throws IOException, InterruptedException {
-//        when(build.getResult()).thenReturn(Result.SUCCESS);
-//        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-//        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-//        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-//
-//        new CompareCoverageAction().perform(build, null, null, listener);
-//
-//        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
-//    }
-//
-//    @Test
-//    public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess() throws IOException, InterruptedException {
-//        when(build.getResult()).thenReturn(Result.SUCCESS);
-//        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-//        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-//        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-//        when(listener.error(anyString())).thenReturn(printWriter);
-//
-//        doThrow(new IOException("???")).when(pullRequestRepository).comment(any(GHRepository.class), anyInt(), anyString());
-//
-//        new CompareCoverageAction().perform(build, null, null, listener);
-//
-//        verify(listener).error("Couldn't add comment to pull request #12!");
-//        verify(printWriter, atLeastOnce()).println(any(Throwable.class));
-//    }
-//
-//    @Test
-//    public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
-//            throws IOException, InterruptedException {
-//        when(build.getResult()).thenReturn(Result.SUCCESS);
-//        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-//        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-//        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-//
-//        when(settingsRepository.isPrivateJenkinsPublicGitHub()).thenReturn(true);
-//
-//        new CompareCoverageAction().perform(build, null, null, listener);
-//
-//        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
-//    }
-//
-//    @Test
-//    public void postCoverageStatusToPullRequestAsCommentWithCustomJenkinsUrlIfConfigured() throws IOException, InterruptedException {
-//        when(build.getResult()).thenReturn(Result.SUCCESS);
-//        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
-//        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn("12");
-//        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn("aaa/job/a");
-//
-//        when(settingsRepository.getJenkinsUrl()).thenReturn("customJ");
-//
-//        new CompareCoverageAction().perform(build, null, null, listener);
-//
-//        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
-//    }
+    private List<GHPullRequestCommitDetail> commits = new ArrayList<GHPullRequestCommitDetail>() {{
+        add(mock(GHPullRequestCommitDetail.class));
+        add(commit);
+    }};
+    private PagedIterable<GHPullRequestCommitDetail> pagedIterable = mock(PagedIterable.class);
 
+    private CompareCoverageAction coverageAction = new CompareCoverageAction();
+
+    @Before
+    public void initMocks() throws IOException, InterruptedException {
+        ServiceRegistry.setMasterCoverageRepository(masterCoverageRepository);
+        ServiceRegistry.setCoverageRepository(coverageRepository);
+        ServiceRegistry.setSettingsRepository(settingsRepository);
+        ServiceRegistry.setPullRequestRepository(pullRequestRepository);
+        when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
+        when(listener.getLogger()).thenReturn(System.out);
+    }
+
+    @Test
+    public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
+        new CompareCoverageAction().perform(build, null, null, listener);
+    }
+
+    @Test
+    public void postCoverageStatusToPullRequestAsComment() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        coverageAction.setPublishResultAs("comment");
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+    }
+
+    @Test
+    public void postResultAsStatusCheck() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        prepareCommit();
+        coverageAction.setPublishResultAs("statusCheck");
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(pullRequestRepository).createCommitStatus("fh3k2l", GHCommitState.SUCCESS, "aaa/job/a", "0.0 vs 0.0");
+    }
+
+    @Test
+    public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        when(listener.error(anyString())).thenReturn(printWriter);
+        coverageAction.setPublishResultAs("comment");
+
+        doThrow(new IOException("???")).when(pullRequestRepository).comment(any(GHRepository.class), anyInt(), anyString());
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(listener).error("Couldn't add comment to pull request #12!");
+        verify(printWriter, atLeastOnce()).println(any(Throwable.class));
+    }
+
+    @Test
+    public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
+            throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        when(settingsRepository.isPrivateJenkinsPublicGitHub()).thenReturn(true);
+        coverageAction.setPublishResultAs("comment");
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
+    }
+
+    @Test
+    public void postCoverageStatusToPullRequestAsCommentWithCustomJenkinsUrlIfConfigured() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        when(settingsRepository.getJenkinsUrl()).thenReturn("customJ");
+        coverageAction.setPublishResultAs("comment");
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+    }
+
+    private void prepareCommit() throws IOException {
+        GHPullRequest ghPullRequest = mock(GHPullRequest.class);
+        when(ghRepository.getPullRequest(12)).thenReturn(ghPullRequest);
+        when(ghPullRequest.listCommits()).thenReturn(pagedIterable);
+        when(pagedIterable.asList()).thenReturn(commits);
+        when(commit.getSha()).thenReturn("fh3k2l");
+    }
+
+    private void prepareBuildSuccess() throws IOException, InterruptedException {
+        when(build.getResult()).thenReturn(Result.SUCCESS);
+        when(build.getEnvironment(any(TaskListener.class))).thenReturn(envVars);
+    }
+
+    private void prepareEnvVars() {
+        String buildUrl = "aaa/job/a";
+        String prId = "12";
+        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(prId);
+        when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn(buildUrl);
+        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(GIT_URL);
+    }
 }
