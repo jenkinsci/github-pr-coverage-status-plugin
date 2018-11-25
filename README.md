@@ -97,12 +97,12 @@ where first one is Pull Request ID (number) and second link to repository
     * ```currentBuild.result = 'SUCCESS'```
 * Trigger MasterCoverageAction to collect master coverage (scmVars is needed for multibranch)
     *  ```step([$class: 'MasterCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
-    * Optionally you can specify jacoco coverage type like this:
-    ```step([$class: 'MasterCoverageAction', jacocoCoverageType: 'INSTRUCTION', scmVars: [GIT_URL: env.GIT_URL]])```
+    * Optionally you can specify jacoco counter type like this:
+    ```step([$class: 'MasterCoverageAction', jacocoCounterType: 'INSTRUCTION', scmVars: [GIT_URL: env.GIT_URL]])```
 * Trigger CompareCoverageAction to compare coverage and publish results (scmVars is needed for multibranch)
     *  ```step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
-    * Optionally use can specify here jacoco coverage type and sonar login and sonar password like this:
-        ```step([$class: 'CompareCoverageAction', jacocoCoverageType: 'INSTRUCTION', sonarLogin: "login", sonarPassword: "password"])```
+    * Optionally use can specify here jacoco counter type and sonar login and sonar password like this:
+        ```step([$class: 'CompareCoverageAction', jacocoCounterType: 'INSTRUCTION', sonarLogin: "login", sonarPassword: "password"])```
 
 * Simple Multibranch Pipeline example
 ```

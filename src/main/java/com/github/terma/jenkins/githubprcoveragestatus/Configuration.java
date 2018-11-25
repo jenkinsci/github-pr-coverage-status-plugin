@@ -95,7 +95,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<String, Float>();
 
         private boolean disableSimpleCov;
-        private String jacocoCoverageType;
         private String gitHubApiUrl;
         private String personalAccessToken;
         private String jenkinsUrl;
@@ -196,7 +195,6 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
             useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));
             disableSimpleCov = BooleanUtils.toBoolean(formData.getString("disableSimpleCov"));
-            jacocoCoverageType = StringUtils.trimToNull(formData.getString("jacocoCoverageType"));
             sonarUrl = StringUtils.trimToNull(formData.getString("sonarUrl"));
             sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
             sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));

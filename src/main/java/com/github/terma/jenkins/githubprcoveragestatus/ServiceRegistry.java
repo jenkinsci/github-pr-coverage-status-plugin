@@ -52,9 +52,9 @@ public class ServiceRegistry {
     }
 
     public static CoverageRepository getCoverageRepository(final boolean disableSimpleCov,
-                                                           final String jacocoCoverageType) {
+                                                           final String jacocoCoverageCounter) {
         return coverageRepository != null ? coverageRepository
-                : new GetCoverageCallable(disableSimpleCov, jacocoCoverageType);
+                : new GetCoverageCallable(disableSimpleCov, jacocoCoverageCounter);
     }
 
     public static void setCoverageRepository(CoverageRepository coverageRepository) {

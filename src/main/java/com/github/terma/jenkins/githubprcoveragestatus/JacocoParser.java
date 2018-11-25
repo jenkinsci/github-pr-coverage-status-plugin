@@ -33,7 +33,7 @@ import java.util.List;
  */
 class JacocoParser implements CoverageReportParser {
 
-    private List<String> coverageTypes = new ArrayList<String>() {{
+    private List<String> coverageCounters = new ArrayList<String>() {{
         add("instruction");
         add("complexity");
         add("method");
@@ -41,10 +41,10 @@ class JacocoParser implements CoverageReportParser {
         add("line");
     }};
 
-    private String coverageType = "";
+    private String coverageCounterType = "";
 
-    public JacocoParser(String coverageType) {
-        this.coverageType = coverageType;
+    public JacocoParser(String coverageCounterType) {
+        this.coverageCounterType = coverageCounterType;
     }
 
     private float getByXpath(final String filePath, final String content, final String xpath) {
@@ -69,12 +69,12 @@ class JacocoParser implements CoverageReportParser {
                     "Can't read Jacoco report by path: " + jacocoFilePath);
         }
 
-        if (!isValidCoverageType(coverageType)) {
-            coverageType = coverageTypes.get(0);
+        if (!isValidCoverageCounter(coverageCounterType)) {
+            coverageCounterType = coverageCounters.get(0);
         }
 
-        final float missed = getByXpath(jacocoFilePath, content, getMissedXpath(coverageType));
-        final float covered = getByXpath(jacocoFilePath, content, getCoverageXpath(coverageType));
+        final float missed = getByXpath(jacocoFilePath, content, getMissedXpath(coverageCounterType));
+        final float covered = getByXpath(jacocoFilePath, content, getCoverageXpath(coverageCounterType));
         final float coverage = covered + missed;
         if (coverage == 0) {
             return 0;
@@ -83,23 +83,23 @@ class JacocoParser implements CoverageReportParser {
         }
     }
 
-    private boolean isValidCoverageType(String coverageType) {
-        if (coverageType == null) {
+    private boolean isValidCoverageCounter(String coverageCounter) {
+        if (coverageCounter == null) {
             return false;
         }
-        for (String type : coverageTypes) {
-            if (type.equalsIgnoreCase(coverageType)) {
+        for (String type : coverageCounters) {
+            if (type.equalsIgnoreCase(coverageCounter)) {
                 return true;
             }
         }
         return false;
     }
 
-    private String getMissedXpath(String coverageType) {
-        return "/report/counter[@type='" + coverageType.toUpperCase() + "']/@missed";
+    private String getMissedXpath(String counterType) {
+        return "/report/counter[@type='" + counterType.toUpperCase() + "']/@missed";
     }
 
-    private String getCoverageXpath(String coverageType) {
-        return "/report/counter[@type='" + coverageType.toUpperCase() + "']/@covered";
+    private String getCoverageXpath(String counterType) {
+        return "/report/counter[@type='" + counterType.toUpperCase() + "']/@covered";
     }
 }
