@@ -74,7 +74,7 @@ class JacocoParser implements CoverageReportParser {
         }
 
         final float missed = getByXpath(jacocoFilePath, content, getMissedXpath(coverageCounterType));
-        final float covered = getByXpath(jacocoFilePath, content, getCoverageXpath(coverageCounterType));
+        final float covered = getByXpath(jacocoFilePath,content, getCoverageXpath(coverageCounterType));
         final float coverage = covered + missed;
         if (coverage == 0) {
             return 0;
