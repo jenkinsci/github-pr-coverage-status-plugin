@@ -33,24 +33,30 @@ import java.util.List;
 final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> implements CoverageRepository {
 
     private final boolean disableSimpleCov;
+    private String jacocoCounterType = "";
 
-    GetCoverageCallable(final boolean disableSimpleCov) {
+    GetCoverageCallable(final boolean disableSimpleCov, final String jacocoCounterType) {
         this.disableSimpleCov = disableSimpleCov;
+        this.jacocoCounterType = jacocoCounterType;
     }
 
-    private static List<Float> getFloats(File ws, String path, CoverageReportParser parser) {
+    private List<Float> getFloats(File ws, String path, CoverageReportParser parser) {
         FileSet fs = Util.createFileSet(ws, path);
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
         List<Float> cov = new ArrayList<Float>();
-        for (String file : files) cov.add(parser.get(new File(ds.getBasedir(), file).getAbsolutePath()));
+        for (String file : files) {
+            cov.add(parser.get(new File(ds.getBasedir(), file).getAbsolutePath()));
+        }
         return cov;
     }
 
     @Override
     public float get(final FilePath workspace) throws IOException, InterruptedException {
-        if (workspace == null) throw new IllegalArgumentException("Workspace should not be null!");
-        return workspace.act(new GetCoverageCallable(disableSimpleCov));
+        if (workspace == null) {
+            throw new IllegalArgumentException("Workspace should not be null!");
+        }
+        return workspace.act(new GetCoverageCallable(disableSimpleCov, jacocoCounterType));
     }
 
     @Override
@@ -58,13 +64,18 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> impleme
         final List<Float> cov = new ArrayList<Float>();
         cov.addAll(getFloats(ws, "**/cobertura.xml", new CoberturaParser()));
         cov.addAll(getFloats(ws, "**/cobertura-coverage.xml", new CoberturaParser()));
-        cov.addAll(getFloats(ws, "**/jacoco.xml", new JacocoParser()));
-        cov.addAll(getFloats(ws, "**/jacocoTestReport.xml", new JacocoParser())); //default for gradle
+        cov.addAll(getFloats(ws, "**/jacoco.xml", new JacocoParser(jacocoCounterType)));
+        //default for gradle
+        cov.addAll(getFloats(ws, "**/jacocoTestReport.xml", new JacocoParser(jacocoCounterType)));
         cov.addAll(getFloats(ws, "**/clover.xml", new CloverParser()));
-        if (!disableSimpleCov) cov.addAll(getFloats(ws, "**/coverage.json", new SimpleCovParser()));
+        if (!disableSimpleCov) {
+            cov.addAll(getFloats(ws, "**/coverage.json", new SimpleCovParser()));
+        }
 
         float s = 0;
-        for (float v : cov) s += v;
+        for (float v : cov) {
+            s += v;
+        }
 
         if (cov.isEmpty()) {
             return 0f;

@@ -60,6 +60,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private String sonarLogin;
     private String sonarPassword;
     private Map<String, String> scmVars;
+    private String jacocoCoverageCounter;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
@@ -83,6 +84,11 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     @DataBoundSetter
     public void setScmVars(Map<String, String> scmVars) {
         this.scmVars = scmVars;
+    }
+
+    @DataBoundSetter
+    public void setJacocoCoverageCounter(String jacocoCoverageCounter) {
+        this.jacocoCoverageCounter = jacocoCoverageCounter;
     }
 
     // todo show message that addition comment in progress as it could take a while
@@ -112,7 +118,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
 
         buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");
-        final float coverage = ServiceRegistry.getCoverageRepository(settingsRepository.isDisableSimpleCov()).get(workspace);
+        final float coverage = ServiceRegistry.getCoverageRepository(settingsRepository.isDisableSimpleCov(),
+                jacocoCoverageCounter).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
         final Message message = new Message(coverage, masterCoverage);
@@ -122,8 +129,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         String jenkinsUrl = settingsRepository.getJenkinsUrl();
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
-
-
+        
         try {
             final String comment = message.forComment(
                     buildUrl,

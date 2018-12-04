@@ -52,6 +52,7 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
 
 
     private Map<String, String> scmVars;
+    private String jacocoCounterType;
 
     @DataBoundConstructor
     public MasterCoverageAction() {
@@ -68,6 +69,11 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         this.scmVars = scmVars;
     }
 
+    @DataBoundSetter
+    public void setJacocoCounterType(String jacocoCounterType) {
+        this.jacocoCounterType = jacocoCounterType;
+    }
+
     @SuppressWarnings("NullableProblems")
     @Override
     public void perform(final Run build, final FilePath workspace, final Launcher launcher,
@@ -78,7 +84,9 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         final boolean disableSimpleCov = ServiceRegistry.getSettingsRepository().isDisableSimpleCov();
-        final float masterCoverage = ServiceRegistry.getCoverageRepository(disableSimpleCov).get(workspace);
+        final String jacocoCounterType = this.jacocoCounterType;
+        final float masterCoverage = ServiceRegistry.getCoverageRepository(disableSimpleCov, jacocoCounterType)
+                .get(workspace);
         buildLog.println("Master coverage " + Percent.toWholeString(masterCoverage));
         Configuration.setMasterCoverage(gitUrl, masterCoverage);
     }
