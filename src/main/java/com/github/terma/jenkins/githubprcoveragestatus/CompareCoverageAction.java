@@ -140,8 +140,10 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
 
         if ("comment".equalsIgnoreCase(publishResultAs)) {
+            buildLog.println(BUILD_LOG_PREFIX + "publishing result as comment");
             publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener);
         } else {
+            buildLog.println(BUILD_LOG_PREFIX + "publishing result as status check");
             publishStatusCheck(gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
         }
     }
@@ -166,14 +168,15 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private void publishStatusCheck(GHRepository gitHubRepository, int prId, float targetCoverage,
                                     float coverage, String buildUrl, TaskListener listener) {
         try {
+            PrintStream logger = listener.getLogger();
             List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
-            for (int i = 0; i < commits.size(); i++) {
-                if (i == commits.size() - 1) {
-                    ServiceRegistry.getPullRequestRepository().createCommitStatus(commits.get(i).getSha(), GHCommitState.SUCCESS, buildUrl,
-                            targetCoverage + " vs " + coverage);
-                }
-            }
-        } catch (Exception e) {
+            logger.println(BUILD_LOG_PREFIX + "commit size = " + String.valueOf(commits.size()));
+            ServiceRegistry.getPullRequestRepository().createCommitStatus(gitHubRepository, commits.get(commits.size() - 1).getSha(), GHCommitState.SUCCESS, buildUrl,
+                    targetCoverage + " vs " + coverage);
+        } catch (
+                Exception e)
+
+        {
             PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");
             e.printStackTrace(pw);
         }

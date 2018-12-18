@@ -84,7 +84,11 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
     }
 
     @Override
-    public void createCommitStatus(String sha1, GHCommitState state, String targetUrl, String description) {
-        ServiceRegistry.getPullRequestRepository().createCommitStatus(sha1, GHCommitState.SUCCESS, targetUrl, description);
+    public void createCommitStatus(GHRepository ghRepository, String sha1, GHCommitState state, String targetUrl, String description) {
+        try {
+            ghRepository.createCommitStatus(sha1, GHCommitState.SUCCESS, targetUrl, description);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
