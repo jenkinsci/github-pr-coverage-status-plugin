@@ -90,7 +90,14 @@ public class CompareCoverageActionTest {
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).createCommitStatus(ghRepository, "fh3k2l", GHCommitState.SUCCESS, "aaa/job/a", "0.0 vs 0.0");
+        verify(pullRequestRepository).createCommitStatus(
+                ghRepository,
+                "fh3k2l",
+                GHCommitState.SUCCESS,
+                "aaa/job/a",
+                "Coverage 0% changed 0.0% vs master 0%",
+                "test-coverage-plugin"
+        );
     }
 
     @Test

@@ -31,5 +31,11 @@ interface PullRequestRepository {
 
     void comment(GHRepository ghRepository, int prId, String message) throws IOException;
 
-    void createCommitStatus(GHRepository ghRepository, String sha1, GHCommitState state, String targetUrl, String description);
+    void createCommitStatus(
+            GHRepository ghRepository,
+            String sha1,
+            GHCommitState state,
+            String targetUrl,
+            String description,
+            String context) throws IOException;
 }

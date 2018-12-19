@@ -121,7 +121,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
-        MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
+        MasterCoverageRepository masterCoverageRepository = ServiceRegistry
+                .getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
         final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
         final float masterCoverage = masterCoverageRepository.get(gitUrl);
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
@@ -144,7 +145,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener);
         } else {
             buildLog.println(BUILD_LOG_PREFIX + "publishing result as status check");
-            publishStatusCheck(gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
+            publishStatusCheck(message, gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
         }
     }
 
@@ -165,18 +166,20 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         }
     }
 
-    private void publishStatusCheck(GHRepository gitHubRepository, int prId, float targetCoverage,
+    private void publishStatusCheck(Message message, GHRepository gitHubRepository, int prId, float targetCoverage,
                                     float coverage, String buildUrl, TaskListener listener) {
         try {
-            PrintStream logger = listener.getLogger();
+            String text = message.forStatusCheck();
             List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
-            logger.println(BUILD_LOG_PREFIX + "commit size = " + String.valueOf(commits.size()));
-            ServiceRegistry.getPullRequestRepository().createCommitStatus(gitHubRepository, commits.get(commits.size() - 1).getSha(), GHCommitState.SUCCESS, buildUrl,
-                    targetCoverage + " vs " + coverage);
-        } catch (
-                Exception e)
-
-        {
+            ServiceRegistry.getPullRequestRepository().createCommitStatus(
+                    gitHubRepository,
+                    commits.get(commits.size() - 1).getSha(),
+                    GHCommitState.SUCCESS,
+                    buildUrl,
+                    message.forStatusCheck(),
+                    "test-coverage-plugin"
+            );
+        } catch (Exception e) {
             PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");
             e.printStackTrace(pw);
         }
