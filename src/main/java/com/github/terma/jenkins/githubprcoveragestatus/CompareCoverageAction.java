@@ -104,8 +104,11 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     @SuppressWarnings("NullableProblems")
     @Override
     public void perform(
-            final Run build, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+            final Run build,
+            final FilePath workspace,
+            final Launcher launcher,
+            final TaskListener listener
+    ) throws InterruptedException, IOException {
         final PrintStream buildLog = listener.getLogger();
 
         if (build.getResult() != Result.SUCCESS) {
@@ -150,8 +153,14 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     }
 
     private void publishComment(
-            Message message, String buildUrl, String jenkinsUrl, SettingsRepository settingsRepository,
-            GHRepository gitHubRepository, int prId, TaskListener listener) {
+            Message message,
+            String buildUrl,
+            String jenkinsUrl,
+            SettingsRepository settingsRepository,
+            GHRepository gitHubRepository,
+            int prId,
+            TaskListener listener
+    ) {
         try {
             final String comment = message.forComment(
                     buildUrl,
@@ -166,8 +175,15 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         }
     }
 
-    private void publishStatusCheck(Message message, GHRepository gitHubRepository, int prId, float targetCoverage,
-                                    float coverage, String buildUrl, TaskListener listener) {
+    private void publishStatusCheck(
+            Message message,
+            GHRepository gitHubRepository,
+            int prId,
+            float targetCoverage,
+            float coverage,
+            String buildUrl,
+            TaskListener listener
+    ) {
         try {
             String text = message.forStatusCheck();
             List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
