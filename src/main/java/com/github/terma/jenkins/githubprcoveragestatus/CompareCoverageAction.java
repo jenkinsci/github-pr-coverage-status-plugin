@@ -192,8 +192,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                     commits.get(commits.size() - 1).getSha(),
                     GHCommitState.SUCCESS,
                     buildUrl,
-                    message.forStatusCheck(),
-                    "test-coverage-plugin"
+                    message.forStatusCheck()
             );
         } catch (Exception e) {
             PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");

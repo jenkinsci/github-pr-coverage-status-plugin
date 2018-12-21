@@ -36,6 +36,6 @@ interface PullRequestRepository {
             String sha1,
             GHCommitState state,
             String targetUrl,
-            String description,
-            String context) throws IOException;
+            String description
+    ) throws IOException;
 }

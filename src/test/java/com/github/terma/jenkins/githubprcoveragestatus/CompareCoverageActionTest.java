@@ -95,8 +95,7 @@ public class CompareCoverageActionTest {
                 "fh3k2l",
                 GHCommitState.SUCCESS,
                 "aaa/job/a",
-                "Coverage 0% changed 0.0% vs master 0%",
-                "test-coverage-plugin"
+                "Coverage 0% changed 0.0% vs master 0%"
         );
     }
 

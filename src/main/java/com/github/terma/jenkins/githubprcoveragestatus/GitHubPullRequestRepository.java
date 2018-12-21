@@ -88,9 +88,8 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
             GHRepository ghRepository,
             String sha1, GHCommitState state,
             String targetUrl,
-            String description,
-            String context
+            String description
     ) throws IOException {
-        ghRepository.createCommitStatus(sha1, GHCommitState.SUCCESS, targetUrl, description, context);
+        ghRepository.createCommitStatus(sha1, GHCommitState.SUCCESS, targetUrl, description, "test-coverage-plugin");
     }
 }
