@@ -60,6 +60,13 @@ class Message {
         }
     }
 
+    public String forStatusCheck() {
+        return String.format("Coverage %s changed %s vs master %s",
+                Percent.toWholeNoSignString(coverage),
+                Percent.toString(Percent.change(coverage, masterCoverage)),
+                Percent.toWholeNoSignString(masterCoverage));
+    }
+
     private String shieldIoUrl(String icon, final int yellowThreshold, final int greenThreshold) {
         final String color = getColor(yellowThreshold, greenThreshold);
         // dash should be encoded as two dash

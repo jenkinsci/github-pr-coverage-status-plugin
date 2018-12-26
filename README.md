@@ -99,10 +99,14 @@ where first one is Pull Request ID (number) and second link to repository
     *  ```step([$class: 'MasterCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
     * Optionally you can specify jacoco counter type like this:
     ```step([$class: 'MasterCoverageAction', jacocoCounterType: 'INSTRUCTION', scmVars: [GIT_URL: env.GIT_URL]])```
+    * You can also specify how the result will pe published (comment or status check). By default it will be published as a status check
+    ```step([$class: 'MasterCoverageAction', jacocoCounterType: 'INSTRUCTION', publishResultAs: 'statusCheck', scmVars: [GIT_URL: env.GIT_URL]])```
 * Trigger CompareCoverageAction to compare coverage and publish results (scmVars is needed for multibranch)
     *  ```step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])```
     * Optionally use can specify here jacoco counter type and sonar login and sonar password like this:
         ```step([$class: 'CompareCoverageAction', jacocoCounterType: 'INSTRUCTION', sonarLogin: "login", sonarPassword: "password"])```
+    * You can also specify how the result will pe published (comment or status check). By default it will be published as a status check
+        ```step([$class: 'MasterCoverageAction', jacocoCounterType: 'INSTRUCTION', publishResultAs: 'statusCheck', scmVars: [GIT_URL: env.GIT_URL]])```
 
 * Simple Multibranch Pipeline example
 ```
@@ -139,7 +143,7 @@ where first one is Pull Request ID (number) and second link to repository
                 script {
                     currentBuild.result = 'SUCCESS'
                  }
-                step([$class: 'CompareCoverageAction', scmVars: [GIT_URL: env.GIT_URL]])
+                step([$class: 'CompareCoverageAction', publishResultAs: 'statusCheck', scmVars: [GIT_URL: env.GIT_URL]])
             }
         }
     }
