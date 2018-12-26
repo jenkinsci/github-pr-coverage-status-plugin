@@ -1,0 +1,18 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+        <f:entry title="${%Jacoco coverage counter type}" field="jacocoCoverageCounter">
+          <select name="jacocoCoverageCounter">
+            <f:option value="INSTRUCTION">${%Instruction}</f:option>
+            <f:option value="LINE">${%Line}</f:option>
+            <f:option value="COMPLEXITY">${%Complexity}</f:option>
+            <f:option value="METHOD">${%Method}</f:option>
+            <f:option value="CLASS">${%Class}</f:option>
+          </select>
+        </f:entry>
+        <f:entry title="${%Publish result as}" field="publishResultAs">
+          <select name="publishResultAs">
+            <f:option value="comment">${%Status Check}</f:option>
+            <f:option value="statusCheck">${%Comment}</f:option>
+          </select>
+        </f:entry>
+</j:jelly>
