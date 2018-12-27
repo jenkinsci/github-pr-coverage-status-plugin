@@ -74,6 +74,10 @@ public class MasterCoverageAction extends Recorder implements SimpleBuildStep {
         this.jacocoCounterType = jacocoCounterType;
     }
 
+    public String getJacocoCounterType() {
+        return jacocoCounterType;
+    }
+
     @SuppressWarnings("NullableProblems")
     @Override
     public void perform(final Run build, final FilePath workspace, final Launcher launcher,

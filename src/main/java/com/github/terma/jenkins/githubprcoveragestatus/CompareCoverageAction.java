@@ -100,6 +100,14 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         this.jacocoCoverageCounter = jacocoCoverageCounter;
     }
 
+    public String getPublishResultAs() {
+        return publishResultAs;
+    }
+
+    public String getJacocoCoverageCounter() {
+        return jacocoCoverageCounter;
+    }
+
     // todo show message that addition comment in progress as it could take a while
     @SuppressWarnings("NullableProblems")
     @Override
