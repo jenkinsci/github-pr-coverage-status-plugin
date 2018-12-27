@@ -11,8 +11,8 @@
         </f:entry>
         <f:entry title="${%Publish result as}" field="publishResultAs">
           <select name="publishResultAs">
-            <f:option value="comment">${%Status Check}</f:option>
-            <f:option value="statusCheck">${%Comment}</f:option>
+            <f:option value="comment">${%Comment}</f:option>
+            <f:option value="statusCheck">${%Status Check}</f:option>
           </select>
         </f:entry>
 </j:jelly>
