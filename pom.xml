@@ -30,8 +30,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
-        <developerConnection>scm:git:https://github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
         <tag>HEAD</tag>
     </scm>
@@ -50,8 +50,10 @@
     </issueManagement>
 
     <properties>
-        <jenkins.version>2.7</jenkins.version>
-        <java.level>7</java.level>
+        <jenkins.version>1.580.1</jenkins.version>
+        <!--<jenkins.version>2.46.3</jenkins.version>-->
+        <java.level>8</java.level>
+        <!--<java.level>7</java.level>-->
     </properties>
 
     <repositories>
@@ -156,7 +158,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
+                <version>0.8.1</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>

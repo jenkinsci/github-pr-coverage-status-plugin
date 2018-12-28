@@ -29,6 +29,8 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.github.GHCommitState;
+import org.kohsuke.github.GHPullRequestCommitDetail;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -37,6 +39,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,9 +63,16 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private String sonarLogin;
     private String sonarPassword;
     private Map<String, String> scmVars;
+    private String jacocoCoverageCounter;
+    private String publishResultAs;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
+    }
+
+    @DataBoundSetter
+    public void setPublishResultAs(String publishResultAs) {
+        this.publishResultAs = publishResultAs;
     }
 
     @DataBoundSetter
@@ -85,12 +95,28 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         this.scmVars = scmVars;
     }
 
+    @DataBoundSetter
+    public void setJacocoCoverageCounter(String jacocoCoverageCounter) {
+        this.jacocoCoverageCounter = jacocoCoverageCounter;
+    }
+
+    public String getPublishResultAs() {
+        return publishResultAs;
+    }
+
+    public String getJacocoCoverageCounter() {
+        return jacocoCoverageCounter;
+    }
+
     // todo show message that addition comment in progress as it could take a while
     @SuppressWarnings("NullableProblems")
     @Override
     public void perform(
-            final Run build, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+            final Run build,
+            final FilePath workspace,
+            final Launcher launcher,
+            final TaskListener listener
+    ) throws InterruptedException, IOException {
         final PrintStream buildLog = listener.getLogger();
 
         if (build.getResult() != Result.SUCCESS) {
@@ -106,13 +132,15 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         final String gitUrl = PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
 
         buildLog.println(BUILD_LOG_PREFIX + "getting master coverage...");
-        MasterCoverageRepository masterCoverageRepository = ServiceRegistry.getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
+        MasterCoverageRepository masterCoverageRepository = ServiceRegistry
+                .getMasterCoverageRepository(buildLog, sonarLogin, sonarPassword);
         final GHRepository gitHubRepository = ServiceRegistry.getPullRequestRepository().getGitHubRepository(gitUrl);
         final float masterCoverage = masterCoverageRepository.get(gitUrl);
         buildLog.println(BUILD_LOG_PREFIX + "master coverage: " + masterCoverage);
 
         buildLog.println(BUILD_LOG_PREFIX + "collecting coverage...");
-        final float coverage = ServiceRegistry.getCoverageRepository(settingsRepository.isDisableSimpleCov()).get(workspace);
+        final float coverage = ServiceRegistry.getCoverageRepository(settingsRepository.isDisableSimpleCov(),
+                jacocoCoverageCounter).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
         final Message message = new Message(coverage, masterCoverage);
@@ -123,7 +151,24 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         String jenkinsUrl = settingsRepository.getJenkinsUrl();
         if (jenkinsUrl == null) jenkinsUrl = Utils.getJenkinsUrlFromBuildUrl(buildUrl);
 
+        if ("comment".equalsIgnoreCase(publishResultAs)) {
+            buildLog.println(BUILD_LOG_PREFIX + "publishing result as comment");
+            publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener);
+        } else {
+            buildLog.println(BUILD_LOG_PREFIX + "publishing result as status check");
+            publishStatusCheck(message, gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
+        }
+    }
 
+    private void publishComment(
+            Message message,
+            String buildUrl,
+            String jenkinsUrl,
+            SettingsRepository settingsRepository,
+            GHRepository gitHubRepository,
+            int prId,
+            TaskListener listener
+    ) {
         try {
             final String comment = message.forComment(
                     buildUrl,
@@ -135,6 +180,31 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         } catch (Exception ex) {
             PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
             ex.printStackTrace(pw);
+        }
+    }
+
+    private void publishStatusCheck(
+            Message message,
+            GHRepository gitHubRepository,
+            int prId,
+            float targetCoverage,
+            float coverage,
+            String buildUrl,
+            TaskListener listener
+    ) {
+        try {
+            String text = message.forStatusCheck();
+            List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
+            ServiceRegistry.getPullRequestRepository().createCommitStatus(
+                    gitHubRepository,
+                    commits.get(commits.size() - 1).getSha(),
+                    GHCommitState.SUCCESS,
+                    buildUrl,
+                    message.forStatusCheck()
+            );
+        } catch (Exception e) {
+            PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");
+            e.printStackTrace(pw);
         }
     }
 

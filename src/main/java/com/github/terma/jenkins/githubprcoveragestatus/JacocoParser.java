@@ -21,6 +21,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 <counter type="INSTRUCTION" missed="1" covered="4"/>
@@ -31,8 +33,19 @@ import java.io.IOException;
  */
 class JacocoParser implements CoverageReportParser {
 
-    private static final String MISSED_XPATH = "/report/counter[@type='LINE']/@missed";
-    private static final String COVERAGE_XPATH = "/report/counter[@type='LINE']/@covered";
+    private List<String> coverageCounters = new ArrayList<String>() {{
+        add("instruction");
+        add("complexity");
+        add("method");
+        add("class");
+        add("line");
+    }};
+
+    private String coverageCounterType = "";
+
+    public JacocoParser(String coverageCounterType) {
+        this.coverageCounterType = coverageCounterType;
+    }
 
     private float getByXpath(final String filePath, final String content, final String xpath) {
         try {
@@ -47,7 +60,7 @@ class JacocoParser implements CoverageReportParser {
     }
 
     @Override
-    public float get(final String jacocoFilePath) {
+    public float get(String jacocoFilePath) {
         final String content;
         try {
             content = FileUtils.readFileToString(new File(jacocoFilePath));
@@ -56,14 +69,37 @@ class JacocoParser implements CoverageReportParser {
                     "Can't read Jacoco report by path: " + jacocoFilePath);
         }
 
-        final float lineMissed = getByXpath(jacocoFilePath, content, MISSED_XPATH);
-        final float lineCovered = getByXpath(jacocoFilePath, content, COVERAGE_XPATH);
-        final float lines = lineCovered + lineMissed;
-        if (lines == 0) {
+        if (!isValidCoverageCounter(coverageCounterType)) {
+            coverageCounterType = coverageCounters.get(0);
+        }
+
+        final float missed = getByXpath(jacocoFilePath, content, getMissedXpath(coverageCounterType));
+        final float covered = getByXpath(jacocoFilePath,content, getCoverageXpath(coverageCounterType));
+        final float coverage = covered + missed;
+        if (coverage == 0) {
             return 0;
         } else {
-            return lineCovered / (lines);
+            return covered / (coverage);
         }
     }
 
+    private boolean isValidCoverageCounter(String coverageCounter) {
+        if (coverageCounter == null) {
+            return false;
+        }
+        for (String type : coverageCounters) {
+            if (type.equalsIgnoreCase(coverageCounter)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getMissedXpath(String counterType) {
+        return "/report/counter[@type='" + counterType.toUpperCase() + "']/@missed";
+    }
+
+    private String getCoverageXpath(String counterType) {
+        return "/report/counter[@type='" + counterType.toUpperCase() + "']/@covered";
+    }
 }

@@ -17,10 +17,11 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
-import java.io.IOException;
-
+import org.kohsuke.github.GHCommitState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
+
+import java.io.IOException;
 
 interface PullRequestRepository {
 
@@ -30,4 +31,11 @@ interface PullRequestRepository {
 
     void comment(GHRepository ghRepository, int prId, String message) throws IOException;
 
+    void createCommitStatus(
+            GHRepository ghRepository,
+            String sha1,
+            GHCommitState state,
+            String targetUrl,
+            String description
+    ) throws IOException;
 }
