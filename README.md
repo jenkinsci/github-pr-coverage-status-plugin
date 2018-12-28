@@ -187,6 +187,15 @@ To fix that:
 
 ## Changelog
 
+### [2.0.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-2.0.0)
+
+- **Non back compatible change** minimum Java version 8 (before 7) & Jenkins 2.7 (before 1.5...)
+- Github-api lib upgraded to 1.90
+- Add params support for freestyle jobs
+- Allow publishing result as a status check
+- Allow counter type selection for Jacoco
+- Update jacoco from 0.7.5.x to 0.8.1
+
 ### [1.10.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-1.10.0)
 
 - Use scmVars before env variables for git url detection
