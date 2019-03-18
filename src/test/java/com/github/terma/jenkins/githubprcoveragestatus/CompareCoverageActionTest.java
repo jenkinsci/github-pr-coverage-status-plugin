@@ -27,7 +27,6 @@ import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,7 +162,6 @@ public class CompareCoverageActionTest {
     }
     
     private void prepareCoverageData(float masterCoverage, float prCoverage) throws IOException, InterruptedException {
-        PrintStream logger = mock(PrintStream.class);
         when(masterCoverageRepository.get(GIT_URL)).thenReturn(masterCoverage);
         when(coverageRepository.get(null)).thenReturn(prCoverage);
         initMocks();
