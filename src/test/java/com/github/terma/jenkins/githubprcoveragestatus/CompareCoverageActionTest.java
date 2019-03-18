@@ -32,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import com.github.terma.jenkins.githubprcoveragestatus.MasterCoverageRepository;
-import com.github.terma.jenkins.githubprcoveragestatus.CoverageRepository;
 
 public class CompareCoverageActionTest {
 
