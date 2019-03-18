@@ -27,10 +27,13 @@ import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import com.github.terma.jenkins.githubprcoveragestatus.MasterCoverageRepository;
+import com.github.terma.jenkins.githubprcoveragestatus.CoverageRepository;
 
 public class CompareCoverageActionTest {
 
@@ -64,6 +67,12 @@ public class CompareCoverageActionTest {
         when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
         when(listener.getLogger()).thenReturn(System.out);
     }
+    
+    @Before
+    public void reinitializeCoverageRepositories() {
+        masterCoverageRepository = mock(MasterCoverageRepository.class);
+        coverageRepository = mock(CoverageRepository.class);
+    }
 
     @Test
     public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
@@ -82,20 +91,36 @@ public class CompareCoverageActionTest {
     }
 
     @Test
-    public void postResultAsStatusCheck() throws IOException, InterruptedException {
+    public void postResultAsSuccessfulStatusCheck() throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         prepareCommit();
+        prepareCoverageData(0.88f, 0.95f);
         coverageAction.setPublishResultAs("statusCheck");
-
         coverageAction.perform(build, null, null, listener);
-
         verify(pullRequestRepository).createCommitStatus(
                 ghRepository,
                 "fh3k2l",
                 GHCommitState.SUCCESS,
                 "aaa/job/a",
-                "Coverage 0% changed 0.0% vs master 0%"
+                "Coverage 95% changed +7.0% vs master 88%"
+        );
+    }
+    
+    @Test
+    public void postResultAsFailedStatusCheck() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        prepareCommit();
+        prepareCoverageData(0.95f, 0.9f);
+        coverageAction.setPublishResultAs("statusCheck");
+        coverageAction.perform(build, null, null, listener);
+        verify(pullRequestRepository).createCommitStatus(
+                ghRepository,
+                "fh3k2l",
+                GHCommitState.FAILURE,
+                "aaa/job/a",
+                "Coverage 90% changed -5.0% vs master 95%"
         );
     }
 
@@ -137,6 +162,13 @@ public class CompareCoverageActionTest {
         coverageAction.perform(build, null, null, listener);
 
         verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+    }
+    
+    private void prepareCoverageData(float masterCoverage, float prCoverage) throws IOException, InterruptedException {
+        PrintStream logger = mock(PrintStream.class);
+        when(masterCoverageRepository.get(GIT_URL)).thenReturn(masterCoverage);
+        when(coverageRepository.get(null)).thenReturn(prCoverage);
+        initMocks();
     }
 
     private void prepareCommit() throws IOException {
