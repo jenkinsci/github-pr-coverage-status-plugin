@@ -94,7 +94,9 @@ public class CompareCoverageActionTest {
         prepareCommit();
         prepareCoverageData(0.88f, 0.95f);
         coverageAction.setPublishResultAs("statusCheck");
+        
         coverageAction.perform(build, null, null, listener);
+        
         verify(pullRequestRepository).createCommitStatus(
                 ghRepository,
                 "fh3k2l",
@@ -111,7 +113,9 @@ public class CompareCoverageActionTest {
         prepareCommit();
         prepareCoverageData(0.95f, 0.9f);
         coverageAction.setPublishResultAs("statusCheck");
+        
         coverageAction.perform(build, null, null, listener);
+        
         verify(pullRequestRepository).createCommitStatus(
                 ghRepository,
                 "fh3k2l",
