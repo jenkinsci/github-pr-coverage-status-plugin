@@ -198,7 +198,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             ServiceRegistry.getPullRequestRepository().createCommitStatus(
                     gitHubRepository,
                     commits.get(commits.size() - 1).getSha(),
-                    GHCommitState.SUCCESS,
+                    coverage < targetCoverage ? GHCommitState.FAILURE : GHCommitState.SUCCESS,
                     buildUrl,
                     message.forStatusCheck()
             );
