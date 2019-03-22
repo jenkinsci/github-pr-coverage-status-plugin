@@ -86,7 +86,7 @@ public class CompareCoverageActionTest {
 
         verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
-    
+
     @Test
     public void postResultAsStatusCheck() throws IOException, InterruptedException {
         prepareBuildSuccess();
