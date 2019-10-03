@@ -186,6 +186,11 @@ To fix that:
 ![Plugin settings](https://raw.githubusercontent.com/jenkinsci/github-pr-coverage-status-plugin/master/plugin-settings.png)
 
 ## Changelog
+### [2.1.1](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-2.1.1)
+- Remove non-UTF-8 symbol from version
+
+### [2.1.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/v2.1.0)
+- Fail the status check when the coverage decreased
 
 ### [2.0.0](https://github.com/jenkinsci/github-pr-coverage-status-plugin/releases/tag/github-pr-coverage-status-2.0.0)
 
