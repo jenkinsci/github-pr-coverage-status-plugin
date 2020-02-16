@@ -26,8 +26,8 @@ import java.io.IOException;
  * For more info about Clover see:
  * <a href="https://answers.atlassian.com/questions/203628/clover-xml-number-of-covered-lines>
  * https://answers.atlassian.com/questions/203628/clover-xml-number-of-covered-lines</a>
- * <a href="https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin>
- * https://wiki.jenkins-ci.org/display/JENKINS/Clover+Plugin</a>
+ * <a href="https://plugins.jenkins.io/clover/">
+ * https://plugins.jenkins.io/clover/</a>
  * <a href="https://phpunit.de/manual/current/en/logging.html#logging.codecoverage.xml"
  * https://phpunit.de/manual/current/en/logging.html#logging.codecoverage.xml</a>
  */
