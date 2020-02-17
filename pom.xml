@@ -11,7 +11,7 @@
     <version>2.2.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
-    <url>https://plugins.jenkins.io/github-pr-coverage-status</url>
+    <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
 
     <name>GitHub Pull Request Coverage Status</name>
 
