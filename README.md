@@ -170,7 +170,7 @@ Default browser policy to block non secure resources on secure pages from unknow
 
 To fix that:
 
-1. Configure Jenkins to be accessible for ```https``` https://jenkins.io/doc/book/installing
+1. Configure Jenkins to be accessible for ```https``` https://jenkins.io/doc/book/installing/#configuring-http
 1. Next you have a few options:
   * Run your Jenkins on ```https``` only
   * Or configure plugin to publish link on picture over ```https```
