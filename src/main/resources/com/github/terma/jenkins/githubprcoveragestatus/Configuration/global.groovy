@@ -27,6 +27,10 @@ f.section(title: descriptor.displayName) {
     f.entry(field: "greenThreshold", title: _("Green Threshold 0-100%")) {
         f.textbox()
     }
+    
+    f.entry(field: "tolerance", title: _("Tolerance for comparing to master 0.0-1.0")) {
+        f.textbox()
+    }
 
     f.entry(field: "useSonarForMasterCoverage", title: _("Use Sonar for master coverage")) {
         f.checkbox()

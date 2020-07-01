@@ -11,6 +11,8 @@ interface SettingsRepository {
     int getYellowThreshold();
 
     int getGreenThreshold();
+    
+    float getTolerance();
 
     boolean isPrivateJenkinsPublicGitHub();
 

@@ -65,6 +65,10 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         return DESCRIPTOR.getSonarToken();
     }
 
+    public static String getTolerance() {
+        return Float.toString(DESCRIPTOR.getTolerance());
+    }
+
     public static String getSonarLogin() {
         return DESCRIPTOR.getSonarLogin();
     }
@@ -91,6 +95,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         private static final int DEFAULT_YELLOW_THRESHOLD = 80;
         private static final int DEFAULT_GREEN_THRESHOLD = 90;
+        private static final float DEFAULT_TOLERANCE = 0;
 
         private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<String, Float>();
 
@@ -107,6 +112,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         private int yellowThreshold = DEFAULT_YELLOW_THRESHOLD;
         private int greenThreshold = DEFAULT_GREEN_THRESHOLD;
+        private float tolerance = DEFAULT_TOLERANCE;
 
         public ConfigurationDescriptor() {
             load();
@@ -145,6 +151,11 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         @Override
         public int getGreenThreshold() {
             return greenThreshold;
+        }
+
+        @Override
+        public float getTolerance() {
+            return tolerance;
         }
 
         @Override
@@ -191,6 +202,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             personalAccessToken = StringUtils.trimToNull(formData.getString("personalAccessToken"));
             yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
             greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
+            tolerance = NumberUtils.toFloat(formData.getString("tolerance"), DEFAULT_TOLERANCE);
             jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
             privateJenkinsPublicGitHub = BooleanUtils.toBoolean(formData.getString("privateJenkinsPublicGitHub"));
             useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));

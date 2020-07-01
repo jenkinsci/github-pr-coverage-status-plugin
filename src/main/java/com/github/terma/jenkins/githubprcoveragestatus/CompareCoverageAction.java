@@ -65,9 +65,15 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     private Map<String, String> scmVars;
     private String jacocoCoverageCounter;
     private String publishResultAs;
+    private String comparisonMode;
 
     @DataBoundConstructor
     public CompareCoverageAction() {
+    }
+
+    @DataBoundSetter
+    public void setComparisonMode(String comparisonMode) {
+        this.comparisonMode = comparisonMode;
     }
 
     @DataBoundSetter
@@ -98,6 +104,10 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     @DataBoundSetter
     public void setJacocoCoverageCounter(String jacocoCoverageCounter) {
         this.jacocoCoverageCounter = jacocoCoverageCounter;
+    }
+
+    public String getComparisonMode() {
+        return comparisonMode;
     }
 
     public String getPublishResultAs() {
@@ -156,7 +166,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener);
         } else {
             buildLog.println(BUILD_LOG_PREFIX + "publishing result as status check");
-            publishStatusCheck(message, gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
+            publishStatusCheck(message, settingsRepository, gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
         }
     }
 
@@ -185,6 +195,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
     private void publishStatusCheck(
             Message message,
+            SettingsRepository settingsRepository,
             GHRepository gitHubRepository,
             int prId,
             float targetCoverage,
@@ -195,12 +206,27 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         try {
             String text = message.forStatusCheck();
             List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
+            String statusMessage;
+            boolean comparison;
+            if ("threshold".equalsIgnoreCase(comparisonMode)){
+                comparison = Percent.of(coverage) <= settingsRepository.getGreenThreshold();
+                statusMessage = message.forThresholdStatusCheck( settingsRepository.getGreenThreshold() );
+            } else if ("tolerance".equalsIgnoreCase(comparisonMode)){
+                float tolerance = settingsRepository.getTolerance();
+                float result = Math.abs(coverage - targetCoverage) * 100;
+                comparison = result > tolerance;
+                statusMessage = message.forToleranceStatusCheck(tolerance);
+            } else {
+                comparison = Percent.roundFourAfterDigit(coverage) < Percent.roundFourAfterDigit(targetCoverage);
+                statusMessage = message.forStatusCheck();
+            }
+
             ServiceRegistry.getPullRequestRepository().createCommitStatus(
                     gitHubRepository,
                     commits.get(commits.size() - 1).getSha(),
-                    coverage < targetCoverage ? GHCommitState.FAILURE : GHCommitState.SUCCESS,
+                    comparison ? GHCommitState.FAILURE : GHCommitState.SUCCESS,
                     buildUrl,
-                    message.forStatusCheck()
+                    statusMessage
             );
         } catch (Exception e) {
             PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");

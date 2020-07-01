@@ -15,4 +15,11 @@
             <f:option value="statusCheck">${%Status Check}</f:option>
           </select>
         </f:entry>
+        <f:entry title="${%Mode of comparing against master}" field="comparisonMode">
+          <select name="comparisonMode">
+            <f:option value="Strict">${%Strict}</f:option>
+            <f:option value="threshold">${%Threshold}</f:option>
+            <f:option value="tolerance">${%Tolerance}</f:option>
+          </select>
+        </f:entry>
 </j:jelly>
