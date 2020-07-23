@@ -35,7 +35,7 @@ public class PrIdAndUrlUtils {
 
     /**
      * Injected by
-     * https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
+     * https://plugins.jenkins.io/ghprb/
      */
     public static final String GIT_PR_ID_ENV_PROPERTY = "ghprbPullId";
     public static final String CHANGE_ID_PROPERTY = "CHANGE_ID";
