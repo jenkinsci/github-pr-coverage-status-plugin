@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-buildPlugin(platforms: ['linux'], findbugs: [archive: true, unstableTotalAll: '0'], checkstyle: [run: true, archive: true])
+buildPlugin(platforms: ['linux'])
 
 //node {
 //    stage 'post-build'
