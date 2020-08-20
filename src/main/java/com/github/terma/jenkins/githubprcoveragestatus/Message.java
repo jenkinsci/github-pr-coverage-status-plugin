@@ -61,10 +61,21 @@ class Message {
     }
 
     public String forStatusCheck() {
-        return String.format("Coverage %s changed %s vs master %s",
+        return forConsole();
+    }
+
+    public String forThresholdStatusCheck(final int greenThreshold){
+        return String.format("Coverage %s vs threshold %s",
+                Percent.toWholeNoSignString(coverage),
+                Integer.toString(greenThreshold));
+    }
+
+    public String forToleranceStatusCheck(float tolerance){
+        return String.format("Coverage %s changed %s vs master %s (tolerance %s)",
                 Percent.toWholeNoSignString(coverage),
                 Percent.toString(Percent.change(coverage, masterCoverage)),
-                Percent.toWholeNoSignString(masterCoverage));
+                Percent.toWholeNoSignString(masterCoverage),
+                Float.toString(tolerance));
     }
 
     private String shieldIoUrl(String icon, final int yellowThreshold, final int greenThreshold) {
