@@ -64,7 +64,7 @@ public class ServiceRegistry {
     }
 
     public static SettingsRepository getSettingsRepository() {
-        return settingsRepository != null ? settingsRepository : Configuration.DESCRIPTOR;
+        return Configuration.DESCRIPTOR;
     }
 
     public static void setSettingsRepository(SettingsRepository settingsRepository) {
