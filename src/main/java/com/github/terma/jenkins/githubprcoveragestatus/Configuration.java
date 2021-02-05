@@ -124,7 +124,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
 
         public void set(String repo, float coverage) {
             coverageByRepo.put(repo, coverage);
-            save();
+            // save();
         }
 
         @Override
