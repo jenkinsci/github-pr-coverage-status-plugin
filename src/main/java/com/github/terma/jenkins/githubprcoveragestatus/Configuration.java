@@ -18,6 +18,7 @@ limitations under the License.
 package com.github.terma.jenkins.githubprcoveragestatus;
 
 import hudson.Extension;
+import hudson.util.Secret;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import net.sf.json.JSONObject;
