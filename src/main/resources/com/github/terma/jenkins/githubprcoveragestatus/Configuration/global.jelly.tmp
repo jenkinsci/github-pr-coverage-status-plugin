@@ -7,7 +7,7 @@
       <f:textbox default="http://api.github.com"/>
     </f:entry>
     <f:entry title="${%Access Token}" field="accessToken">
-      <f:password autocomplete="off"/>
+      <f:password />
     </f:entry>
   </f:section>
 </j:jelly>
