@@ -18,6 +18,7 @@ limitations under the License.
 package com.github.terma.jenkins.githubprcoveragestatus;
 
 import hudson.Extension;
+import hudson.util.Secret;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import net.sf.json.JSONObject;
@@ -188,7 +189,8 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             gitHubApiUrl = StringUtils.trimToNull(formData.getString("gitHubApiUrl"));
-            personalAccessToken = StringUtils.trimToNull(formData.getString("personalAccessToken"));
+            personalAccessToken = Secret.toString(Secret.fromString(
+                    StringUtils.trimToNull(formData.getString("personalAccessToken"))));
             yellowThreshold = NumberUtils.toInt(formData.getString("yellowThreshold"), DEFAULT_YELLOW_THRESHOLD);
             greenThreshold = NumberUtils.toInt(formData.getString("greenThreshold"), DEFAULT_GREEN_THRESHOLD);
             jenkinsUrl = StringUtils.trimToNull(formData.getString("jenkinsUrl"));
@@ -196,9 +198,11 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             useSonarForMasterCoverage = BooleanUtils.toBoolean(formData.getString("useSonarForMasterCoverage"));
             disableSimpleCov = BooleanUtils.toBoolean(formData.getString("disableSimpleCov"));
             sonarUrl = StringUtils.trimToNull(formData.getString("sonarUrl"));
-            sonarToken = StringUtils.trimToNull(formData.getString("sonarToken"));
+            sonarToken = Secret.toString(Secret.fromString(
+                    StringUtils.trimToNull(formData.getString("sonarToken"))));
             sonarLogin = StringUtils.trimToNull(formData.getString("sonarLogin"));
-            sonarPassword = StringUtils.trimToNull(formData.getString("sonarPassword"));
+            sonarPassword = Secret.toString(Secret.fromString(
+                    StringUtils.trimToNull(formData.getString("sonarPassword"))));
             save();
             return super.configure(req, formData);
         }
