@@ -143,8 +143,10 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                 jacocoCoverageCounter).get(workspace);
         buildLog.println(BUILD_LOG_PREFIX + "build coverage: " + coverage);
 
+        final String targetBranch = Utils.getTargetBranch(build, listener);
+
         final Message message = new Message(coverage, masterCoverage);
-        buildLog.println(BUILD_LOG_PREFIX + message.forConsole());
+        buildLog.println(BUILD_LOG_PREFIX + message.forConsole(targetBranch));
 
         final String buildUrl = Utils.getBuildUrl(build, listener);
 
@@ -153,10 +155,10 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
 
         if ("comment".equalsIgnoreCase(publishResultAs)) {
             buildLog.println(BUILD_LOG_PREFIX + "publishing result as comment");
-            publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener);
+            publishComment(message, buildUrl, jenkinsUrl, settingsRepository, gitHubRepository, prId, listener, targetBranch);
         } else {
             buildLog.println(BUILD_LOG_PREFIX + "publishing result as status check");
-            publishStatusCheck(message, gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener);
+            publishStatusCheck(message, gitHubRepository, prId, masterCoverage, coverage, buildUrl, listener, targetBranch);
         }
     }
 
@@ -167,7 +169,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             SettingsRepository settingsRepository,
             GHRepository gitHubRepository,
             int prId,
-            TaskListener listener
+            TaskListener listener,
+            String targetBranch
     ) {
         try {
             final String comment = message.forComment(
@@ -175,7 +178,8 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
                     jenkinsUrl,
                     settingsRepository.getYellowThreshold(),
                     settingsRepository.getGreenThreshold(),
-                    settingsRepository.isPrivateJenkinsPublicGitHub());
+                    settingsRepository.isPrivateJenkinsPublicGitHub(),
+                    targetBranch);
             ServiceRegistry.getPullRequestRepository().comment(gitHubRepository, prId, comment);
         } catch (Exception ex) {
             PrintWriter pw = listener.error("Couldn't add comment to pull request #" + prId + "!");
@@ -190,17 +194,18 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
             float targetCoverage,
             float coverage,
             String buildUrl,
-            TaskListener listener
+            TaskListener listener,
+            String targetBranch
     ) {
         try {
-            String text = message.forStatusCheck();
+            String text = message.forStatusCheck(targetBranch);
             List<GHPullRequestCommitDetail> commits = gitHubRepository.getPullRequest(prId).listCommits().asList();
             ServiceRegistry.getPullRequestRepository().createCommitStatus(
                     gitHubRepository,
                     commits.get(commits.size() - 1).getSha(),
                     coverage < targetCoverage ? GHCommitState.FAILURE : GHCommitState.SUCCESS,
                     buildUrl,
-                    message.forStatusCheck()
+                    text
             );
         } catch (Exception e) {
             PrintWriter pw = listener.error("Couldn't add status check to pull request #" + prId + "!");

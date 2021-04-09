@@ -27,6 +27,7 @@ import java.io.IOException;
 class Utils {
 
     public static final String BUILD_URL_ENV_PROPERTY = "BUILD_URL";
+    public static final String TARGET_BRANCH = "CHANGE_TARGET";
 
     public static String getJenkinsUrlFromBuildUrl(String buildUrl) {
         final String keyword = "/job/";
@@ -38,6 +39,11 @@ class Utils {
     public static String getBuildUrl(Run build, TaskListener listener) throws IOException, InterruptedException {
         final EnvVars envVars = build.getEnvironment(listener);
         return envVars.get(BUILD_URL_ENV_PROPERTY);
+    }
+
+    public static String getTargetBranch(Run build, TaskListener listener) throws IOException, InterruptedException {
+        final EnvVars envVars = build.getEnvironment(listener);
+        return envVars.get(TARGET_BRANCH);
     }
 
 }
