@@ -17,12 +17,18 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.github.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GitHubPullRequestRepository implements PullRequestRepository {
+
+    private static final Logger LOGGER = Logger.getLogger(GitHubPullRequestRepository.class.getName());
 
     @Override
     public GHPullRequest getPullRequestFor(String gitHubUrl, String branch, String sha) throws IOException {
@@ -63,6 +69,10 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
         final String apiUrl = settingsRepository.getGitHubApiUrl();
         final String personalAccessToken = settingsRepository.getPersonalAccessToken();
 
+        if (StringUtils.isEmpty(personalAccessToken)) {
+            LOGGER.log(Level.WARNING, "personal access token not configured");
+        }
+
         if (apiUrl != null) {
             if (personalAccessToken != null) {
                 return GitHub.connectToEnterprise(apiUrl, personalAccessToken);
@@ -80,6 +90,15 @@ public class GitHubPullRequestRepository implements PullRequestRepository {
 
     @Override
     public void comment(final GHRepository ghRepository, final int prId, final String message) throws IOException {
+        // delete old comment if exists
+        String login = getGitHub().getMyself().getLogin();
+
+        Optional<GHIssueComment> commentExist = ghRepository.getIssue(prId).getComments().stream().
+                filter(c -> c.getUserName().equals(login) && c.getBody().contains("coverage")).findFirst();
+        if (commentExist.isPresent()) {
+            commentExist.get().delete();
+        }
+
         ghRepository.getPullRequest(prId).comment(message);
     }
 

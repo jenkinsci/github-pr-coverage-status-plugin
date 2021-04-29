@@ -17,20 +17,21 @@ limitations under the License.
 */
 package com.github.terma.jenkins.githubprcoveragestatus;
 
+import static org.mockito.Mockito.*;
+
 import hudson.EnvVars;
 import hudson.model.Build;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import org.junit.Before;
-import org.junit.Test;
-import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.kohsuke.github.*;
 
 public class CompareCoverageActionTest {
 
@@ -40,18 +41,27 @@ public class CompareCoverageActionTest {
     private TaskListener listener = mock(TaskListener.class);
     private EnvVars envVars = mock(EnvVars.class);
 
-    private MasterCoverageRepository masterCoverageRepository = mock(MasterCoverageRepository.class);
-    private CoverageRepository coverageRepository = mock(CoverageRepository.class);
-    private SettingsRepository settingsRepository = mock(SettingsRepository.class);
-    private PullRequestRepository pullRequestRepository = mock(PullRequestRepository.class);
+    private MasterCoverageRepository masterCoverageRepository =
+            mock(MasterCoverageRepository.class);
+    private CoverageRepository coverageRepository =
+            mock(CoverageRepository.class);
+    private SettingsRepository settingsRepository =
+            mock(SettingsRepository.class);
+    private PullRequestRepository pullRequestRepository =
+            mock(PullRequestRepository.class);
     private GHRepository ghRepository = mock(GHRepository.class);
-    private GHPullRequestCommitDetail commit = mock(GHPullRequestCommitDetail.class);
+    private GHPullRequestCommitDetail commit =
+            mock(GHPullRequestCommitDetail.class);
 
-    private List<GHPullRequestCommitDetail> commits = new ArrayList<GHPullRequestCommitDetail>() {{
-        add(mock(GHPullRequestCommitDetail.class));
-        add(commit);
-    }};
-    private PagedIterable<GHPullRequestCommitDetail> pagedIterable = mock(PagedIterable.class);
+    private List<GHPullRequestCommitDetail> commits =
+            new ArrayList<GHPullRequestCommitDetail>() {
+                {
+                    add(mock(GHPullRequestCommitDetail.class));
+                    add(commit);
+                }
+            };
+    private PagedIterable<GHPullRequestCommitDetail> pagedIterable =
+            mock(PagedIterable.class);
 
     private CompareCoverageAction coverageAction = new CompareCoverageAction();
 
@@ -61,10 +71,11 @@ public class CompareCoverageActionTest {
         ServiceRegistry.setCoverageRepository(coverageRepository);
         ServiceRegistry.setSettingsRepository(settingsRepository);
         ServiceRegistry.setPullRequestRepository(pullRequestRepository);
-        when(pullRequestRepository.getGitHubRepository(GIT_URL)).thenReturn(ghRepository);
+        when(pullRequestRepository.getGitHubRepository(GIT_URL))
+                .thenReturn(ghRepository);
         when(listener.getLogger()).thenReturn(System.out);
     }
-    
+
     @Before
     public void reinitializeCoverageRepositories() {
         masterCoverageRepository = mock(MasterCoverageRepository.class);
@@ -72,23 +83,29 @@ public class CompareCoverageActionTest {
     }
 
     @Test
-    public void skipStepIfResultOfBuildIsNotSuccess() throws IOException, InterruptedException {
+    public void skipStepIfResultOfBuildIsNotSuccess()
+            throws IOException, InterruptedException {
         new CompareCoverageAction().perform(build, null, null, listener);
     }
 
     @Test
-    public void postCoverageStatusToPullRequestAsComment() throws IOException, InterruptedException {
+    public void postCoverageStatusToPullRequestAsComment()
+            throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         coverageAction.setPublishResultAs("comment");
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        verify(pullRequestRepository)
+                .comment(
+                        ghRepository, 12,
+                        "[![0% (0.0%) vs dev 0%](aaa/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
 
     @Test
-    public void postResultAsStatusCheck() throws IOException, InterruptedException {
+    public void postResultAsStatusCheck()
+            throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         prepareCommit();
@@ -96,17 +113,14 @@ public class CompareCoverageActionTest {
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).createCommitStatus(
-                ghRepository,
-                "fh3k2l",
-                GHCommitState.SUCCESS,
-                "aaa/job/a",
-                "Coverage 0% changed 0.0% vs master 0%"
-        );
+        verify(pullRequestRepository)
+                .createCommitStatus(ghRepository, "fh3k2l", GHCommitState.SUCCESS,
+                        "aaa/job/a", "Coverage 0% changed 0.0% vs dev 0%");
     }
 
     @Test
-    public void postResultAsSuccessfulStatusCheck() throws IOException, InterruptedException {
+    public void postResultAsSuccessfulStatusCheck()
+            throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         prepareCommit();
@@ -115,17 +129,15 @@ public class CompareCoverageActionTest {
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).createCommitStatus(
-                ghRepository,
-                "fh3k2l",
-                GHCommitState.SUCCESS,
-                "aaa/job/a",
-                "Coverage 95% changed +7.0% vs master 88%"
-        );
+        verify(pullRequestRepository)
+                .createCommitStatus(ghRepository, "fh3k2l", GHCommitState.SUCCESS,
+                        "aaa/job/a",
+                        "Coverage 95% changed +7.0% vs dev 88%");
     }
-    
+
     @Test
-    public void postResultAsFailedStatusCheck() throws IOException, InterruptedException {
+    public void postResultAsFailedStatusCheck()
+            throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         prepareCommit();
@@ -134,23 +146,23 @@ public class CompareCoverageActionTest {
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).createCommitStatus(
-                ghRepository,
-                "fh3k2l",
-                GHCommitState.FAILURE,
-                "aaa/job/a",
-                "Coverage 90% changed -5.0% vs master 95%"
-        );
+        verify(pullRequestRepository)
+                .createCommitStatus(ghRepository, "fh3k2l", GHCommitState.FAILURE,
+                        "aaa/job/a",
+                        "Coverage 90% changed -5.0% vs dev 95%");
     }
 
     @Test
-    public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess() throws IOException, InterruptedException {
+    public void keepBuildGreenAndLogErrorIfExceptionDuringGitHubAccess()
+            throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         when(listener.error(anyString())).thenReturn(printWriter);
         coverageAction.setPublishResultAs("comment");
 
-        doThrow(new IOException("???")).when(pullRequestRepository).comment(any(GHRepository.class), anyInt(), anyString());
+        doThrow(new IOException("???"))
+                .when(pullRequestRepository)
+                .comment(any(GHRepository.class), anyInt(), anyString());
 
         coverageAction.perform(build, null, null, listener);
 
@@ -159,7 +171,8 @@ public class CompareCoverageActionTest {
     }
 
     @Test
-    public void postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
+    public void
+    postCoverageStatusToPullRequestAsCommentWithShieldIoIfPrivateJenkinsPublicGitHubTurnOn()
             throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
@@ -168,11 +181,16 @@ public class CompareCoverageActionTest {
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20master%200%25-brightgreen.svg)](aaa/job/a)");
+        verify(pullRequestRepository)
+                .comment(
+                        ghRepository, 12,
+                        "[![0% (0.0%) vs dev 0%](https://img.shields.io/badge/coverage-0%25%20(0.0%25)%20vs%20dev%200%25-brightgreen.svg)](aaa/job/a)");
     }
 
     @Test
-    public void postCoverageStatusToPullRequestAsCommentWithCustomJenkinsUrlIfConfigured() throws IOException, InterruptedException {
+    public void
+    postCoverageStatusToPullRequestAsCommentWithCustomJenkinsUrlIfConfigured()
+            throws IOException, InterruptedException {
         prepareBuildSuccess();
         prepareEnvVars();
         when(settingsRepository.getJenkinsUrl()).thenReturn("customJ");
@@ -180,10 +198,14 @@ public class CompareCoverageActionTest {
 
         coverageAction.perform(build, null, null, listener);
 
-        verify(pullRequestRepository).comment(ghRepository, 12, "[![0% (0.0%) vs master 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
+        verify(pullRequestRepository)
+                .comment(
+                        ghRepository, 12,
+                        "[![0% (0.0%) vs dev 0%](customJ/coverage-status-icon/?coverage=0.0&masterCoverage=0.0)](aaa/job/a)");
     }
-    
-    private void prepareCoverageData(float masterCoverage, float prCoverage) throws IOException, InterruptedException {
+
+    private void prepareCoverageData(float masterCoverage, float prCoverage)
+            throws IOException, InterruptedException {
         when(masterCoverageRepository.get(GIT_URL)).thenReturn(masterCoverage);
         when(coverageRepository.get(null)).thenReturn(prCoverage);
         initMocks();

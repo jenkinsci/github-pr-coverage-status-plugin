@@ -23,8 +23,9 @@ import org.apache.commons.httpclient.util.URIUtil;
 @SuppressWarnings("WeakerAccess")
 class Message {
 
-    //see http://shields.io/ for reference
-    private static final String BADGE_TEMPLATE = "https://img.shields.io/badge/coverage-%s-%s.svg";
+    // see http://shields.io/ for reference
+    private static final String BADGE_TEMPLATE =
+            "https://img.shields.io/badge/coverage-%s-%s.svg";
 
     private static final String COLOR_RED = "red";
     private static final String COLOR_YELLOW = "yellow";
@@ -39,35 +40,38 @@ class Message {
     }
 
     public String forConsole() {
-        return String.format("Coverage %s changed %s vs master %s",
+        return String.format(
+                "Coverage %s changed %s vs dev %s",
                 Percent.toWholeNoSignString(coverage),
                 Percent.toString(Percent.change(coverage, masterCoverage)),
                 Percent.toWholeNoSignString(masterCoverage));
     }
 
-    public String forComment(
-            final String buildUrl, final String jenkinsUrl,
-            final int yellowThreshold, final int greenThreshold,
-            final boolean useShieldsIo) {
+    public String forComment(final String buildUrl, final String jenkinsUrl,
+                             final int yellowThreshold, final int greenThreshold,
+                             final boolean useShieldsIo) {
         final String icon = forIcon();
         if (useShieldsIo) {
-            return "[![" + icon + "](" + shieldIoUrl(icon, yellowThreshold, greenThreshold) + ")](" + buildUrl + ")";
+            return "[![" + icon + "](" +
+                    shieldIoUrl(icon, yellowThreshold, greenThreshold) + ")](" +
+                    buildUrl + ")";
         } else {
-            return "[![" + icon + "](" + jenkinsUrl + "/coverage-status-icon/" +
-                    "?coverage=" + coverage +
-                    "&masterCoverage=" + masterCoverage +
+            return "[![" + icon + "](" + jenkinsUrl + "/coverage-status-icon/"
+                    + "?coverage=" + coverage + "&masterCoverage=" + masterCoverage +
                     ")](" + buildUrl + ")";
         }
     }
 
     public String forStatusCheck() {
-        return String.format("Coverage %s changed %s vs master %s",
+        return String.format(
+                "Coverage %s changed %s vs dev %s",
                 Percent.toWholeNoSignString(coverage),
                 Percent.toString(Percent.change(coverage, masterCoverage)),
                 Percent.toWholeNoSignString(masterCoverage));
     }
 
-    private String shieldIoUrl(String icon, final int yellowThreshold, final int greenThreshold) {
+    private String shieldIoUrl(String icon, final int yellowThreshold,
+                               final int greenThreshold) {
         final String color = getColor(yellowThreshold, greenThreshold);
         // dash should be encoded as two dash
         icon = icon.replace("-", "--");
@@ -90,11 +94,11 @@ class Message {
     }
 
     /**
-     * Example: 92% (+23%) vs master 70%
+     * Example: 92% (+23%) vs dev 70%
      */
     public String forIcon() {
-        return String.format("%s (%s) vs master %s",
-                Percent.toWholeNoSignString(coverage),
+        return String.format(
+                "%s (%s) vs dev %s", Percent.toWholeNoSignString(coverage),
                 Percent.toString(Percent.change(coverage, masterCoverage)),
                 Percent.toWholeNoSignString(masterCoverage));
     }
