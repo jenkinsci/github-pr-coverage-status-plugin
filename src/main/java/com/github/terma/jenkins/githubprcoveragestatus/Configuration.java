@@ -27,7 +27,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -117,7 +117,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return "Coverage status for GitHub Pull Requests";
         }
 
-        @Nonnull
+        @NonNull
         public Map<String, Float> getCoverageByRepo() {
             return coverageByRepo;
         }
