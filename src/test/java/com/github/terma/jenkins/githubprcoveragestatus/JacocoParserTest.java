@@ -65,7 +65,7 @@ public class JacocoParserTest {
             new JacocoParser("LINE").get(filePath);
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
-            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").trim();
+            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").replace("\r", "").trim();
             Assert.assertEquals(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
@@ -88,7 +88,7 @@ public class JacocoParserTest {
             new JacocoParser("LINE").get(filePath);
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
-            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").trim();
+            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").replace("\r", "").trim();
             Assert.assertEquals(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
@@ -112,7 +112,7 @@ public class JacocoParserTest {
             new JacocoParser("LINE").get(filePath);
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
-            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").trim();
+            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").replace("\r", "").trim();
             Assert.assertEquals(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
