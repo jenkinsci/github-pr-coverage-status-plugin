@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 
 public class XmlUtils {
 
@@ -48,7 +49,7 @@ public class XmlUtils {
 //                    }
                 }
             });
-            Document doc = builder.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
+            Document doc = builder.parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
             XPathFactory xPathfactory = XPathFactory.newInstance();
             XPathExpression expr = xPathfactory.newXPath().compile(xpath);
             return (String) expr.evaluate(doc, XPathConstants.STRING);
