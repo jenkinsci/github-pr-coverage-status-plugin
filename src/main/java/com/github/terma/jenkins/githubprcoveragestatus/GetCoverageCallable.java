@@ -44,7 +44,7 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> impleme
         FileSet fs = Util.createFileSet(ws, path);
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
-        List<Float> cov = new ArrayList<Float>();
+        List<Float> cov = new ArrayList<>();
         for (String file : files) {
             cov.add(parser.get(new File(ds.getBasedir(), file).getAbsolutePath()));
         }
@@ -60,8 +60,8 @@ final class GetCoverageCallable extends MasterToSlaveFileCallable<Float> impleme
     }
 
     @Override
-    public Float invoke(final File ws, final VirtualChannel channel) throws IOException {
-        final List<Float> cov = new ArrayList<Float>();
+    public Float invoke(final File ws, final VirtualChannel channel) {
+        final List<Float> cov = new ArrayList<>();
         cov.addAll(getFloats(ws, "**/cobertura.xml", new CoberturaParser()));
         cov.addAll(getFloats(ws, "**/cobertura-coverage.xml", new CoberturaParser()));
         cov.addAll(getFloats(ws, "**/jacoco.xml", new JacocoParser(jacocoCounterType)));

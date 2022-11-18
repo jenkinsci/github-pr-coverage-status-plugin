@@ -20,12 +20,10 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class CoberturaParserTest {
 
     @Test
-    public void extractCoverageFromCoberturaReportAsLineRatePlusBranchRateDivByTwo() throws IOException {
+    public void extractCoverageFromCoberturaReportAsLineRatePlusBranchRateDivByTwo() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura.xml").getFile();
 
@@ -33,7 +31,7 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractCoverageFromCoberturaReportWithSingleQuotes() throws IOException {
+    public void extractCoverageFromCoberturaReportWithSingleQuotes() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-with-single-quotes.xml").getFile();
 
@@ -41,7 +39,7 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractZeroCoverageIfNoZeroLineRateAndBranchRate() throws IOException {
+    public void extractZeroCoverageIfNoZeroLineRateAndBranchRate() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-coverage.xml").getFile();
 
@@ -49,7 +47,7 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractCoverageIfBranchRateIsZeroAndHasOnlyLineRate() throws IOException {
+    public void extractCoverageIfBranchRateIsZeroAndHasOnlyLineRate() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-branch-rate.xml").getFile();
 
@@ -57,7 +55,7 @@ public class CoberturaParserTest {
     }
 
     @Test
-    public void extractCoverageIfLineRateIsZeroAndHasBranchRate() throws IOException {
+    public void extractCoverageIfLineRateIsZeroAndHasBranchRate() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-zero-line-rate.xml").getFile();
 
@@ -65,14 +63,14 @@ public class CoberturaParserTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void throwExceptionIfNoLineRate() throws IOException {
+    public void throwExceptionIfNoLineRate() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-no-line-rate.xml").getFile();
         new CoberturaParser().get(filePath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void throwExceptionIfNoBranchRate() throws IOException {
+    public void throwExceptionIfNoBranchRate() {
         String filePath = CoberturaParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CoberturaParserTest/cobertura-no-branch-rate.xml").getFile();
         new CoberturaParser().get(filePath);

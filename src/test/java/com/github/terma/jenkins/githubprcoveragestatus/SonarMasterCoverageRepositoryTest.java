@@ -28,7 +28,7 @@ public class SonarMasterCoverageRepositoryTest {
     private ByteArrayOutputStream buildLogOutputStream;
 
     @After
-    public void afterTest() throws Exception {
+    public void afterTest() {
         System.out.println(buildLogOutputStream.toString());
         wireMockRule.resetMappings();
     }

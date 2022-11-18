@@ -20,12 +20,10 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class CloverParserTest {
 
     @Test
-    public void extractCoverageFromCloverReport() throws IOException {
+    public void extractCoverageFromCloverReport() {
         String filePath = CloverParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CloverParserTest/clover.xml").getFile();
 
@@ -33,7 +31,7 @@ public class CloverParserTest {
     }
 
     @Test
-    public void extractZeroCoverageIfNoCoveredStatements() throws IOException {
+    public void extractZeroCoverageIfNoCoveredStatements() {
         String filePath = CloverParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CloverParserTest/clover-zero-statements-coverage.xml").getFile();
 
@@ -41,7 +39,7 @@ public class CloverParserTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void throwExceptionIfReportDoesntHaveStatementsAttribute() throws IOException {
+    public void throwExceptionIfReportDoesntHaveStatementsAttribute() {
         String filePath = CloverParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CloverParserTest/clover-invalid-no-statements.xml").getFile();
 
@@ -49,7 +47,7 @@ public class CloverParserTest {
     }
 
     @Test
-    public void extractZeroCoverageIfZeroStatements() throws IOException {
+    public void extractZeroCoverageIfZeroStatements() {
         String filePath = CloverParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/CloverParserTest/clover-zero-statements.xml").getFile();
 
