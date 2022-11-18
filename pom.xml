@@ -31,10 +31,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com/jenkinsci/github-pr-coverage-status-plugin.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/github-pr-coverage-status-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/github-pr-coverage-status-plugin</url>
-        <tag>HEAD</tag>
+        <connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
+        <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
+        <url>https://github.com/${gitHubRepo}</url>
+        <tag>${scmTag}</tag>
     </scm>
 
     <licenses>
