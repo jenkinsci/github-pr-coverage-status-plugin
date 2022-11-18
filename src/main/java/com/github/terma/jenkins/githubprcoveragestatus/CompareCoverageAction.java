@@ -35,7 +35,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -217,7 +217,7 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         @Override
-        @Nonnull
+        @NonNull
         public String getDisplayName() {
             return "Publish coverage to GitHub";
         }

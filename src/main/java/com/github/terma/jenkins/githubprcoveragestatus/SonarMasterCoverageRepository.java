@@ -111,7 +111,7 @@ public class SonarMasterCoverageRepository implements MasterCoverageRepository {
         try {
             final GetMethod method = executeGetRequest(uri);
             String value = JsonUtils.findInJson(method.getResponseBodyAsString(), "component.measures[0].value");
-            return Float.valueOf(value) / 100;
+            return Float.parseFloat(value) / 100;
         } catch (Exception e) {
             throw new SonarCoverageMeasureRetrievalException(String.format("failed to get coverage measure for sonar project %s - %s", project.getKey(), e.getMessage()), e);
         }
