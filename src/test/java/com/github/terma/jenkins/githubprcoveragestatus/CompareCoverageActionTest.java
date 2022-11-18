@@ -56,7 +56,7 @@ public class CompareCoverageActionTest {
     private CompareCoverageAction coverageAction = new CompareCoverageAction();
 
     @Before
-    public void initMocks() throws IOException, InterruptedException {
+    public void initMocks() throws IOException {
         ServiceRegistry.setMasterCoverageRepository(masterCoverageRepository);
         ServiceRegistry.setCoverageRepository(coverageRepository);
         ServiceRegistry.setSettingsRepository(settingsRepository);

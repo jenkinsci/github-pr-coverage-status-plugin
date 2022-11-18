@@ -20,12 +20,10 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class JacocoParserTest {
 
     @Test
-    public void extractCoverageFromJacocoReport() throws IOException {
+    public void extractCoverageFromJacocoReport() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
 
@@ -33,7 +31,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void extractCoverageFromJacocoReportWhenNoLinesOfCode() throws IOException {
+    public void extractCoverageFromJacocoReportWhenNoLinesOfCode() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-no-code.xml").getFile();
 
@@ -41,7 +39,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void extractInstructionCoverageFromJacocoReportWhenCoverageTypeNull() throws IOException {
+    public void extractInstructionCoverageFromJacocoReportWhenCoverageTypeNull() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
 
@@ -49,7 +47,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void extractInstructionCoverageFromJacocoReportWhenCoverageTypeUnknown() throws IOException {
+    public void extractInstructionCoverageFromJacocoReportWhenCoverageTypeUnknown() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco.xml").getFile();
 
@@ -57,7 +55,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void throwExceptionWhenExtractCoverageFromJacocoAndNoLineTag() throws IOException {
+    public void throwExceptionWhenExtractCoverageFromJacocoAndNoLineTag() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-no-line-tag.xml").getFile();
 
@@ -65,7 +63,7 @@ public class JacocoParserTest {
             new JacocoParser("LINE").get(filePath);
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
-            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH");
+            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").replace("\r", "").trim();
             Assert.assertEquals(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
@@ -80,7 +78,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void throwExceptionWhenExtractCoverageFromJacocoAndMissedNotNumber() throws IOException {
+    public void throwExceptionWhenExtractCoverageFromJacocoAndMissedNotNumber() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-missed-not-number.xml").getFile();
 
@@ -88,7 +86,7 @@ public class JacocoParserTest {
             new JacocoParser("LINE").get(filePath);
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
-            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH");
+            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").replace("\r", "").trim();
             Assert.assertEquals(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
@@ -104,7 +102,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void throwExceptionWhenExtractCoverageFromJacocoAndCoveredNotNumber() throws IOException {
+    public void throwExceptionWhenExtractCoverageFromJacocoAndCoveredNotNumber() {
         String filePath = JacocoParserTest.class.getResource(
                 "/com/github/terma/jenkins/githubprcoveragestatus/JacocoParserTest/jacoco-covered-not-number.xml").getFile();
 
@@ -112,7 +110,7 @@ public class JacocoParserTest {
             new JacocoParser("LINE").get(filePath);
             Assert.fail("Where is my exception?");
         } catch (Exception e) {
-            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH");
+            String messageWithoutAbsolutePath = e.getMessage().replace(filePath, "FILE_PATH").replace("\r", "").trim();
             Assert.assertEquals(
                     "Strange Jacoco report!\n" +
                             "File path: FILE_PATH\n" +
@@ -128,7 +126,7 @@ public class JacocoParserTest {
     }
 
     @Test
-    public void throwExceptionWhenExtractCoverageFromJacocoAndNoFile() throws IOException {
+    public void throwExceptionWhenExtractCoverageFromJacocoAndNoFile() {
         try {
             new JacocoParser("LINE").get("/jacoco-no-file.xml");
             Assert.fail("Where is my exception?");

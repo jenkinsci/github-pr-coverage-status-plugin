@@ -1,0 +1,5 @@
+<?jelly escape-by-default='true'?>
+<div>
+    Addon for <a href="https://plugins.jenkins.io/ghprb/">GitHub Pull Request Builder</a> gives you the possibility of publishing code coverage status (Cobertura and Jenkins) to Pull Request Commits.
+    You will see coverage of your PR and comparison with the main branch.
+</div>

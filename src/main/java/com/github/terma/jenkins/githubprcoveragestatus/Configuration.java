@@ -28,7 +28,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,7 +93,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
         private static final int DEFAULT_YELLOW_THRESHOLD = 80;
         private static final int DEFAULT_GREEN_THRESHOLD = 90;
 
-        private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<String, Float>();
+        private final Map<String, Float> coverageByRepo = new ConcurrentHashMap<>();
 
         private boolean disableSimpleCov;
         private String gitHubApiUrl;
@@ -118,7 +118,7 @@ public class Configuration extends AbstractDescribableImpl<Configuration> {
             return "Coverage status for GitHub Pull Requests";
         }
 
-        @Nonnull
+        @NonNull
         public Map<String, Float> getCoverageByRepo() {
             return coverageByRepo;
         }
