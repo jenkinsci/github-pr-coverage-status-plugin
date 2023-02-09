@@ -70,14 +70,26 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
     public CompareCoverageAction() {
     }
 
+    public String getPublishResultAs() {
+        return publishResultAs;
+    }
+
     @DataBoundSetter
     public void setPublishResultAs(String publishResultAs) {
         this.publishResultAs = publishResultAs;
     }
 
+    public String getSonarLogin() {
+        return sonarLogin;
+    }
+
     @DataBoundSetter
     public void setSonarLogin(String sonarLogin) {
         this.sonarLogin = sonarLogin;
+    }
+
+    public String getSonarPassword() {
+        return sonarPassword;
     }
 
     @DataBoundSetter
@@ -95,17 +107,13 @@ public class CompareCoverageAction extends Recorder implements SimpleBuildStep {
         this.scmVars = scmVars;
     }
 
+    public String getJacocoCoverageCounter() {
+        return jacocoCoverageCounter;
+    }
+
     @DataBoundSetter
     public void setJacocoCoverageCounter(String jacocoCoverageCounter) {
         this.jacocoCoverageCounter = jacocoCoverageCounter;
-    }
-
-    public String getPublishResultAs() {
-        return publishResultAs;
-    }
-
-    public String getJacocoCoverageCounter() {
-        return jacocoCoverageCounter;
     }
 
     // todo show message that addition comment in progress as it could take a while
