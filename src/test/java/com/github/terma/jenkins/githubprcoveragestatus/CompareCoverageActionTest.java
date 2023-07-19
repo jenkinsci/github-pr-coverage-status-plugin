@@ -123,7 +123,7 @@ public class CompareCoverageActionTest {
                 "Coverage 95% changed +7.0% vs master 88%"
         );
     }
-    
+
     @Test
     public void postResultAsFailedStatusCheck() throws IOException, InterruptedException {
         prepareBuildSuccess();
@@ -140,6 +140,44 @@ public class CompareCoverageActionTest {
                 GHCommitState.FAILURE,
                 "aaa/job/a",
                 "Coverage 90% changed -5.0% vs master 95%"
+        );
+    }
+
+    @Test
+    public void postResultAsFailedStatusCheckOnMicroChange() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        prepareCommit();
+        prepareCoverageData(0.95f, 0.94994f); //-0,006%
+        coverageAction.setPublishResultAs("statusCheck");
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(pullRequestRepository).createCommitStatus(
+                ghRepository,
+                "fh3k2l",
+                GHCommitState.FAILURE,
+                "aaa/job/a",
+                "Coverage 95% changed -0.01% vs master 95%"
+        );
+    }
+
+    @Test
+    public void postResultAsSuccessStatusCheckOnMicroChange() throws IOException, InterruptedException {
+        prepareBuildSuccess();
+        prepareEnvVars();
+        prepareCommit();
+        prepareCoverageData(0.95f, 0.94996f); //-0,004%
+        coverageAction.setPublishResultAs("statusCheck");
+
+        coverageAction.perform(build, null, null, listener);
+
+        verify(pullRequestRepository).createCommitStatus(
+                ghRepository,
+                "fh3k2l",
+                GHCommitState.SUCCESS,
+                "aaa/job/a",
+                "Coverage 95% changed 0.0% vs master 95%"
         );
     }
 
