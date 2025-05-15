@@ -208,5 +208,7 @@ public class CompareCoverageActionTest {
         when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(prId);
         when(envVars.get(Utils.BUILD_URL_ENV_PROPERTY)).thenReturn(buildUrl);
         when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(GIT_URL);
+        when(envVars.get("CHANGE_ID")).thenReturn(null);
+        when(envVars.get("CHANGE_URL")).thenReturn(null);
     }
 }
