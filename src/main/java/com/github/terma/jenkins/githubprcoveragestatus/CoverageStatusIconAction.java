@@ -3,7 +3,7 @@ package com.github.terma.jenkins.githubprcoveragestatus;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
