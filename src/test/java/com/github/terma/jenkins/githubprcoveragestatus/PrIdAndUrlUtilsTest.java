@@ -72,87 +72,81 @@ public class PrIdAndUrlUtilsTest {
 
     @Test
     public void gitPrIdPrIdHasPriority() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(PR_ID);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY, PrIdAndUrlUtils.CHANGE_ID_PROPERTY, PR_ID, CHANGE_ID);
 
         Assert.assertEquals(PR_ID_INT, PrIdAndUrlUtils.getPrId(scmVars, build, listener));
     }
 
     @Test
     public void gitPrIdIfPrIdIsNullChangeIdIsUsed() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_ID_PROPERTY)).thenReturn(CHANGE_ID);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY, PrIdAndUrlUtils.CHANGE_ID_PROPERTY, null, CHANGE_ID);
 
         Assert.assertEquals(CHANGE_ID_INT, PrIdAndUrlUtils.getPrId(scmVars, build, listener));
     }
 
     @Test
     public void getGitPrIdFromScmVarsIfOtherNull() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_ID_PROPERTY)).thenReturn(null);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_PR_ID_ENV_PROPERTY, PrIdAndUrlUtils.CHANGE_ID_PROPERTY, null, null);
         when(ghPullRequest.getNumber()).thenReturn(SCM_ENVS_PR_ID_INT);
         Assert.assertEquals(SCM_ENVS_PR_ID_INT, PrIdAndUrlUtils.getPrId(scmVars, build, listener));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void throwExceptionWhenNoPrId() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(null);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, null, null);
         Assert.assertEquals(PR_ID, PrIdAndUrlUtils.getGitUrl(null, build, listener));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void throwExceptionWhenNoPrIdAndScmVarsEmpty() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(null);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, null, null);
         scmVars.clear();
         Assert.assertEquals(PR_ID, PrIdAndUrlUtils.getGitUrl(scmVars, build, listener));
     }
 
     @Test
     public void getGitUrlGitUrlHasPriority() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(PR_ID);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, PR_ID, CHANGE_ID);
 
         Assert.assertEquals(PR_ID, PrIdAndUrlUtils.getGitUrl(null, build, listener));
     }
 
     @Test
     public void getGitUrlIfGitUrlsNullChangeUrlIsUsed() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, null, CHANGE_ID);
 
         Assert.assertEquals(CHANGE_ID, PrIdAndUrlUtils.getGitUrl(null, build, listener));
     }
 
     @Test
     public void getGitUrlFromScmVarsIfOtherNull() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(null);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, null, null);
 
         Assert.assertEquals("SCM_VARS_GIT_URL", PrIdAndUrlUtils.getGitUrl(scmVars, build, listener));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void shouldThrowExceptionWhenGetGitUrlIfAllNull() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(null);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, null, null);
         PrIdAndUrlUtils.getGitUrl(null, build, listener);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void shouldThrowExceptionWhenGetGitUrlIfAllEmpty() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(null);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(null);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, null, null);
         scmVars.clear();
         PrIdAndUrlUtils.getGitUrl(scmVars, build, listener);
     }
 
     @Test
     public void getGitUrlScmVarsHasPriority() throws IOException, InterruptedException {
-        when(envVars.get(PrIdAndUrlUtils.GIT_URL_PROPERTY)).thenReturn(PR_ID);
-        when(envVars.get(PrIdAndUrlUtils.CHANGE_URL_PROPERTY)).thenReturn(CHANGE_ID);
+        setupTreeMapGetStubs(PrIdAndUrlUtils.GIT_URL_PROPERTY, PrIdAndUrlUtils.CHANGE_URL_PROPERTY, PR_ID, CHANGE_ID);
 
         Assert.assertEquals("SCM_VARS_GIT_URL", PrIdAndUrlUtils.getGitUrl(scmVars, build, listener));
+    }
+
+    private void setupTreeMapGetStubs(Object getArg1, Object getArg12, String getReturnValue, String getReturnValue2) {
+        when(envVars.get(getArg1)).thenReturn(getReturnValue);
+        when(envVars.get(getArg12)).thenReturn(getReturnValue2);
     }
 }
